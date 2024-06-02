@@ -5,8 +5,8 @@
 class Projectile
 {
 public:
-	virtual void Draw(); //temp should be virtual
-	void Update();
+	virtual void Draw(); // default draw is a circle. ONLY FOR DEBUG
+	virtual void Update(); // default is pos and velocty update
 
 	void SetPosition(float x, float y);
 	void SetVelocity(float x, float y);

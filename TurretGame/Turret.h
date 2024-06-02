@@ -3,7 +3,7 @@
 #include "raylib.h"
 #include "constants.h"
 
-class Projectile;
+class Bullet;
 
 class Turret
 {
@@ -12,9 +12,10 @@ public:
 	void Draw();
 	void Update(unsigned int frame, int mouseX, int mouseY);
 
-	void ShootProjectile(std::vector<Projectile*>& projectiles);
+	void ShootProjectile(std::vector<Bullet*>& projectiles);
 
 	void SetBulletSpeedMultiplier(float multiplier);
+	void SetFirerate(float firerate);
 
 	float GetFirerate();
 	unsigned int GetLastShotFrame();
@@ -32,7 +33,7 @@ private:
 	int textureHeight;
 	Rectangle textureSourceRec;
 	Rectangle textureDestRec;
-	Vector2 textureRotationPoint;
+	Vector2 textureOriginPoint;
 	//---------------------------------
 
 	//GAME PROPERTIES------------------

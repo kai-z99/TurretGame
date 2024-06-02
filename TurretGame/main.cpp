@@ -5,6 +5,8 @@
 #include "constants.h"
 #include "Turret.h"
 #include "Projectile.h"
+#include "Bullet.h"
+#include "SoldierEnemy.h"
 #include "helpers.h"
 
 
@@ -12,11 +14,16 @@ int main(void)
 {
     InitWindow(screenWidth, screenHeight, "TurretGame window");
     SetTargetFPS(60);
-    ToggleFullscreen();
+    //ToggleFullscreen();
     HideCursor();
     Turret t = Turret();
+
+    SoldierEnemy* s = new SoldierEnemy();
+    s->SetPosition(screenWidth - 100, screenHeight / 2);
+
+
     Vector2 mousePos = { 0,0 };
-    std::vector<Projectile*> projectiles;
+    std::vector<Bullet*> bullets;
     unsigned int frameCount = 0;
 
     while (!WindowShouldClose())
@@ -25,26 +32,42 @@ int main(void)
         mousePos = { GetMousePosition().x, GetMousePosition().y };
         t.Update(frameCount, mousePos.x, mousePos.y);
 
-        for (Projectile* p : projectiles)
+        if (s->IsActive()) s->Update(frameCount);
+        
+        for (Bullet* p : bullets)
         {
-            p->Update();
+            if (p->isActive)
+            {
+                p->Update();
+
+                if (p->EnemyCollided(s))
+                {
+                    p->isActive = false;
+                    s->SetHealth(s->GetHealth() - 1);
+                }
+            }
+       
         }
 
         if (IsMouseButtonDown(0) && t.GetCanShoot())
         {
-            t.ShootProjectile(projectiles);
+            t.ShootProjectile(bullets);
         }
 
-
+        
         BeginDrawing();
         ClearBackground(RAYWHITE);
         DrawLine(deathBoundaryX, 0, deathBoundaryX, screenHeight, RED);
         DrawLine(0, menuBoundaryY, screenWidth, menuBoundaryY, RED);
         t.Draw();
 
-        for (Projectile* p : projectiles)
+        if (s->IsActive()) s->Draw();
+
+        
+        for (Bullet* p : bullets)
         {
-            p->Draw();
+            if (p->isActive) p->Draw();
+            
         }
 
         

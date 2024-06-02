@@ -8,12 +8,12 @@ Turret::Turret()
     this->angle = 0;
 
     //Texture init
-    this->texture = LoadTexture("turret.png");
+    this->texture = LoadTexture("Sprites/turret.png");
     this->textureWidth = this->texture.width;
     this->textureHeight = this->texture.height;
     this->textureSourceRec = { 0.0f, 0.0f, (float)this->textureWidth, (float)this->textureHeight };
     this->textureDestRec = { this->position.x, this->position.y, (float)this->textureWidth, (float)this->textureHeight };
-    this->textureRotationPoint = { this->textureWidth / 2.0f, this->textureHeight / 2.0f + 10.0f };
+    this->textureOriginPoint = { this->textureWidth / 2.0f, this->textureHeight / 2.0f + 10.0f };
 
     //gun state
     this->lastShotFrame = 0;
@@ -28,7 +28,7 @@ Turret::Turret()
 
 void Turret::Draw()
 {
-    DrawTexturePro(this->texture, this->textureSourceRec, this->textureDestRec, this->textureRotationPoint, this->angle * RAD2DEG + 90.0f, WHITE);
+    DrawTexturePro(this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, this->angle * RAD2DEG + 90.0f, WHITE);
 }
 
 void Turret::Update(unsigned int frame, int mouseX, int mouseY)
@@ -55,7 +55,7 @@ void Turret::UpdateAngle(int mouseX, int mouseY)
     this->angle = CalculateAngle(this->position.x, this->position.y, mouseX, mouseY);
 }
 
-void Turret::ShootProjectile(std::vector<Projectile*>& projectiles)
+void Turret::ShootProjectile(std::vector<Bullet*>& projectiles)
 {
     TurretBullet* p = new TurretBullet();
     p->SetPosition(this->position.x, this->position.y);
@@ -70,6 +70,11 @@ void Turret::ShootProjectile(std::vector<Projectile*>& projectiles)
 void Turret::SetBulletSpeedMultiplier(float multiplier)
 {
     this->bulletSpeedMultiplier = multiplier;
+}
+
+void Turret::SetFirerate(float firerate)
+{
+    this->firerate = firerate;
 }
 
 float Turret::GetFirerate()

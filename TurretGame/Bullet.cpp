@@ -1,4 +1,6 @@
 #include "Bullet.h"
+#include "raylib.h"
+#include "Enemy.h"
 
 void Bullet::Draw() //default draw is a red circle; debug only
 {
@@ -7,10 +9,15 @@ void Bullet::Draw() //default draw is a red circle; debug only
 
 bool Bullet::EnemyCollided(Enemy* e)
 {
-    return false;
+    return CheckCollisionCircleRec(this->position, this->hitBoxRadius, e->GetHitbox()) && e->IsActive();
 }
 
 float Bullet::GetBaseSpeed() const
 {
     return this->baseSpeed;
 }
+
+//bool Bullet::IsActive()
+//{
+//    return this->isActive;
+//}
