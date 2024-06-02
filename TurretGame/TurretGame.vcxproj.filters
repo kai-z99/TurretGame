@@ -27,6 +27,12 @@
     <ClCompile Include="Projectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TurretBullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Turret.h">
@@ -39,6 +45,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TurretBullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

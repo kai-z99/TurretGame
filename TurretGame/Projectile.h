@@ -5,15 +5,13 @@
 class Projectile
 {
 public:
-	void Draw(); //temp should be virtual
+	virtual void Draw(); //temp should be virtual
 	void Update();
 
 	void SetPosition(float x, float y);
 	void SetVelocity(float x, float y);
 
-	
-
-private:
+protected:
 	Vector2 position;
 	Vector2 velocity;
 };

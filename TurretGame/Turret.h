@@ -23,7 +23,7 @@ public:
 private:
 	void UpdateAngle(int mouseX, int mouseY);
 
-	Vector2 position = { 100.0f, screenHeight / 2.0f };
+	Vector2 position = { 100.0f, (screenHeight / 2.0f) + (menuBoundaryY / 2.0f)};
 	float angle;
 
 	//TEXTURE PROPERTIES---------------
@@ -40,8 +40,6 @@ private:
 	bool shotThisFrame;
 	int lastShotFrame;
 
-
-	float baseBulletSpeed;
 	float bulletSpeedMultiplier;
 
 	float firerate;

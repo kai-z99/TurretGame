@@ -39,6 +39,7 @@ int main(void)
         BeginDrawing();
         ClearBackground(RAYWHITE);
         DrawLine(deathBoundaryX, 0, deathBoundaryX, screenHeight, RED);
+        DrawLine(0, menuBoundaryY, screenWidth, menuBoundaryY, RED);
         t.Draw();
 
         for (Projectile* p : projectiles)
@@ -60,6 +61,7 @@ int main(void)
     return 0;
 }
 
+//bg image
 //game class
 //create enemy
 //different projectiles

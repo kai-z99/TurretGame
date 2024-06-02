@@ -1,7 +1,7 @@
 #include "Turret.h"
 #include "raymath.h"
 #include "helpers.h"
-#include "Projectile.h"
+#include "TurretBullet.h"
 
 Turret::Turret()
 {
@@ -21,7 +21,6 @@ Turret::Turret()
     this->shotThisFrame = false;
 
     //gun settings
-    this->baseBulletSpeed = 20.0f;
     this->bulletSpeedMultiplier = 1.0f;
     this->firerate = 1.5f; // in shots per second
 
@@ -58,9 +57,9 @@ void Turret::UpdateAngle(int mouseX, int mouseY)
 
 void Turret::ShootProjectile(std::vector<Projectile*>& projectiles)
 {
-    Projectile* p = new Projectile();
+    TurretBullet* p = new TurretBullet();
     p->SetPosition(this->position.x, this->position.y);
-    p->SetVelocity(this->baseBulletSpeed * this->bulletSpeedMultiplier * cosf(this->angle), this->baseBulletSpeed * this->bulletSpeedMultiplier * sinf(this->angle));
+    p->SetVelocity(p->GetBaseSpeed() * this->bulletSpeedMultiplier * cosf(this->angle), p->GetBaseSpeed() * this->bulletSpeedMultiplier * sinf(this->angle));
 
     projectiles.push_back(p);
 

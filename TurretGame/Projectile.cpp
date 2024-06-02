@@ -1,6 +1,6 @@
 #include "Projectile.h"
 
-void Projectile::Draw()
+void Projectile::Draw() // default draw is a circle. ONLY FOR DEBUG
 {
 	DrawCircle(this->position.x, this->position.y, 10, BLACK); //temp
 }
