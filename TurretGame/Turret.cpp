@@ -47,7 +47,9 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
     // base case: 1 firerate is 1 shot every second
 
     //       v time from last shot
-    if (frame - this->lastShotFrame > 60 / this->firerate) canShoot = true;
+    if (frame - this->lastShotFrame > 60 / this->firerate) canShoot = true; //old
+
+    //NEW map is id : BulletCooldownInfo struct, go thorugh each and set the canShoots for each based on lastShot frame and firerate.
 
 }
 
@@ -65,8 +67,8 @@ void Turret::ShootProjectile(std::vector<Bullet*>& projectiles)
 
     projectiles.push_back(p);
 
-    this->shotThisFrame = true; // required to update last shot frame
-    this->canShoot = false; // put the turret on cooldown
+    this->shotThisFrame = true; // required to update last shot frame :::: update the corresponding id in the map
+    this->canShoot = false; // put the turret on cooldown   :::::::::: same here
 }
 
 void Turret::SetBulletSpeedMultiplier(float multiplier)

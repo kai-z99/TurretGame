@@ -30,7 +30,7 @@ private:
 
 	Turret* turret;
 
-	const int bulletLimit = 300;
+	const int bulletLimit = 200; //how many bullets can be on the screen
 	std::vector<Bullet*> bullets;
 	std::vector<Enemy*> enemies;
 

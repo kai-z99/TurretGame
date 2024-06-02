@@ -50,7 +50,6 @@ void Game::Initialize()
     SetTargetFPS(60);
     //ToggleFullscreen();
     HideCursor();
-
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
 
     this->playerHealth = 100;
@@ -68,12 +67,12 @@ void Game::Draw()
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
+    //draw bg
+    DrawTexture(galaxyBGTexture, 0,0,WHITE);
+
     //draw boundaries
     DrawLine(deathBoundaryX, 0, deathBoundaryX, screenHeight, RED);
     DrawLine(0, menuBoundaryY, screenWidth, menuBoundaryY, RED);
-
-    //draw mouse temp
-    DrawCircle(this->mousePos.x, this->mousePos.y, 5, BLUE);
 
     //draw health
     DrawText(std::to_string(this->playerHealth).c_str(), 30, 30, 40, RED);
@@ -84,21 +83,7 @@ void Game::Draw()
     //draw enemies based on type. elsewise default enemy drawing behavoir.
     for (Enemy* e : enemies)
     {
-        if (e->isActive)
-        {
-            switch (e->GetID())
-            {
-            case 1:
-                dynamic_cast<SoldierEnemy*>(e)->Draw();
-                break;
-
-            default:
-                std::cout << "Unkown enemy type: using default draw.\n";
-                e->Draw();
-                break;
-            }
-        }
-            
+        if (e->isActive) e->Draw();      
     }
 
     //draw bullets based on type. elsewise default enemy drawing behavoir.
@@ -106,20 +91,13 @@ void Game::Draw()
     {
         if (b->isActive)
         {
-            switch (b->GetID())
-            {
-            case 1:
-                dynamic_cast<TurretBullet*>(b)->Draw();
-                break;
-
-            default:
-                std::cout << "Unkown bullet type: using default draw.\n";
-                b->Draw();
-                break;
-            }
+            b->Draw();
         }
 
     }
+
+    //draw mouse temp
+    DrawCircle(this->mousePos.x, this->mousePos.y, 5, BLUE);
 
     EndDrawing();
 }
@@ -139,21 +117,7 @@ void Game::Update()
     //handle bullets
 	for (Bullet* b : bullets)
 	{
-        if (b->isActive)
-        {
-            switch (b->GetID())
-            {
-            case 1:
-                dynamic_cast<TurretBullet*>(b)->Update();
-                break;
-
-            default:
-                std::cout << "Unkown bullet type: using default update.\n";
-                b->Update();
-                break;
-            }
-        }
-		
+        if (b->isActive) b->Update();
 	}
 
     //handle enemies
@@ -161,18 +125,9 @@ void Game::Update()
 	{
         if (e->isActive)
         {
-            switch (e->GetID())
-            {
-            case 1:
-                dynamic_cast<SoldierEnemy*>(e)->Update(this->frameCount);
-                break;
+            e->Update(this->frameCount);
 
-            default:
-                std::cout << "Unkown enemy type: using default update.\n";
-                e->Update(this->frameCount);
-                break;
-            }
-
+            //check if enemy has infiltrated the base
             if (e->GetPosition().x <= deathBoundaryX)
             {
                 e->isActive = false;
@@ -194,7 +149,7 @@ void Game::HandleCollisions()
         {
             for (Enemy* e : enemies)
             {
-                if (e->isActive && b->EnemyCollided(e))
+                if (e->isActive && b->EnemyCollided(e)) //if collide, remove buullet and deal damage
                 {
                     b->isActive = false;
                     e->SetHealth(e->GetHealth() - b->GetBaseDamage());
@@ -209,21 +164,21 @@ void Game::HandleCollisions()
 
 void Game::HandleInput()
 {
-    if (IsMouseButtonDown(0) && this->turret->GetCanShoot())
+    if (IsMouseButtonDown(0) && this->turret->GetCanShoot()) //check if turret shoot
     {
-        if (bullets.size() > this->bulletLimit) this->CleanBulletVector();
+        if (bullets.size() > this->bulletLimit) this->CleanBulletVector(); //if the bullet vector is too big, cleanup
 
-        this->turret->ShootProjectile(bullets);
+        this->turret->ShootProjectile(bullets); //go through the bullet cooldown mapm and shoot the availbles
         
     }
 }
 
-void Game::CleanBulletVector()
+void Game::CleanBulletVector() // keep all active bullet, delete rest from memory. Then clear bullet vector and add the remaing active ones to it.
 {
     //std::cout << "old vector size" << this->bullets.size() << std::endl;
     std::vector<Bullet*> temp;
 
-    for (Bullet* b : bullets)
+    for (Bullet* b : bullets) //keep active bullets, delete inative ones
     {
         if (b->isActive)
         {
@@ -233,23 +188,23 @@ void Game::CleanBulletVector()
         else delete b;
     }
 
-    this->bullets.clear();
+    this->bullets.clear(); // clear the bullet vec
 
-    this->bullets.insert(this->bullets.end(), temp.begin(), temp.end()); // copy bullets in temp to empty bullet vector
+    this->bullets.insert(this->bullets.end(), temp.begin(), temp.end()); // copy the active bullets in temp back to empty bullet vector
     //std::cout << "new vector size" << this->bullets.size() << std::endl;
 }
 
 
 void Game::HandleEnemySpawning()
 {
-    if (this->frameCount % 60 == 0)
+    if (this->frameCount % 300 == 0)
     {
         SoldierEnemy* s = new SoldierEnemy();
         s->SetPosition(screenWidth, GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
         this->enemies.push_back(s);
     }
 
-    if (this->frameCount % 77 == 0)
+    if (this->frameCount % 500 == 0)
     {
         KoopaEnemy* k = new KoopaEnemy();
         k->SetPosition(screenWidth, GetRandomValue(menuBoundaryY + 50, screenHeight - 50));

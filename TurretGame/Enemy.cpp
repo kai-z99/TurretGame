@@ -8,9 +8,11 @@ void Enemy::Draw() //draws hitbox
 
 void Enemy::Update(unsigned int frame)
 {
-	this->position.x += this->velocity.x;
+	// if inKB is false:
+	this->position.x += this->velocity.x; 
 	this->position.y += this->velocity.y;
 
+	// else: this->position.x -= bulletKB * enemyKBAmount; inKB will last some variable amount of frames
 	if (this->health <= 0)
 	{
 		this->isActive = false;

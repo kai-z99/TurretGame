@@ -12,14 +12,14 @@ public:
 	void Draw();
 	void Update(unsigned int frame, int mouseX, int mouseY);
 
-	void ShootProjectile(std::vector<Bullet*>& projectiles);
+	void ShootProjectile(std::vector<Bullet*>& projectiles); //TAKE BULLET ID AS PARAM TO SHOOT TYPES
 
 	void SetBulletSpeedMultiplier(float multiplier);
 	void SetFirerate(float firerate);
 
 	float GetFirerate();
 	unsigned int GetLastShotFrame();
-	bool GetCanShoot();
+	bool GetCanShoot(); //REPLACE WITH COOLDOWN MAP
 
 private:
 	void UpdateAngle(int mouseX, int mouseY);

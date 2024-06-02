@@ -12,7 +12,9 @@ int main(void)
 }
 
 //make it so theres maxHealth and currenthealth where curetnhealth sytarts as max health
+// //add a kb effect (different bullets have differnt kbs) differnte eminimes have difrfernt kb multipliers
 //bg image
 //game class
 //create enemy
 //different projectiles
+// void ShootProjectile(std::vector<Bullet*>& projectiles); //TAKE BULLET ID AS PARAM TO SHOOT TYPES

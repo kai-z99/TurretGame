@@ -50,5 +50,5 @@ void KoopaEnemy::Draw()
 {
 	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
 
-	Enemy::Draw(); // draw hitbox
+	//Enemy::Draw(); // draw hitbox
 }
