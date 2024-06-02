@@ -11,17 +11,20 @@ public:
 	void SetVelocity(float x, float y);
 	void SetHealth(float health);
 
+	int GetID() const;
 	Rectangle GetHitbox() const;
+	Vector2 GetPosition() const;
 	float GetHealth();
-	bool IsActive();
+	int GetDamage() const;
+	bool isActive = true;
 	
 protected:
-	Vector2 position;
+	Vector2 position = {-300, -300};
 	Vector2 velocity;
 	Rectangle hitbox;
 
 	//TEXTURE PROPERTIES---------------
-	Texture2D texture;
+	Texture2D* texture;
 	int textureWidth;
 	int textureHeight;
 	Rectangle textureSourceRec;
@@ -29,7 +32,7 @@ protected:
 	Vector2 textureOriginPoint;
 	//---------------------------------
 
-	bool isActive = true;
+	int id;
 	int damage;
 	float health;
 

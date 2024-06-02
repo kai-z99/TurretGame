@@ -1,16 +1,18 @@
 #include "SoldierEnemy.h"
+#include "textures.h"
+
 SoldierEnemy::SoldierEnemy()
 {
+	this->id = 1;
 	this->damage = 1;
 	this->health = 4;
 	this->velocity = { -4,0 };
-
-	this->hitbox = { this->position.x, this->position.y, 50, 100 };
+	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100};
 
 	//Texture init for animation state 1
-	this->texture = LoadTexture("Sprites/scarfy.png");
-	this->textureWidth = this->texture.width;
-	this->textureHeight = this->texture.height;
+	this->texture = &scarfyTexture;
+	this->textureWidth = this->texture->width;
+	this->textureHeight = this->texture->height;
 	this->textureSourceRec = { 0.0f, 0.0f, (float)this->textureWidth / 6.0f, (float)this->textureHeight }; //first sixth of scarfy.png is the first anim state
 	this->textureDestRec = { this->position.x, this->position.y, (float)this->textureWidth / 6, (float)this->textureHeight };
 	this->textureOriginPoint = { (this->textureWidth / 6.0f) / 2.0f, this->textureHeight / 2.0f};
@@ -30,7 +32,7 @@ void SoldierEnemy::Update(unsigned int frame)
 
 
 	//update hitbox position
-	this->hitbox = { this->position.x, this->position.y, 50, 100 };
+	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
 
 	//update part of scarfy we want to show based off anim state
 	this->textureSourceRec = { ((float)this->textureWidth / 6.0f) * (this->animationState - 1), //x0
@@ -49,7 +51,7 @@ void SoldierEnemy::Update(unsigned int frame)
 
 void SoldierEnemy::Draw()
 {
-	DrawTexturePro(this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
+	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
 
 	Enemy::Draw(); // draw hitbox
 }

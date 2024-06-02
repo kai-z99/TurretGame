@@ -2,15 +2,16 @@
 #include "raymath.h"
 #include "helpers.h"
 #include "TurretBullet.h"
+#include "textures.h" 
 
 Turret::Turret()
 {
     this->angle = 0;
 
     //Texture init
-    this->texture = LoadTexture("Sprites/turret.png");
-    this->textureWidth = this->texture.width;
-    this->textureHeight = this->texture.height;
+    this->texture = &turretTexture;
+    this->textureWidth = this->texture->width;
+    this->textureHeight = this->texture->height;
     this->textureSourceRec = { 0.0f, 0.0f, (float)this->textureWidth, (float)this->textureHeight };
     this->textureDestRec = { this->position.x, this->position.y, (float)this->textureWidth, (float)this->textureHeight };
     this->textureOriginPoint = { this->textureWidth / 2.0f, this->textureHeight / 2.0f + 10.0f };
@@ -28,7 +29,7 @@ Turret::Turret()
 
 void Turret::Draw()
 {
-    DrawTexturePro(this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, this->angle * RAD2DEG + 90.0f, WHITE);
+    DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, this->angle * RAD2DEG + 90.0f, WHITE);
 }
 
 void Turret::Update(unsigned int frame, int mouseX, int mouseY)
@@ -58,6 +59,7 @@ void Turret::UpdateAngle(int mouseX, int mouseY)
 void Turret::ShootProjectile(std::vector<Bullet*>& projectiles)
 {
     TurretBullet* p = new TurretBullet();
+
     p->SetPosition(this->position.x, this->position.y);
     p->SetVelocity(p->GetBaseSpeed() * this->bulletSpeedMultiplier * cosf(this->angle), p->GetBaseSpeed() * this->bulletSpeedMultiplier * sinf(this->angle));
 

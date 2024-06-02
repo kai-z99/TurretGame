@@ -28,7 +28,7 @@ private:
 	float angle;
 
 	//TEXTURE PROPERTIES---------------
-	Texture2D texture;
+	Texture2D* texture;
 	int textureWidth;
 	int textureHeight;
 	Rectangle textureSourceRec;
@@ -44,8 +44,4 @@ private:
 	float bulletSpeedMultiplier;
 
 	float firerate;
-
-
-	
-
 };

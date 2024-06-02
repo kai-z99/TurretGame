@@ -3,7 +3,7 @@
 
 void Enemy::Draw() //draws hitbox
 {
-	DrawRectangleLines(this->position.x - (this->hitbox.width / 2), this->position.y - (this->hitbox.height / 2), this->hitbox.width, this->hitbox.height, RED);
+	DrawRectangleLines(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
 }
 
 void Enemy::Update(unsigned int frame)
@@ -32,9 +32,19 @@ void Enemy::SetHealth(float health)
 	this->health = health;
 }
 
+int Enemy::GetID() const
+{
+	return this->id;
+}
+
 Rectangle Enemy::GetHitbox() const
 {
 	return this->hitbox;
+}
+
+Vector2 Enemy::GetPosition() const
+{
+	return this->position;
 }
 
 float Enemy::GetHealth()
@@ -42,7 +52,8 @@ float Enemy::GetHealth()
 	return this->health;
 }
 
-bool Enemy::IsActive()
+int Enemy::GetDamage() const
 {
-	return this->isActive;
+	return this->damage;
 }
+
