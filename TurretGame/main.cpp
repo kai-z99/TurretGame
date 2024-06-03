@@ -11,7 +11,7 @@ int main(void)
 
 }
 
-//make it so theres maxHealth and currenthealth where curetnhealth sytarts as max health
+// texureLooper class TextureLooper(Texture2D* texture, int segments, int animationState)
 // //add a kb effect (different bullets have differnt kbs) differnte eminimes have difrfernt kb multipliers
 //bg image
 //game class

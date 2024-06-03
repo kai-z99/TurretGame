@@ -136,6 +136,7 @@
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ShockwaveBullet.cpp" />
     <ClCompile Include="SoldierEnemy.cpp" />
+    <ClCompile Include="TextureLoop.cpp" />
     <ClCompile Include="textures.cpp" />
     <ClCompile Include="Turret.cpp" />
     <ClCompile Include="TurretBullet.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ShockwaveBullet.h" />
     <ClInclude Include="SoldierEnemy.h" />
+    <ClInclude Include="TextureLoop.h" />
     <ClInclude Include="textures.h" />
     <ClInclude Include="Turret.h" />
     <ClInclude Include="TurretBullet.h" />

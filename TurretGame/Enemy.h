@@ -2,6 +2,7 @@
 #include "raylib.h"
 
 class Bullet;
+class TextureLoop;
 
 class Enemy
 {
@@ -38,6 +39,8 @@ protected:
 	Rectangle textureDestRec;
 	Vector2 textureOriginPoint;
 	//---------------------------------
+	TextureLoop* textureLoop;
+
 
 	int id;
 	int damage;

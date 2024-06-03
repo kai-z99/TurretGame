@@ -1,5 +1,6 @@
 #include "SoldierEnemy.h"
 #include "textures.h"
+#include "TextureLoop.h"
 
 SoldierEnemy::SoldierEnemy()
 {
@@ -10,52 +11,37 @@ SoldierEnemy::SoldierEnemy()
 
 	this->knockbackMultiplier = 1.0f;
 	this->velocity = { -4,0 };
-	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100};
-
-	//Texture init for animation state 1
-	this->texture = &scarfyTexture;
-	this->textureWidth = this->texture->width;
-	this->textureHeight = this->texture->height;
-	this->textureSourceRec = { 0.0f, 0.0f, (float)this->textureWidth / 6.0f, (float)this->textureHeight }; //first sixth of scarfy.png is the first anim state
-	this->textureDestRec = { this->position.x, this->position.y, (float)this->textureWidth / 6, (float)this->textureHeight };
-	this->textureOriginPoint = { (this->textureWidth / 6.0f) / 2.0f, this->textureHeight / 2.0f};
-
-	this->animationState = 1;
+	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100}; //50 and100 are the hitbox dimensions... minus half for centering purpose
+	this->textureLoop = new TextureLoop(&scarfyTexture, 6, 1.0f, this->position);
+	this->textureLoop->ToggleMirrorImage();
 }
 
 void SoldierEnemy::Update(unsigned int frame)
 {
-	Enemy::Update(frame); // update position and velocity and check if death
+	// update position and velocity and check if death
+	Enemy::Update(frame);
 
-	if (frame % 6 == 0) //update the animation state
-	{
-		if (this->animationState == 6) this->animationState = 1;
-		else this->animationState++;
-	}
+	//update position of texture
+	this->textureLoop->SetPosition(this->position.x, this->position.y);
 
+	//update the animation state
+	if (frame % 6 == 0) this->textureLoop->NextFrame();
 
 	//update hitbox position
-	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
+	//this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
+	this->hitbox.x = this->position.x - (50 / 2);
+	this->hitbox.y = this->position.y - (100 / 2);
 
-	//update part of scarfy we want to show based off anim state
-	this->textureSourceRec = { ((float)this->textureWidth / 6.0f) * (this->animationState - 1), //x0
-								0.0f,															//y0
-								((float)this->textureWidth / 6.0f),								//x1
-								(float)this->textureHeight };									//y1
-
-	//mirror scarfy's image to run left instead of right
-	this->textureSourceRec.width = -this->textureSourceRec.width;
-
-	//update the destination rectangle
-	this->textureDestRec = { this->position.x, this->position.y,
-						 (float)this->textureWidth / 6.0f,
-						 (float)this->textureHeight };
+	//update texture proteries based on new position
+	this->textureLoop->Update();
+	
 }
 
 void SoldierEnemy::Draw()
 {
-	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
+	//DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
+	this->textureLoop->Draw();
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
 
-	//Enemy::Draw(); // draw hitbox
+	Enemy::Draw(); // draw hitbox
 }

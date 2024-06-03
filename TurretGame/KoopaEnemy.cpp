@@ -1,5 +1,6 @@
 #include "KoopaEnemy.h"
 #include "textures.h"
+#include "TextureLoop.h"
 
 KoopaEnemy::KoopaEnemy()
 {
@@ -9,50 +10,39 @@ KoopaEnemy::KoopaEnemy()
 	this->health = this->maxHealth;
 	this->knockbackMultiplier = 0.5f;
 	this->velocity = { -1.5,0 };
-	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
-
-	//Texture init for animation state 1
-	this->texture = &koopaTexture;
-	this->textureWidth = this->texture->width;
-	this->textureHeight = this->texture->height;
-	this->textureSourceRec = { 0.0f, 0.0f, ((float)this->textureWidth / 2.0f), (float)this->textureHeight }; //first half of koopa.png is the first anim state
-	this->textureDestRec = { this->position.x, this->position.y, ((float)this->textureWidth / 2.0f) * 4.0f, (float)this->textureHeight * 4.0f};
-	this->textureOriginPoint = { (this->textureWidth / 2.0f) * 4.0f / 2.0f, this->textureHeight * 4.0f / 2.0f };
-
-	this->animationState = 1;
+	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 }; //50 and 100 are the hitbox dimensions... minus half for centering purpose
+	this->textureLoop = new TextureLoop(&koopaTexture, 2, 4.0f, this->position);
 }
 
 void KoopaEnemy::Update(unsigned int frame)
 {
-	Enemy::Update(frame); // update position and velocity and check if death
+	// update position and velocity and check if death
+	Enemy::Update(frame); 
 
-	if (frame % 20 == 0) //update the animation state
-	{
-		if (this->animationState == 2) this->animationState = 1;
-		else this->animationState++;
-	}
+	//update postion of texture
+	this->textureLoop->SetPosition(this->position.x, this->position.y);
 
+	//update the animation state
+	if (frame % 20 == 0) this->textureLoop->NextFrame(); 
 
 	//update hitbox position
-	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
+	//this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
+	this->hitbox.x = this->position.x - (50 / 2);
+	this->hitbox.y = this->position.y - (100 / 2);
 
-	//update part of koopa we want to show based off anim state
-	this->textureSourceRec = { ((float)this->textureWidth / 2.0f) * (this->animationState - 1), //x0
-								0.0f,															//y0
-								((float)this->textureWidth / 2.0f),								//x1
-								(float)this->textureHeight };									//y1
+	
 
-	//update the destination rectangle
-	this->textureDestRec = { this->position.x, this->position.y,
-						 ((float)this->textureWidth / 2.0f) * 4.0f,
-						 (float)this->textureHeight * 4.0f };
+	//update texture proteries based on new position
+	this->textureLoop->Update();
+	
 }
 
 void KoopaEnemy::Draw()
 {
-	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
+	this->textureLoop->Draw();
+	//DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
 	
 
-	//Enemy::Draw(); // draw hitbox
+	Enemy::Draw(); // draw hitbox
 }
