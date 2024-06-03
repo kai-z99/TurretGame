@@ -18,3 +18,4 @@ int main(void)
 //create enemy
 //different projectiles
 // void ShootProjectile(std::vector<Bullet*>& projectiles); //TAKE BULLET ID AS PARAM TO SHOOT TYPES
+//explosion texture when hit

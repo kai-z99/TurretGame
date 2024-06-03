@@ -3,19 +3,20 @@
 #include "Enemy.h"
 #include "constants.h"
 
-void Bullet::Draw() //default draw is a red circle; debug only
+void Bullet::Draw() //default draw is a red circle hitbox; debug only
 {
-    DrawCircle(this->position.x, this->position.y, 10, RED); //temp
+    DrawCircleLines(this->position.x, this->position.y, this->hitBoxRadius, RED); //temp
 }
 
 void Bullet::Update()
 {
     Projectile::Update();
 
-    if (this->position.x > screenWidth + 200 || this->position.x < -200 || this->position.y > screenHeight + 200 || this->position.y < -200)
+    //check if its off the screen
+    if (this->position.x > screenWidth + 200 || this->position.x < -200 || this->position.y > screenHeight + 200 || this->position.y < menuBoundaryY - 200)
     {
         this->isActive = false;
-    }
+    } 
 }
 
 bool Bullet::EnemyCollided(Enemy* e)
@@ -31,6 +32,11 @@ float Bullet::GetBaseSpeed() const
 float Bullet::GetBaseDamage() const
 {
     return this->baseDamage;
+}
+
+int Bullet::GetBaseKnockbackDuration() const
+{
+    return this->baseKnockbackDuration;
 }
 
 int Bullet::GetID() const

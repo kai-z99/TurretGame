@@ -1,6 +1,8 @@
 #pragma once
 #include "raylib.h"
 
+class Bullet;
+
 class Enemy
 {
 public:
@@ -10,6 +12,7 @@ public:
 	void SetPosition(float x, float y);
 	void SetVelocity(float x, float y);
 	void SetHealth(float health);
+	void ApplyKnockback(Bullet* b);
 
 	int GetID() const;
 	Rectangle GetHitbox() const;
@@ -35,6 +38,8 @@ protected:
 	int id;
 	int damage;
 	float health;
+	float knockbackMultiplier;
+	int knockbackFrames = 0;
 
 	int animationState;
 };

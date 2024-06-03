@@ -1,9 +1,11 @@
 #pragma once
 #include <vector>
+#include <unordered_map>
 #include "raylib.h"
 #include "constants.h"
 
 class Bullet;
+struct BulletCooldownInfo;
 
 class Turret
 {
@@ -12,14 +14,13 @@ public:
 	void Draw();
 	void Update(unsigned int frame, int mouseX, int mouseY);
 
-	void ShootProjectile(std::vector<Bullet*>& projectiles); //TAKE BULLET ID AS PARAM TO SHOOT TYPES
+	void ShootBullet(std::vector<Bullet*>& bullets, int id); //TAKE BULLET ID AS PARAM TO SHOOT TYPES
 
 	void SetBulletSpeedMultiplier(float multiplier);
 	void SetFirerate(float firerate);
 
 	float GetFirerate();
-	unsigned int GetLastShotFrame();
-	bool GetCanShoot(); //REPLACE WITH COOLDOWN MAP
+	const std::unordered_map<int, BulletCooldownInfo*>& GetBulletCooldownMap();
 
 private:
 	void UpdateAngle(int mouseX, int mouseY);
@@ -37,10 +38,7 @@ private:
 	//---------------------------------
 
 	//GAME PROPERTIES------------------
-	bool canShoot;
-	bool shotThisFrame;
-	int lastShotFrame;
-
+	std::unordered_map<int, BulletCooldownInfo*> bulletCooldownMap; // bullet id : info
 	float bulletSpeedMultiplier;
 
 	float firerate;

@@ -8,6 +8,7 @@
 #include "Bullet.h"
 #include "TurretBullet.h"
 #include "textures.h"
+#include "helpers.h"
 
 
 Game::Game()
@@ -97,7 +98,7 @@ void Game::Draw()
     }
 
     //draw mouse temp
-    DrawCircle(this->mousePos.x, this->mousePos.y, 5, BLUE);
+    DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5, BLUE);
 
     EndDrawing();
 }
@@ -112,7 +113,7 @@ void Game::Update()
 
 
     //update turret
-    this->turret->Update(frameCount, mousePos.x, mousePos.y);
+    this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);
 
     //handle bullets
 	for (Bullet* b : bullets)
@@ -151,8 +152,9 @@ void Game::HandleCollisions()
             {
                 if (e->isActive && b->EnemyCollided(e)) //if collide, remove buullet and deal damage
                 {
-                    b->isActive = false;
+                    e->ApplyKnockback(b);
                     e->SetHealth(e->GetHealth() - b->GetBaseDamage());
+                    b->isActive = false;
                 }
                 
             }
@@ -164,12 +166,21 @@ void Game::HandleCollisions()
 
 void Game::HandleInput()
 {
-    if (IsMouseButtonDown(0) && this->turret->GetCanShoot()) //check if turret shoot
+    if (IsMouseButtonDown(0)) //check if turret shoot
     {
-        if (bullets.size() > this->bulletLimit) this->CleanBulletVector(); //if the bullet vector is too big, cleanup
+        //go through each bullet type
+        for (const auto& cooldown : this->turret->GetBulletCooldownMap()) // bulletid : cooldownInfo
+        {
+            //if that type isnt on cooldown
+            if (cooldown.second->canShoot)
+            {
+                //shoot that bullet type once.
+                this->turret->ShootBullet(this->bullets, cooldown.first);
+            }
+        }
 
-        this->turret->ShootProjectile(bullets); //go through the bullet cooldown mapm and shoot the availbles
-        
+        if (bullets.size() > this->bulletLimit) this->CleanBulletVector(); //if the bullet vector is too big, cleanup
+    
     }
 }
 
@@ -200,14 +211,14 @@ void Game::HandleEnemySpawning()
     if (this->frameCount % 300 == 0)
     {
         SoldierEnemy* s = new SoldierEnemy();
-        s->SetPosition(screenWidth, GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+        s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
         this->enemies.push_back(s);
     }
 
     if (this->frameCount % 500 == 0)
     {
         KoopaEnemy* k = new KoopaEnemy();
-        k->SetPosition(screenWidth, GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+        k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
         this->enemies.push_back(k);
     }
 }

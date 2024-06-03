@@ -6,6 +6,7 @@ SoldierEnemy::SoldierEnemy()
 	this->id = 1;
 	this->damage = 1;
 	this->health = 4;
+	this->knockbackMultiplier = 1.0f;
 	this->velocity = { -4,0 };
 	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100};
 

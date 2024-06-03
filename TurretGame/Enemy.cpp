@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "Bullet.h"
 #include <iostream>
 
 void Enemy::Draw() //draws hitbox
@@ -8,15 +9,27 @@ void Enemy::Draw() //draws hitbox
 
 void Enemy::Update(unsigned int frame)
 {
-	// if inKB is false:
-	this->position.x += this->velocity.x; 
-	this->position.y += this->velocity.y;
+	if (this->knockbackFrames <= 0)
+	{
+		this->position.x += this->velocity.x;
+		this->position.y += this->velocity.y;
+	}
 
-	// else: this->position.x -= bulletKB * enemyKBAmount; inKB will last some variable amount of frames
+	else
+	{
+		this->position.x += 5 * this->knockbackMultiplier;
+		this->knockbackFrames -= 1;
+	}
+	
 	if (this->health <= 0)
 	{
 		this->isActive = false;
 	}
+}
+
+void Enemy::ApplyKnockback(Bullet* b)
+{
+	this->knockbackFrames += b->GetBaseKnockbackDuration();
 }
 
 void Enemy::SetPosition(float x, float y)
@@ -33,6 +46,7 @@ void Enemy::SetHealth(float health)
 {
 	this->health = health;
 }
+
 
 int Enemy::GetID() const
 {
@@ -58,4 +72,5 @@ int Enemy::GetDamage() const
 {
 	return this->damage;
 }
+
 

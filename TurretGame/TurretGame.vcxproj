@@ -134,6 +134,7 @@
     <ClCompile Include="KoopaEnemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="ShockwaveBullet.cpp" />
     <ClCompile Include="SoldierEnemy.cpp" />
     <ClCompile Include="textures.cpp" />
     <ClCompile Include="Turret.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="helpers.h" />
     <ClInclude Include="KoopaEnemy.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="ShockwaveBullet.h" />
     <ClInclude Include="SoldierEnemy.h" />
     <ClInclude Include="textures.h" />
     <ClInclude Include="Turret.h" />

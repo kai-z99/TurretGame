@@ -1,10 +1,12 @@
 #include "TurretBullet.h"
 #include "textures.h"
+#include "helpers.h"
 TurretBullet::TurretBullet()
 {
 	this->id = 1;
 	this->baseSpeed = 30.0f;
 	this->baseDamage = 1.0f;
+	this->baseKnockbackDuration = 5;
 	this->hitBoxRadius = 10.0f;
 
 	//Texture init
@@ -21,6 +23,7 @@ void TurretBullet::Draw() // sould draw sprite
 {
 	//DrawCircle(this->position.x, this->position.y, this->hitBoxRadius, GRAY);
 	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0.0f, WHITE);
+	Bullet::Draw(); // hitbopxc for debug
 }
 
 void TurretBullet::Update()

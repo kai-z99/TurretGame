@@ -12,6 +12,7 @@ public:
 
 	float GetBaseSpeed() const;
 	float GetBaseDamage() const;
+	int GetBaseKnockbackDuration() const;
 	int GetID() const;
 
 	bool isActive = true;
@@ -31,6 +32,7 @@ protected:
 
 	float baseDamage;
 	float baseSpeed;
+	int baseKnockbackDuration;
 	float hitBoxRadius;
 	int id; // 1: turret 2: 
 

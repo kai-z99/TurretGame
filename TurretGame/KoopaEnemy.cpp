@@ -6,6 +6,7 @@ KoopaEnemy::KoopaEnemy()
 	this->id = 2;
 	this->damage = 3;
 	this->health = 10;
+	this->knockbackMultiplier = 0.5f;
 	this->velocity = { -1.5,0 };
 	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
 
