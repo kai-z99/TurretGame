@@ -19,3 +19,5 @@ int main(void)
 //different projectiles
 // void ShootProjectile(std::vector<Bullet*>& projectiles); //TAKE BULLET ID AS PARAM TO SHOOT TYPES
 //explosion texture when hit
+//make it so updateing dest recs modifies the positon only instead of creating a new one
+//make helath bars and damage spalsh

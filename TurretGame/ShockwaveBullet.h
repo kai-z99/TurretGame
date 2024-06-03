@@ -8,5 +8,5 @@ class ShockwaveBullet : public Bullet
 public:
 	ShockwaveBullet();
 	virtual void Draw() override;
-	virtual void Update() override;
+	virtual void Update(unsigned int frame) override;
 };

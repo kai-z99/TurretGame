@@ -6,7 +6,7 @@ TurretBullet::TurretBullet()
 	this->id = 1;
 	this->baseSpeed = 30.0f;
 	this->baseDamage = 1.0f;
-	this->baseKnockbackDuration = 5;
+	this->baseKnockbackDuration = 4;
 	this->hitBoxRadius = 10.0f;
 
 	//Texture init
@@ -22,13 +22,13 @@ TurretBullet::TurretBullet()
 void TurretBullet::Draw() // sould draw sprite
 {
 	//DrawCircle(this->position.x, this->position.y, this->hitBoxRadius, GRAY);
-	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0.0f, WHITE);
-	Bullet::Draw(); // hitbopxc for debug
+	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, this->angle * RAD2DEG, WHITE);
+	//Bullet::Draw(); // hitbopxc for debug
 }
 
-void TurretBullet::Update()
+void TurretBullet::Update(unsigned int frame)
 {
-	Bullet::Update();
+	Bullet::Update(frame);
 
 	//update the destination rectangle
 	this->textureDestRec = { this->position.x, this->position.y,

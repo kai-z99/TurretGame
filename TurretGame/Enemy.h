@@ -18,13 +18,17 @@ public:
 	Rectangle GetHitbox() const;
 	Vector2 GetPosition() const;
 	float GetHealth();
+	float GetMaxHealth();
 	int GetDamage() const;
 	bool isActive = true;
 	
 protected:
+	void DrawHealthbar(int yOffset, float barSize); //yOffset: how many px up from middle of image
+
 	Vector2 position = {-300, -300};
 	Vector2 velocity;
 	Rectangle hitbox;
+
 
 	//TEXTURE PROPERTIES---------------
 	Texture2D* texture;
@@ -38,6 +42,7 @@ protected:
 	int id;
 	int damage;
 	float health;
+	float maxHealth;
 	float knockbackMultiplier;
 	int knockbackFrames = 0;
 

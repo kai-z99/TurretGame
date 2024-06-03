@@ -14,3 +14,13 @@ float CalculateAngle(int x0, int y0, int x1, int y1)
     if (dx < 0.0f) return angle + PI;
     return angle;
 }
+
+float CalculateAngle(int x, int y)
+{
+    if (y == 0) return 0; // handle zero division
+
+    float angle = atanf((float)y / (float)x);
+
+    if (x < 0.0f) return angle + PI;
+    return angle;
+}

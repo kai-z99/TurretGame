@@ -5,6 +5,7 @@ extern Texture2D scarfyTexture;
 extern Texture2D koopaTexture;
 extern Texture2D turretTexture;
 extern Texture2D turretBulletTexture;
+extern Texture2D shockwaveBulletTexture;
 
 extern Texture2D galaxyBGTexture;
 

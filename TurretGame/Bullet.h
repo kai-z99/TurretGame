@@ -7,7 +7,7 @@ class Bullet : public Projectile
 {
 public:
 	virtual void Draw() override; //default draw is a red circle; debug only
-	virtual void Update() override; // default is pos and velocty update (same as projectile)
+	virtual void Update(unsigned int frame) override; // default is pos and velocty update (same as projectile)
 	bool EnemyCollided(Enemy* e);
 
 	float GetBaseSpeed() const;
@@ -16,7 +16,6 @@ public:
 	int GetID() const;
 
 	bool isActive = true;
-	//bool IsActive();
 	
 
 protected:
@@ -34,7 +33,9 @@ protected:
 	float baseSpeed;
 	int baseKnockbackDuration;
 	float hitBoxRadius;
-	int id; // 1: turret 2: 
+	float angle;
+
+	int id; // 1: turret 2: shockwave
 
 
 };

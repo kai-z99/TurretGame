@@ -5,6 +5,7 @@
 void Enemy::Draw() //draws hitbox
 {
 	DrawRectangleLines(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
+
 }
 
 void Enemy::Update(unsigned int frame)
@@ -25,6 +26,15 @@ void Enemy::Update(unsigned int frame)
 	{
 		this->isActive = false;
 	}
+}
+
+void Enemy::DrawHealthbar(int yOffset, float barSize)
+{
+	int barWidth = 30 * barSize;
+	int barHeight = 3 * barSize;
+
+	DrawRectangle(this->position.x - (barWidth / 2), this->position.y - yOffset, barWidth, barHeight, RED);
+	DrawRectangle(this->position.x - (barWidth / 2), this->position.y - yOffset, barWidth * (this->health / this->maxHealth), barHeight, GREEN);
 }
 
 void Enemy::ApplyKnockback(Bullet* b)
@@ -66,6 +76,11 @@ Vector2 Enemy::GetPosition() const
 float Enemy::GetHealth()
 {
 	return this->health;
+}
+
+float Enemy::GetMaxHealth()
+{
+	return this->maxHealth;
 }
 
 int Enemy::GetDamage() const

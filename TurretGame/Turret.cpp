@@ -65,9 +65,9 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
             if (frame - pair.second->lastShotFrame > 60 / this->firerate) pair.second->canShoot = true;
         }
 
-        else if (pair.first == 2)
+        else if (pair.first == 2) //not affected by firerate rn, figure a cool implelention maybe
         {
-            if (frame - pair.second->lastShotFrame > 150 / this->firerate) pair.second->canShoot = true;
+            if (frame - pair.second->lastShotFrame > 150 /* /  this->firerate */) pair.second->canShoot = true;
         }
         
     }

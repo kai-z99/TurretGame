@@ -118,7 +118,7 @@ void Game::Update()
     //handle bullets
 	for (Bullet* b : bullets)
 	{
-        if (b->isActive) b->Update();
+        if (b->isActive) b->Update(this->frameCount);
 	}
 
     //handle enemies
@@ -138,7 +138,6 @@ void Game::Update()
 		
 	}
 
-    //enemy spawning
 }
 
 //check if bullets hits enemys

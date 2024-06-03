@@ -5,7 +5,8 @@ KoopaEnemy::KoopaEnemy()
 {
 	this->id = 2;
 	this->damage = 3;
-	this->health = 10;
+	this->maxHealth = 10;
+	this->health = this->maxHealth;
 	this->knockbackMultiplier = 0.5f;
 	this->velocity = { -1.5,0 };
 	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
@@ -50,6 +51,8 @@ void KoopaEnemy::Update(unsigned int frame)
 void KoopaEnemy::Draw()
 {
 	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
+	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
+	
 
 	//Enemy::Draw(); // draw hitbox
 }
