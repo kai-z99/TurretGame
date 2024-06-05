@@ -11,6 +11,11 @@ void Projectile::Update(unsigned int frame) // default is pos and velocty update
 	this->position.y += this->velocity.y;
 }
 
+Vector2 Projectile::GetPosition() const
+{
+	return this->position;
+}
+
 void Projectile::SetPosition(float x, float y)
 {
 	this->position = { x , y };

@@ -8,6 +8,7 @@ Texture2D turretTexture;
 Texture2D turretBulletTexture;
 Texture2D shockwaveBulletTexture;
 
+Texture2D explosionTexture;
 
 Texture2D galaxyBGTexture;
 
@@ -20,6 +21,7 @@ void LoadAllTextures()
     galaxyBGTexture = LoadTexture("Sprites/galaxy.png");
     shockwaveBulletTexture = LoadTexture("Sprites/ShockwaveBullet.png");
     batTexture = LoadTexture("Sprites/bat.png");
+    explosionTexture = LoadTexture("Sprites/explosion.png");
 
 }
 
@@ -31,4 +33,5 @@ void UnloadAllTextures()
     UnloadTexture(galaxyBGTexture);
     UnloadTexture(shockwaveBulletTexture);
     UnloadTexture(batTexture);
+    UnloadTexture(explosionTexture);
 }

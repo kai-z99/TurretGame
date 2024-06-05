@@ -8,6 +8,7 @@ SoldierEnemy::SoldierEnemy()
 	this->damage = 1;
 	this->maxHealth = 4;
 	this->health = this->maxHealth;
+	this->coinDropAmount = 10;
 
 	this->knockbackMultiplier = 1.0f;
 	this->velocity = { -4,0 };
@@ -43,5 +44,5 @@ void SoldierEnemy::Draw()
 	this->textureLoop->Draw();
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
 
-	Enemy::Draw(); // draw hitbox
+	//Enemy::Draw(); // draw hitbox
 }

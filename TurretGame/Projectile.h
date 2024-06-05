@@ -8,6 +8,8 @@ public:
 	virtual void Draw(); // default draw is a circle. ONLY FOR DEBUG
 	virtual void Update(unsigned int frame); // default is pos and velocty update
 
+	Vector2 GetPosition() const;
+
 	void SetPosition(float x, float y);
 	void SetVelocity(float x, float y);
 

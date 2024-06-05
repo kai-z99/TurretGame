@@ -8,6 +8,8 @@ KoopaEnemy::KoopaEnemy()
 	this->damage = 3;
 	this->maxHealth = 10;
 	this->health = this->maxHealth;
+	this->coinDropAmount = 15;
+
 	this->knockbackMultiplier = 0.5f;
 	this->velocity = { -1.5,0 };
 	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 }; //50 and 100 are the hitbox dimensions... minus half for centering purpose
@@ -44,5 +46,5 @@ void KoopaEnemy::Draw()
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
 	
 
-	Enemy::Draw(); // draw hitbox
+	//Enemy::Draw(); // draw hitbox
 }

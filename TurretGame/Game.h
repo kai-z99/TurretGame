@@ -6,6 +6,7 @@ class Turret;
 class Bullet;
 class Enemy;
 class Hotbar;
+class VisualEffectsManager;
 
 struct GameStats;
 
@@ -31,6 +32,7 @@ private:
 	Turret* turret;
 	Hotbar* hotbar;
 	GameStats* gameStats;
+	VisualEffectsManager* effectManager;
 
 	const int bulletLimit = 200; //how many bullets can be on the screen
 	std::vector<Bullet*> bullets;

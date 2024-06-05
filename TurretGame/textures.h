@@ -8,6 +8,8 @@ extern Texture2D turretTexture;
 extern Texture2D turretBulletTexture;
 extern Texture2D shockwaveBulletTexture;
 
+extern Texture2D explosionTexture;
+
 extern Texture2D galaxyBGTexture;
 
 void LoadAllTextures();

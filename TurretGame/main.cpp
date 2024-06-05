@@ -16,3 +16,4 @@ int main(void)
 //explosion texture when hit
 //make damage spalsh
 //coin splash
+//make text const vars in class

@@ -25,6 +25,7 @@ void Enemy::Update(unsigned int frame)
 	if (this->health <= 0)
 	{
 		this->isActive = false;
+		delete this->textureLoop;
 	}
 }
 
@@ -86,6 +87,11 @@ float Enemy::GetMaxHealth()
 int Enemy::GetDamage() const
 {
 	return this->damage;
+}
+
+int Enemy::GetCoinDropAmount() const
+{
+	return this->coinDropAmount;
 }
 
 

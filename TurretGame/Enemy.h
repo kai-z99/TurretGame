@@ -8,6 +8,7 @@ class Enemy
 {
 public:
 	virtual void Draw(); // default just draws its hitbox.
+	void DrawCoinSplash();
 	virtual void Update(unsigned int frame); // defulat update is just pos and velocity
 
 	void SetPosition(float x, float y);
@@ -21,6 +22,7 @@ public:
 	float GetHealth();
 	float GetMaxHealth();
 	int GetDamage() const;
+	int GetCoinDropAmount() const;
 	bool isActive = true;
 	
 protected:
@@ -30,15 +32,6 @@ protected:
 	Vector2 velocity;
 	Rectangle hitbox;
 
-
-	//TEXTURE PROPERTIES---------------
-	Texture2D* texture;
-	int textureWidth;
-	int textureHeight;
-	Rectangle textureSourceRec;
-	Rectangle textureDestRec;
-	Vector2 textureOriginPoint;
-	//---------------------------------
 	TextureLoop* textureLoop;
 
 
@@ -48,6 +41,7 @@ protected:
 	float maxHealth;
 	float knockbackMultiplier;
 	int knockbackFrames = 0;
+	int coinDropAmount;
 
 	int animationState;
 };

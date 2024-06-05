@@ -10,7 +10,7 @@
 #include "Hotbar.h"
 #include "textures.h"
 #include "helpers.h"
-
+#include "VisualEffectsManager.h"
 
 Game::Game()
 {
@@ -28,6 +28,8 @@ Game::~Game()
 	{
 		delete e;
 	}
+
+    delete this->gameStats;
 }
 
 void Game::Run()
@@ -48,7 +50,7 @@ void Game::Initialize()
 {
     InitWindow(screenWidth, screenHeight, "TurretGame window");
     SetTargetFPS(60);
-    ToggleFullscreen();
+    //ToggleFullscreen();
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
 
@@ -57,6 +59,7 @@ void Game::Initialize()
     this->turret = new Turret();
     this->hotbar = new Hotbar();
     this->gameStats = new GameStats();
+    this->effectManager = new VisualEffectsManager();
     this->gameStats->health = 100;
     this->gameStats->coins = 0;
 }
@@ -92,6 +95,9 @@ void Game::Draw()
 
     }
 
+    //draw and update visual effects
+    this->effectManager->UpdateAndDraw();
+
     //draw hotbar
     this->hotbar->Draw(this->gameStats);
 
@@ -108,7 +114,6 @@ void Game::Update()
 
     //update mouse position
     mousePos = { GetMousePosition().x, GetMousePosition().y };
-
 
     //update turret
     this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);
@@ -149,8 +154,18 @@ void Game::HandleCollisions()
             {
                 if (e->isActive && b->EnemyCollided(e)) //if collide, remove buullet and deal damage
                 {
+                    //maybe make this a function?
+                    this->effectManager->DisplayExplosion(b->GetPosition());
                     e->ApplyKnockback(b);
                     e->SetHealth(e->GetHealth() - b->GetBaseDamage());
+
+                    // if enemy died, add coin amount. and display coin effect
+                    if (e->GetHealth() <= 0)
+                    {
+                        this->gameStats->coins += e->GetCoinDropAmount();
+                        this->effectManager->DisplayCoinSplash(e->GetPosition(), e->GetCoinDropAmount());
+                    }
+
                     b->isActive = false;
                 }
                 
