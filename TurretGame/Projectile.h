@@ -12,6 +12,6 @@ public:
 	void SetVelocity(float x, float y);
 
 protected:
-	Vector2 position;
+	Vector2 position = {-300, -300}; //default position is off site
 	Vector2 velocity;
 };

@@ -23,7 +23,7 @@ Turret::Turret()
     this->firerate = 1.5f; // in shots per second
     
     //initate bullet cooldown map
-    for (int i = 0; i <= 2; i++)
+    for (int i = 1; i <= 2; i++)
     {
         this->bulletCooldownMap[i] = new BulletCooldownInfo();
         this->bulletCooldownMap[i]->canShoot = true;

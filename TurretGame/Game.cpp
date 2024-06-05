@@ -7,14 +7,13 @@
 #include "KoopaEnemy.h"
 #include "Bullet.h"
 #include "TurretBullet.h"
+#include "Hotbar.h"
 #include "textures.h"
 #include "helpers.h"
 
 
 Game::Game()
 {
-    this->frameCount = 0;
-    this->mousePos = { 0,0 };
     this->Initialize();
 }
 
@@ -49,18 +48,17 @@ void Game::Initialize()
 {
     InitWindow(screenWidth, screenHeight, "TurretGame window");
     SetTargetFPS(60);
-    //ToggleFullscreen();
+    ToggleFullscreen();
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
 
-    this->playerHealth = 100;
+    this->frameCount = 0;
+    this->mousePos = { 0,0 };
     this->turret = new Turret();
-   // this->turret->SetFirerate(15.0f);
-    //temp
-    SoldierEnemy* s = new SoldierEnemy();
-    s->SetPosition(screenWidth, screenHeight / 2);
-
-    this->enemies.push_back(s);
+    this->hotbar = new Hotbar();
+    this->gameStats = new GameStats();
+    this->gameStats->health = 100;
+    this->gameStats->coins = 0;
 }
 
 void Game::Draw()
@@ -74,9 +72,6 @@ void Game::Draw()
     //draw boundaries
     DrawLine(deathBoundaryX, 0, deathBoundaryX, screenHeight, RED);
     DrawLine(0, menuBoundaryY, screenWidth, menuBoundaryY, RED);
-
-    //draw health
-    DrawText(std::to_string(this->playerHealth).c_str(), 30, 30, 40, RED);
 
     //draw turret
     this->turret->Draw();
@@ -96,6 +91,9 @@ void Game::Draw()
         }
 
     }
+
+    //draw hotbar
+    this->hotbar->Draw(this->gameStats);
 
     //draw mouse temp
     DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5, BLUE);
@@ -132,7 +130,7 @@ void Game::Update()
             if (e->GetPosition().x <= deathBoundaryX)
             {
                 e->isActive = false;
-                this->playerHealth -= e->GetDamage();
+                this->gameStats->health -= e->GetDamage();
             }
         }
 		

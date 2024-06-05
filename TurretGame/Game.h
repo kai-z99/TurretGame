@@ -5,7 +5,9 @@
 class Turret;
 class Bullet;
 class Enemy;
+class Hotbar;
 
+struct GameStats;
 
 class Game
 {
@@ -26,9 +28,9 @@ private:
 
 	void CleanBulletVector();
 
-	int playerHealth;
-
 	Turret* turret;
+	Hotbar* hotbar;
+	GameStats* gameStats;
 
 	const int bulletLimit = 200; //how many bullets can be on the screen
 	std::vector<Bullet*> bullets;

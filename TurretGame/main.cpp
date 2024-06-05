@@ -11,13 +11,8 @@ int main(void)
 
 }
 
-// texureLooper class TextureLooper(Texture2D* texture, int segments, int animationState)
-// //add a kb effect (different bullets have differnt kbs) differnte eminimes have difrfernt kb multipliers
-//bg image
-//game class
-//create enemy
+//more enemis
 //different projectiles
-// void ShootProjectile(std::vector<Bullet*>& projectiles); //TAKE BULLET ID AS PARAM TO SHOOT TYPES
 //explosion texture when hit
-//make it so updateing dest recs modifies the positon only instead of creating a new one
-//make helath bars and damage spalsh
+//make damage spalsh
+//coin splash

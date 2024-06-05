@@ -9,3 +9,11 @@ struct BulletCooldownInfo
 	bool canShoot;
 	unsigned int lastShotFrame;
 };
+
+struct GameStats
+{
+	int health;
+	int coins;
+
+	//upgrades
+};
