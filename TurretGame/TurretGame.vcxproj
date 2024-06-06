@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="CoinSplashEffect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="ExplosionEffect.cpp" />
@@ -137,17 +138,20 @@
     <ClCompile Include="KoopaEnemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="RedKoopaEnemy.cpp" />
     <ClCompile Include="ShockwaveBullet.cpp" />
     <ClCompile Include="SoldierEnemy.cpp" />
     <ClCompile Include="TextureLoop.cpp" />
     <ClCompile Include="textures.cpp" />
     <ClCompile Include="Turret.cpp" />
     <ClCompile Include="TurretBullet.cpp" />
+    <ClCompile Include="UpgradeButton.cpp" />
     <ClCompile Include="VisualEffect.cpp" />
     <ClCompile Include="VisualEffectsManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="CoinSplashEffect.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="Enemy.h" />
@@ -157,12 +161,14 @@
     <ClInclude Include="Hotbar.h" />
     <ClInclude Include="KoopaEnemy.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="RedKoopaEnemy.h" />
     <ClInclude Include="ShockwaveBullet.h" />
     <ClInclude Include="SoldierEnemy.h" />
     <ClInclude Include="TextureLoop.h" />
     <ClInclude Include="textures.h" />
     <ClInclude Include="Turret.h" />
     <ClInclude Include="TurretBullet.h" />
+    <ClInclude Include="UpgradeButton.h" />
     <ClInclude Include="VisualEffect.h" />
     <ClInclude Include="VisualEffectsManager.h" />
   </ItemGroup>

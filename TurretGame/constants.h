@@ -5,3 +5,4 @@ const int screenHeight = 1080;
 const int deathBoundaryX = 240;
 const int menuBoundaryY = 150;
 //enemy hurt clear red
+

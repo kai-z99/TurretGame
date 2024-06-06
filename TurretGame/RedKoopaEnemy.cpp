@@ -1,0 +1,72 @@
+#include "RedKoopaEnemy.h"
+#include "textures.h"
+#include "TextureLoop.h"
+
+RedKoopaEnemy::RedKoopaEnemy()
+{
+	this->id = 3;
+	this->damage = 6;
+	this->maxHealth = 15;
+	this->health = this->maxHealth;
+	this->coinDropAmount = GetRandomValue(20,30);
+
+	this->knockbackMultiplier = 0.0f;
+	this->velocity = { -4.0f,0.0f };
+	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 }; //50 and 100 are the hitbox dimensions... minus half for centering purpose
+	this->textureLoop = new TextureLoop(&redKoopaTexture, 4, 4.0f, this->position);
+	this->shellTextureLoop = new TextureLoop(&redKoopaShellTexture, 4, 4.0f, this->position);
+
+	//special
+	this->distanceWalked = 0;
+	this->shellForm = true;
+	this->deShellThreshold = GetRandomValue(380, 600);
+}
+
+void RedKoopaEnemy::Update(unsigned int frame)
+{
+	// update position and velocity and check if death
+	Enemy::Update(frame);
+
+	//update distance walked
+	this->distanceWalked -= this->velocity.x;
+
+	//check if koopa should unshell
+	if (this->distanceWalked >= deShellThreshold)
+	{
+		this->shellForm = false;
+		this->velocity.x = -1.2f;
+		this->knockbackMultiplier = 0.65f;
+	}
+
+	//update postion of texture
+	this->textureLoop->SetPosition(this->position.x, this->position.y);
+	this->shellTextureLoop->SetPosition(this->position.x, this->position.y);
+
+	//update the animation state
+	if (this->shellForm && frame % 7 == 0) this->shellTextureLoop->NextFrame();
+	else if (frame % 17 == 0) this->textureLoop->NextFrame();
+
+	
+
+	//update hitbox position
+	//this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
+	this->hitbox.x = this->position.x - (50 / 2);
+	this->hitbox.y = this->position.y - (100 / 2);
+
+
+	//update texture proteries based on new position
+	this->textureLoop->Update();
+	this->shellTextureLoop->Update();
+}
+
+void RedKoopaEnemy::Draw()
+{
+	if (!this->shellForm) this->textureLoop->Draw();
+	else this->shellTextureLoop->Draw();
+	
+	//DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
+	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
+
+
+	//Enemy::Draw(); // draw hitbox
+}

@@ -5,12 +5,14 @@
 #include "Enemy.h"
 #include "SoldierEnemy.h"
 #include "KoopaEnemy.h"
+#include "RedKoopaEnemy.h"
 #include "Bullet.h"
 #include "TurretBullet.h"
 #include "Hotbar.h"
 #include "textures.h"
 #include "helpers.h"
 #include "VisualEffectsManager.h"
+#include "UpgradeButton.h"
 
 Game::Game()
 {
@@ -34,13 +36,15 @@ Game::~Game()
 
 void Game::Run()
 {
+
+    
     while (!WindowShouldClose())
     {
-        this->Update();
         this->HandleEnemySpawning();
         this->HandleCollisions();
         this->HandleInput();
         this->Draw();
+        this->Update();
     }
 
     CloseWindow();
@@ -62,6 +66,9 @@ void Game::Initialize()
     this->effectManager = new VisualEffectsManager();
     this->gameStats->health = 100;
     this->gameStats->coins = 0;
+
+
+
 }
 
 void Game::Draw()
@@ -100,7 +107,6 @@ void Game::Draw()
 
     //draw hotbar
     this->hotbar->Draw(this->gameStats);
-
     //draw mouse temp
     DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5, BLUE);
 
@@ -115,8 +121,14 @@ void Game::Update()
     //update mouse position
     mousePos = { GetMousePosition().x, GetMousePosition().y };
 
+    this->hotbar->Update(this->frameCount);
+
     //update turret
     this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);
+
+
+
+
 
     //handle bullets
 	for (Bullet* b : bullets)
@@ -233,5 +245,13 @@ void Game::HandleEnemySpawning()
         k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
         this->enemies.push_back(k);
     }
+
+    if (this->frameCount % 400 == 0)
+    {
+        RedKoopaEnemy* k = new RedKoopaEnemy();
+        k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+        this->enemies.push_back(k);
+    }
+
 }
 

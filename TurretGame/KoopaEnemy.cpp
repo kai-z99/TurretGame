@@ -8,7 +8,7 @@ KoopaEnemy::KoopaEnemy()
 	this->damage = 3;
 	this->maxHealth = 10;
 	this->health = this->maxHealth;
-	this->coinDropAmount = 15;
+	this->coinDropAmount = GetRandomValue(12,18);
 
 	this->knockbackMultiplier = 0.5f;
 	this->velocity = { -1.5,0 };

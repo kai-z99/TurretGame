@@ -5,20 +5,18 @@
 void Enemy::Draw() //draws hitbox
 {
 	DrawRectangleLines(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
-
 }
 
 void Enemy::Update(unsigned int frame)
 {
-	if (this->knockbackFrames <= 0)
-	{
-		this->position.x += this->velocity.x;
-		this->position.y += this->velocity.y;
-	}
 
-	else
+	this->position.x += this->velocity.x;
+	this->position.y += this->velocity.y;
+	
+
+	if (this->knockbackFrames > 0)
 	{
-		this->position.x += 5 * this->knockbackMultiplier;
+		this->position.x += 9 * this->knockbackMultiplier;
 		this->knockbackFrames -= 1;
 	}
 	

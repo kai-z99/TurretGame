@@ -1,6 +1,8 @@
 #include "ShockwaveBullet.h"
 #include "textures.h"
 #include "helpers.h"
+
+
 ShockwaveBullet::ShockwaveBullet()
 {
 	this->id = 2;

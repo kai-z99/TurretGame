@@ -17,3 +17,4 @@ int main(void)
 //make damage spalsh
 //coin splash
 //make text const vars in class
+//add enums

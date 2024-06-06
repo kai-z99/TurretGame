@@ -1,10 +1,17 @@
 #include "Hotbar.h"
 #include <string>
 #include "constants.h"
+#include "UpgradeButton.h"
 
 
 Hotbar::Hotbar()
 {
+	for (int i = 0; i <= 5; i++)
+	{
+		int buttonY = (menuBoundaryY / 2) - (UpgradeButton::height / 2);
+
+		this->buttons.push_back(new UpgradeButton(300 + i * 150, buttonY, i));
+	}
 }
 
 void Hotbar::Draw(GameStats* gameStats)
@@ -30,4 +37,17 @@ void Hotbar::Draw(GameStats* gameStats)
 
 	DrawTextEx(GetFontDefault(), text.c_str(), { xPos ,yPos }, fontsize, spacing, RED);
 
+	for (Button* b : this->buttons)
+	{
+		b->Draw();
+	}
+
+}
+
+void Hotbar::Update(unsigned int frame)
+{
+	for (Button* b : this->buttons)
+	{
+		b->Update(GetMouseX(), GetMouseY());
+	}
 }
