@@ -9,9 +9,11 @@ public:
 	virtual void Update(unsigned int frame) override;
 	virtual void Draw() override;
 
+	bool shellForm;
+
 private:
 	TextureLoop* shellTextureLoop;
-	bool shellForm;
+	
 	int distanceWalked;
 	int deShellThreshold;
 };

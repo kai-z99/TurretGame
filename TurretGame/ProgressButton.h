@@ -1,10 +1,10 @@
 #pragma once
 #include "Button.h"
 
-class UpgradeButton : public Button
+class ProgressButton : public Button
 {
 public:
-	UpgradeButton(int posX, int posY, int id);
+	ProgressButton(int posX, int posY, int id);
 
 	virtual void Draw() override;
 	virtual void Update(int mouseX, int mouseY) override;

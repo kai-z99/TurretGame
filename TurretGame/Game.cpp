@@ -12,7 +12,6 @@
 #include "textures.h"
 #include "helpers.h"
 #include "VisualEffectsManager.h"
-#include "UpgradeButton.h"
 
 Game::Game()
 {
@@ -126,10 +125,6 @@ void Game::Update()
     //update turret
     this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);
 
-
-
-
-
     //handle bullets
 	for (Bullet* b : bullets)
 	{
@@ -168,8 +163,22 @@ void Game::HandleCollisions()
                 {
                     //maybe make this a function?
                     this->effectManager->DisplayExplosion(b->GetPosition());
-                    e->ApplyKnockback(b);
-                    e->SetHealth(e->GetHealth() - b->GetBaseDamage());
+                   
+                    //switch here maybe?
+                    if (e->GetID() != 3)
+                    {
+                        e->SetHealth(e->GetHealth() - b->GetBaseDamage());
+                        e->ApplyKnockback(b);
+                    }
+
+                   
+                    // TEMP SOLUTION TO INVINCIBLE SHELL
+                    //if its  red koopa only dmg when out of shell
+                    else if (!dynamic_cast<RedKoopaEnemy*>(e)->shellForm)
+                    {
+                        e->SetHealth(e->GetHealth() - b->GetBaseDamage());
+                        e->ApplyKnockback(b);
+                    }
 
                     // if enemy died, add coin amount. and display coin effect
                     if (e->GetHealth() <= 0)
@@ -206,6 +215,8 @@ void Game::HandleInput()
         if (bullets.size() > this->bulletLimit) this->CleanBulletVector(); //if the bullet vector is too big, cleanup
     
     }
+
+    //check if each button isPressed. If it is, handle the event like rapidfire or something
 }
 
 void Game::CleanBulletVector() // keep all active bullet, delete rest from memory. Then clear bullet vector and add the remaing active ones to it.

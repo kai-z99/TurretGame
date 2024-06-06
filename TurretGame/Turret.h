@@ -40,6 +40,5 @@ private:
 	//GAME PROPERTIES------------------
 	std::unordered_map<int, BulletCooldownInfo*> bulletCooldownMap; // bullet id : info
 	float bulletSpeedMultiplier;
-
 	float firerate;
 };

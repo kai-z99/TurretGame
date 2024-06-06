@@ -1,16 +1,16 @@
 #include "Hotbar.h"
 #include <string>
 #include "constants.h"
-#include "UpgradeButton.h"
+#include "ProgressButton.h"
 
 
 Hotbar::Hotbar()
 {
 	for (int i = 0; i <= 5; i++)
 	{
-		int buttonY = (menuBoundaryY / 2) - (UpgradeButton::height / 2);
+		int buttonY = (menuBoundaryY / 2) - (ProgressButton::height / 2);
 
-		this->buttons.push_back(new UpgradeButton(300 + i * 150, buttonY, i));
+		this->buttons.push_back(new ProgressButton(300 + i * 150, buttonY, i));
 	}
 }
 
