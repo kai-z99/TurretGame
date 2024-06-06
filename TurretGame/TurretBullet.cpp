@@ -10,7 +10,7 @@ TurretBullet::TurretBullet()
 	this->hitBoxRadius = 10.0f;
 
 	//Texture init
-	this->texture = &turretBulletTexture;
+	this->texture = &textures[2];
 	this->textureWidth = this->texture->width;
 	this->textureHeight = this->texture->height;
 	this->textureSourceRec = { 0.0f, 0.0f, (float)this->textureWidth, (float)this->textureHeight };

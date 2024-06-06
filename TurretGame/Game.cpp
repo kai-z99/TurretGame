@@ -76,7 +76,7 @@ void Game::Draw()
     ClearBackground(RAYWHITE);
 
     //draw bg
-    DrawTexture(galaxyBGTexture, 0,0,WHITE);
+    DrawTexture(textures[6], 0, 0, WHITE);
 
     //draw boundaries
     DrawLine(deathBoundaryX, 0, deathBoundaryX, screenHeight, RED);

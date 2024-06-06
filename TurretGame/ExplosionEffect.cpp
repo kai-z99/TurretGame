@@ -6,7 +6,7 @@ ExplosionEffect::ExplosionEffect(Vector2 pos)
 {
 	this->position = pos;
 	this->framesLeft = 10;
-	this->textureLoop = new TextureLoop(&explosionTexture, 9, 1.0f, pos);
+	this->textureLoop = new TextureLoop(&textures[9], 9, 1.0f, pos);
 }
 
 void ExplosionEffect::UpdateAndDraw()

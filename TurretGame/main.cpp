@@ -23,3 +23,4 @@ int main(void)
 //bool inRapidfire in turret
 //IN HANDLEINPUT()  //check if each button isPressed. If it is, handle the event like rapidfire or something
 //use a loop in the texture.cpp so you can just add name of file and be done.
+//THE PROGRESS BARS IN TOP BUTTONS CAN REPRESENT COOLDOWNS FOR ABNLITLIES.

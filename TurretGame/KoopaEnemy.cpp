@@ -13,7 +13,7 @@ KoopaEnemy::KoopaEnemy()
 	this->knockbackMultiplier = 0.5f;
 	this->velocity = { -1.5,0 };
 	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 }; //50 and 100 are the hitbox dimensions... minus half for centering purpose
-	this->textureLoop = new TextureLoop(&koopaTexture, 2, 4.0f, this->position);
+	this->textureLoop = new TextureLoop(&textures[3], 2, 4.0f, this->position);
 }
 
 void KoopaEnemy::Update(unsigned int frame)

@@ -12,7 +12,7 @@ ShockwaveBullet::ShockwaveBullet()
 	this->hitBoxRadius = 20.0f;
 
 	//Texture init
-	this->texture = &shockwaveBulletTexture;
+	this->texture = &textures[7];
 	this->textureWidth = this->texture->width;
 	this->textureHeight = this->texture->height;
 	this->textureSourceRec = { 0.0f, 0.0f, (float)this->textureWidth, (float)this->textureHeight };

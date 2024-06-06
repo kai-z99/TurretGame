@@ -13,8 +13,8 @@ RedKoopaEnemy::RedKoopaEnemy()
 	this->knockbackMultiplier = 0.0f;
 	this->velocity = { -4.0f,0.0f };
 	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 }; //50 and 100 are the hitbox dimensions... minus half for centering purpose
-	this->textureLoop = new TextureLoop(&redKoopaTexture, 4, 4.0f, this->position);
-	this->shellTextureLoop = new TextureLoop(&redKoopaShellTexture, 4, 4.0f, this->position);
+	this->textureLoop = new TextureLoop(&textures[4], 4, 4.0f, this->position);
+	this->shellTextureLoop = new TextureLoop(&textures[5], 4, 4.0f, this->position);
 
 	//special
 	this->distanceWalked = 0;

@@ -11,7 +11,7 @@ Turret::Turret()
     this->angle = 0;
 
     //Texture init
-    this->texture = &turretTexture;
+    this->texture = &textures[1];
     this->textureWidth = this->texture->width;
     this->textureHeight = this->texture->height;
     this->textureSourceRec = { 0.0f, 0.0f, (float)this->textureWidth, (float)this->textureHeight };

@@ -1,42 +1,33 @@
 #include "textures.h"
 
-Texture2D scarfyTexture;
-Texture2D koopaTexture;
-Texture2D redKoopaTexture;
-Texture2D redKoopaShellTexture;
-Texture2D batTexture;
-Texture2D turretTexture;
-Texture2D turretBulletTexture;
-Texture2D shockwaveBulletTexture;
+std::vector<Texture2D> textures;
 
-Texture2D explosionTexture;
-
-Texture2D galaxyBGTexture;
+std::vector<const char*> textureFilePaths = {
+    "Sprites/scarfy.png",               //0
+    "Sprites/turret.png",               //1
+    "Sprites/TurretBullet.png",         //2
+    "Sprites/koopa.png",                //3
+    "Sprites/redKoopa.png",             //4
+    "Sprites/redKoopaShell.png",        //5
+    "Sprites/galaxy.png",               //6
+    "Sprites/ShockwaveBullet.png",      //7
+    "Sprites/bat.png",                  //8
+    "Sprites/explosion.png"             //9
+};
 
 void LoadAllTextures() 
 {
-    scarfyTexture = LoadTexture("Sprites/scarfy.png");
-    turretTexture = LoadTexture("Sprites/turret.png");
-    turretBulletTexture = LoadTexture("Sprites/TurretBullet.png");
-    koopaTexture = LoadTexture("Sprites/koopa.png");
-    redKoopaTexture = LoadTexture("Sprites/redKoopa.png");
-    redKoopaShellTexture = LoadTexture("Sprites/redKoopaShell.png");
-    galaxyBGTexture = LoadTexture("Sprites/galaxy.png");
-    shockwaveBulletTexture = LoadTexture("Sprites/ShockwaveBullet.png");
-    batTexture = LoadTexture("Sprites/bat.png");
-    explosionTexture = LoadTexture("Sprites/explosion.png");
+    for (const char* path : textureFilePaths)
+    {
+        textures.push_back(LoadTexture(path));
+    }
 
 }
 
 void UnloadAllTextures() 
 {
-    UnloadTexture(scarfyTexture);
-    UnloadTexture(turretTexture);
-    UnloadTexture(turretBulletTexture);
-    UnloadTexture(galaxyBGTexture);
-    UnloadTexture(shockwaveBulletTexture);
-    UnloadTexture(batTexture);
-    UnloadTexture(explosionTexture);
-    UnloadTexture(redKoopaTexture);
-    UnloadTexture(redKoopaShellTexture);
+    for (Texture2D t : textures)
+    {
+        UnloadTexture(t);
+    }
 }
