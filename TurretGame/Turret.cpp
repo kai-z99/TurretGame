@@ -20,7 +20,9 @@ Turret::Turret()
 
     //gun settings
     this->bulletSpeedMultiplier = 1.0f;
-    this->firerate = 1.5f; // in shots per second
+    this->baseFirerate = 1.5f; // in shots per second
+    this->rapidFirerate = this->baseFirerate * 3.0f;
+    this->rapidFireFrames = 0;
     
     //initate bullet cooldown map
     for (int i = 1; i <= 2; i++)
@@ -43,6 +45,14 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
     //update its angle
     this->UpdateAngle(mouseX, mouseY);
 
+    if (this->rapidFireFrames > 0)
+    {
+        this->currentFirerate = this->rapidFirerate;
+        this->rapidFireFrames -= 1;
+    }
+         
+    else this->currentFirerate = this->baseFirerate;
+
 
     //update bullet cooldowns
 
@@ -62,7 +72,7 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
         if (pair.first == 1) 
         {
             //if its been long enough. set canShoot to be true in its BulletCooldownInfo.
-            if (frame - pair.second->lastShotFrame > 60 / this->firerate) pair.second->canShoot = true;
+            if (frame - pair.second->lastShotFrame > 60 / this->currentFirerate) pair.second->canShoot = true;
         }
 
         else if (pair.first == 2) //not affected by firerate rn, figure a cool implelention maybe
@@ -124,14 +134,19 @@ void Turret::SetBulletSpeedMultiplier(float multiplier)
     this->bulletSpeedMultiplier = multiplier;
 }
 
-void Turret::SetFirerate(float firerate)
+void Turret::SetBaseFirerate(float firerate)
 {
-    this->firerate = firerate;
+    this->baseFirerate = firerate;
 }
 
-float Turret::GetFirerate()
+void Turret::SetRapidFire(unsigned int frames)
 {
-    return this->firerate;
+    this->rapidFireFrames += frames;
+}
+
+float Turret::GetCurrentFirerate()
+{
+    return this->currentFirerate;
 }
 
 const std::unordered_map<int, BulletCooldownInfo*>& Turret::GetBulletCooldownMap()

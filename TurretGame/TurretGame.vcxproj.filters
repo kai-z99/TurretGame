@@ -75,7 +75,7 @@
     <ClCompile Include="Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ProgressButton.cpp">
+    <ClCompile Include="AbilityButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,7 +140,7 @@
     <ClInclude Include="Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ProgressButton.h">
+    <ClInclude Include="AbilityButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="types.h">

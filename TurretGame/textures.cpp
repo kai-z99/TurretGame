@@ -26,8 +26,10 @@ void LoadAllTextures()
 
 void UnloadAllTextures() 
 {
-    for (Texture2D t : textures)
+    for (const Texture2D& t : textures)
     {
         UnloadTexture(t);
     }
+
+    textures.clear();
 }

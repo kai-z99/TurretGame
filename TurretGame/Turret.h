@@ -17,9 +17,10 @@ public:
 	void ShootBullet(std::vector<Bullet*>& bullets, int id); //TAKE BULLET ID AS PARAM TO SHOOT TYPES
 
 	void SetBulletSpeedMultiplier(float multiplier);
-	void SetFirerate(float firerate);
+	void SetBaseFirerate(float firerate);
+	void SetRapidFire(unsigned int frames);
 
-	float GetFirerate();
+	float GetCurrentFirerate();
 	const std::unordered_map<int, BulletCooldownInfo*>& GetBulletCooldownMap();
 
 private:
@@ -40,5 +41,8 @@ private:
 	//GAME PROPERTIES------------------
 	std::unordered_map<int, BulletCooldownInfo*> bulletCooldownMap; // bullet id : info
 	float bulletSpeedMultiplier;
-	float firerate;
+	float baseFirerate;
+	float rapidFirerate;
+	float currentFirerate;
+	int rapidFireFrames;
 };

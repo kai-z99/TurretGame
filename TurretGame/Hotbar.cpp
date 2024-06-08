@@ -1,16 +1,22 @@
 #include "Hotbar.h"
 #include <string>
 #include "constants.h"
-#include "ProgressButton.h"
+#include "AbilityButton.h"
 
 
 Hotbar::Hotbar()
 {
+	int buttonY = (menuBoundaryY / 2) - (AbilityButton::height / 2);
 	for (int i = 0; i <= 5; i++)
 	{
-		int buttonY = (menuBoundaryY / 2) - (ProgressButton::height / 2);
+		this->buttons.push_back(new AbilityButton(300 + i * 150, buttonY, static_cast<TurretAbility>(i)));
 
-		this->buttons.push_back(new ProgressButton(300 + i * 150, buttonY, i));
+		//temp, set all abilities to 5 charges
+		dynamic_cast<AbilityButton*>(this->buttons[i])->SetTotalCharges(5);
+		dynamic_cast<AbilityButton*>(this->buttons[i])->SetCurrentCharges(5);
+
+		//if its an ability button, set its duration to full
+		//dynamic_cast<ProgressButton*>(this->buttons[i])->SetProgress(1.0f);
 	}
 }
 
@@ -44,10 +50,56 @@ void Hotbar::Draw(GameStats* gameStats)
 
 }
 
-void Hotbar::Update(unsigned int frame)
+void Hotbar::Update(unsigned int frame, std::unordered_map<TurretAbility, std::pair<int, int>> charges)
 {
+	//check if mouse selected any button
 	for (Button* b : this->buttons)
 	{
 		b->Update(GetMouseX(), GetMouseY());
 	}
+
+	// manually check if keyboard activated ablility buttons.
+	for (int i = 0; i <= 5; i++)
+	{
+		if (IsKeyDown(49 + i))
+		{
+			this->buttons[i]->isHeld = true;
+		}
+
+		else if (IsKeyReleased(49 + i))
+		{
+			this->buttons[i]->isClicked = true;
+		}
+	}
+
+	//int i = 0;
+	//for (const auto& pair : charges)
+	//{
+	//	dynamic_cast<AbilityButton*>(this->buttons[i])->SetCurrentCharges(pair.second.first);
+	//	i++;
+	//}
+
+
+	for (int i = 0; i <= 5; i++)
+	{
+		AbilityButton* b = dynamic_cast<AbilityButton*>(this->buttons[i]);
+		b->SetCurrentCharges(charges[b->GetAbility()].first);
+		this->buttons[i] = b;
+	}
+}
+
+std::vector<TurretAbility> Hotbar::GetActiveAbilityButtons()
+{
+	std::vector<TurretAbility> v = {};
+
+	//first 5 are the ablity buttons
+	for (int i = 0; i <= 5; i++)
+	{
+		if (this->buttons[i]->isClicked)
+		{
+			v.push_back(dynamic_cast<AbilityButton*>(this->buttons[i])->GetAbility());
+		}
+	}
+
+	return v;
 }

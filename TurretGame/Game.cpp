@@ -12,6 +12,7 @@
 #include "textures.h"
 #include "helpers.h"
 #include "VisualEffectsManager.h"
+#include "types.h"
 
 Game::Game()
 {
@@ -35,15 +36,13 @@ Game::~Game()
 
 void Game::Run()
 {
-
-    
     while (!WindowShouldClose())
     {
+        this->Update();
         this->HandleEnemySpawning();
         this->HandleCollisions();
         this->HandleInput();
         this->Draw();
-        this->Update();
     }
 
     CloseWindow();
@@ -60,14 +59,18 @@ void Game::Initialize()
     this->frameCount = 0;
     this->mousePos = { 0,0 };
     this->turret = new Turret();
+    //this->turret->SetFirerate(10.0f);
     this->hotbar = new Hotbar();
     this->gameStats = new GameStats();
     this->effectManager = new VisualEffectsManager();
     this->gameStats->health = 100;
     this->gameStats->coins = 0;
 
-
-
+    //temp, fill all charges with 5
+    for (int i = 0; i <= 5; i++)
+    {
+        this->abilityCharges[static_cast<TurretAbility>(i)] = std::make_pair(5, 5);
+    }
 }
 
 void Game::Draw()
@@ -120,8 +123,23 @@ void Game::Update()
     //update mouse position
     mousePos = { GetMousePosition().x, GetMousePosition().y };
 
-    this->hotbar->Update(this->frameCount);
+    //update hotbar buttons
+    this->hotbar->Update(this->frameCount, this->abilityCharges);
 
+    //activate each active abilities respective ability
+    for (TurretAbility a : this->hotbar->GetActiveAbilityButtons())
+    {
+        if (a == Rapidfire)
+        {
+            if (this->abilityCharges[Rapidfire].first > 0)
+            {
+                this->turret->SetRapidFire(240);
+                this->abilityCharges[Rapidfire].first -= 1;
+            }
+            
+        }
+    }
+    
     //update turret
     this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);
 

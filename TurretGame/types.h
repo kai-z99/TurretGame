@@ -1,9 +1,11 @@
 #pragma once
 
-enum TurretAttribute
+enum TurretAbility
 {
-	Damage,
-	Firerate,
-	BulletSpeed,
+	Rapidfire,
+	Freeze,
+	Burn,
+	Explosive,
+	placeholder,
 
 };

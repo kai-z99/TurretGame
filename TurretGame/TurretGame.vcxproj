@@ -145,7 +145,7 @@
     <ClCompile Include="textures.cpp" />
     <ClCompile Include="Turret.cpp" />
     <ClCompile Include="TurretBullet.cpp" />
-    <ClCompile Include="ProgressButton.cpp" />
+    <ClCompile Include="AbilityButton.cpp" />
     <ClCompile Include="VisualEffect.cpp" />
     <ClCompile Include="VisualEffectsManager.cpp" />
   </ItemGroup>
@@ -169,7 +169,7 @@
     <ClInclude Include="Turret.h" />
     <ClInclude Include="TurretBullet.h" />
     <ClInclude Include="types.h" />
-    <ClInclude Include="ProgressButton.h" />
+    <ClInclude Include="AbilityButton.h" />
     <ClInclude Include="VisualEffect.h" />
     <ClInclude Include="VisualEffectsManager.h" />
   </ItemGroup>
