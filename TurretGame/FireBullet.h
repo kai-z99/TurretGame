@@ -1,11 +1,10 @@
 #pragma once
 #include "Bullet.h"
 
-
-class ShockwaveBullet : public Bullet
+class FireBullet : public Bullet
 {
 public:
-	ShockwaveBullet();
+	FireBullet();
 	virtual void Draw() override;
 	virtual void Update(unsigned int frame) override;
 };

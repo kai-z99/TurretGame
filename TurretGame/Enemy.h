@@ -1,5 +1,7 @@
 #pragma once
 #include "raylib.h"
+#include <unordered_map>
+#include "types.h"
 
 class Bullet;
 class TextureLoop;
@@ -7,14 +9,18 @@ class TextureLoop;
 class Enemy
 {
 public:
+	Enemy();
 	virtual void Draw(); // default just draws its hitbox.
-	void DrawCoinSplash();
-	virtual void Update(unsigned int frame); // defulat update is just pos and velocity
+	virtual void Update(unsigned int frame); // defulat update is just pos and velocity, and does status effects
 
 	void SetPosition(float x, float y);
 	void SetVelocity(float x, float y);
 	void SetHealth(float health);
 	void ApplyKnockback(Bullet* b);
+	void ApplyStatusEffect(StatusEffect effect, int frames);
+
+	//constant?
+	std::unordered_map<StatusEffect, int>& GetStatusEffects();
 
 	int GetID() const;
 	Rectangle GetHitbox() const;
@@ -33,7 +39,7 @@ protected:
 	Rectangle hitbox;
 
 	TextureLoop* textureLoop;
-
+	Color tint = WHITE;
 
 	int id;
 	int damage;
@@ -42,6 +48,8 @@ protected:
 	float knockbackMultiplier;
 	int knockbackFrames = 0;
 	int coinDropAmount;
+
+	std::unordered_map<StatusEffect, int> statusEffects; // effect : frames;
 
 	int animationState;
 };

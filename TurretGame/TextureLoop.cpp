@@ -6,6 +6,7 @@ TextureLoop::TextureLoop(Texture2D* texture, int segments, float scale, Vector2 
 	this->scale = scale;
 	this->segments = segments;
 	this->mirrored = false;
+	this->tint = WHITE;
 	this->animationState = 1;
 
 	this->texture = texture;
@@ -28,6 +29,10 @@ void TextureLoop::ToggleMirrorImage()
 	else this->mirrored = false;
 }
 
+void TextureLoop::SetTint(Color tint)
+{
+	this->tint = tint;
+}
 
 void TextureLoop::Update()
 {
@@ -47,7 +52,7 @@ void TextureLoop::Update()
 
 void TextureLoop::Draw()
 {
-	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
+	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, this->tint);
 }
 
 void TextureLoop::NextFrame()

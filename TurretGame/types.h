@@ -4,8 +4,26 @@ enum TurretAbility
 {
 	Rapidfire,
 	Freeze,
-	Burn,
+	SpecialRapidfire,
 	Explosive,
-	placeholder,
+	Knockback,
+	Burn,
 
+};
+
+enum GameState
+{
+	InLevel,
+	UpgradeMenu,
+	LevelSelectMenu,
+	MainMenu,
+};
+
+enum StatusEffect
+{
+	Burning,
+	Frozen,
+	Chilled,
+	Stunned,
+	Poisoned,
 };

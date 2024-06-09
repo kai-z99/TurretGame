@@ -4,6 +4,7 @@
 #include "helpers.h"
 #include "TurretBullet.h"
 #include "ShockwaveBullet.h"
+#include "FireBullet.h"
 #include "textures.h" 
 
 Turret::Turret()
@@ -20,12 +21,14 @@ Turret::Turret()
 
     //gun settings
     this->bulletSpeedMultiplier = 1.0f;
-    this->baseFirerate = 1.5f; // in shots per second
+    this->baseFirerate = 1.5f; // in shots per second for turretBullet
     this->rapidFirerate = this->baseFirerate * 3.0f;
     this->rapidFireFrames = 0;
+
+    this->specialFirerate = 1.0f;
     
     //initate bullet cooldown map
-    for (int i = 1; i <= 2; i++)
+    for (int i = 1; i <= 3; i++)
     {
         this->bulletCooldownMap[i] = new BulletCooldownInfo();
         this->bulletCooldownMap[i]->canShoot = true;
@@ -75,9 +78,16 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
             if (frame - pair.second->lastShotFrame > 60 / this->currentFirerate) pair.second->canShoot = true;
         }
 
+        //shockwave bullet
         else if (pair.first == 2) //not affected by firerate rn, figure a cool implelention maybe
         {
-            if (frame - pair.second->lastShotFrame > 150 /* /  this->firerate */) pair.second->canShoot = true;
+            if (frame - pair.second->lastShotFrame > 150 / this->specialFirerate) pair.second->canShoot = true;
+        }
+
+        //Firebullet
+        else if (pair.first == 3) //not affected by firerate rn, figure a cool implelention maybe
+        {
+            if (frame - pair.second->lastShotFrame > 180 / this->specialFirerate) pair.second->canShoot = true;
         }
         
     }
@@ -112,6 +122,10 @@ void Turret::ShootBullet(std::vector<Bullet*>& bullets, int id)
         b = new ShockwaveBullet();
         break;
 
+    case 3:
+        b = new FireBullet();
+        break;
+
     default: //fallback to turretbbullet on failure
         b = new TurretBullet();
         std::cout << "Could not find that bullet id. Shooting TurretBullet.\n";
@@ -142,6 +156,11 @@ void Turret::SetBaseFirerate(float firerate)
 void Turret::SetRapidFire(unsigned int frames)
 {
     this->rapidFireFrames += frames;
+}
+
+void Turret::SetSpecialFirerate(float firerate)
+{
+    this->specialFirerate = firerate;
 }
 
 float Turret::GetCurrentFirerate()

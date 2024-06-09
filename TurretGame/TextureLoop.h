@@ -10,12 +10,14 @@ public:
 	void Update();
 	void SetPosition(int x, int y);
 	void ToggleMirrorImage();
+	void SetTint(Color tint);
 
 private:
 	int segments;
 	int animationState;
 	float scale;
 	bool mirrored;
+	Color tint;
 
 	Vector2 position;
 	Texture2D* texture;

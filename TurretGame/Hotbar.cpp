@@ -36,7 +36,7 @@ void Hotbar::Draw(GameStats* gameStats)
 	DrawTextEx(GetFontDefault(), text.c_str(), { xPos ,yPos }, fontsize, spacing, RED);
 
 	//draw coins (same fontsize and spacing as health)
-	text = "Coins: " + std::to_string(gameStats->coins);
+	text = "Coins: " + std::to_string(gameStats->coinsCollectedInLevel);
 	textDimensions = MeasureTextEx(GetFontDefault(), text.c_str(), fontsize, 5);
 	xPos = ((float)deathBoundaryX / 2) - (textDimensions.x / 2);
 	yPos = (2*(float)menuBoundaryY / 3) - (textDimensions.y / 2);
@@ -51,6 +51,31 @@ void Hotbar::Draw(GameStats* gameStats)
 }
 
 void Hotbar::Update(unsigned int frame, std::unordered_map<TurretAbility, std::pair<int, int>> charges)
+{
+	//int i = 0;
+	//for (const auto& pair : charges)
+	//{
+	//	dynamic_cast<AbilityButton*>(this->buttons[i])->SetCurrentCharges(pair.second.first);
+	//	i++;
+	//}
+
+	// for every ability button, set its charges based on the games charges.
+	for (int i = 0; i <= 5; i++)
+	{
+		//cast button to abilityButton to access GetAbility()
+		AbilityButton* b = dynamic_cast<AbilityButton*>(this->buttons[i]);
+
+		//set its charges to the games amount
+		b->SetCurrentCharges(charges[b->GetAbility()].first);
+
+		//replace that spot in the buttons vector with the updated amount
+		this->buttons[i] = b;
+
+		//THIS COULD BE ONE LINE BUT ITS NOT READABLE.
+	}
+}
+
+void Hotbar::HandleInput()
 {
 	//check if mouse selected any button
 	for (Button* b : this->buttons)
@@ -71,28 +96,13 @@ void Hotbar::Update(unsigned int frame, std::unordered_map<TurretAbility, std::p
 			this->buttons[i]->isClicked = true;
 		}
 	}
-
-	//int i = 0;
-	//for (const auto& pair : charges)
-	//{
-	//	dynamic_cast<AbilityButton*>(this->buttons[i])->SetCurrentCharges(pair.second.first);
-	//	i++;
-	//}
-
-
-	for (int i = 0; i <= 5; i++)
-	{
-		AbilityButton* b = dynamic_cast<AbilityButton*>(this->buttons[i]);
-		b->SetCurrentCharges(charges[b->GetAbility()].first);
-		this->buttons[i] = b;
-	}
 }
 
 std::vector<TurretAbility> Hotbar::GetActiveAbilityButtons()
 {
 	std::vector<TurretAbility> v = {};
 
-	//first 5 are the ablity buttons
+	//go through each ability button and check if its clicked. if it is, add to return vector
 	for (int i = 0; i <= 5; i++)
 	{
 		if (this->buttons[i]->isClicked)

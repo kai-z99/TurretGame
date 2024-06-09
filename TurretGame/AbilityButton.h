@@ -26,7 +26,7 @@ private:
 	float progress = 0.0f; //how much bar is filled
 	int totalCharges;
 	int currentCharges;
-	Texture2D texture;
+	Texture2D* texture;
 
 };
 

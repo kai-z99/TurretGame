@@ -132,6 +132,8 @@
     <ClCompile Include="CoinSplashEffect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="ExplosionEffect.cpp" />
+    <ClCompile Include="FireBullet.cpp" />
+    <ClCompile Include="FireEffect.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="Hotbar.cpp" />
@@ -156,6 +158,8 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="ExplosionEffect.h" />
+    <ClInclude Include="FireBullet.h" />
+    <ClInclude Include="FireEffect.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="helpers.h" />
     <ClInclude Include="Hotbar.h" />

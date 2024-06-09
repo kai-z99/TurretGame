@@ -64,12 +64,13 @@ void Game::Initialize()
     this->gameStats = new GameStats();
     this->effectManager = new VisualEffectsManager();
     this->gameStats->health = 100;
-    this->gameStats->coins = 0;
+    this->gameStats->totalCoins = 0;
+    this->gameStats->coinsCollectedInLevel = 0;
 
     //temp, fill all charges with 5
     for (int i = 0; i <= 5; i++)
     {
-        this->abilityCharges[static_cast<TurretAbility>(i)] = std::make_pair(5, 5);
+        this->gameStats->abilityCharges[static_cast<TurretAbility>(i)] = std::make_pair(5, 5);
     }
 }
 
@@ -104,6 +105,26 @@ void Game::Draw()
 
     }
 
+    //MAKE THIS A FUNCTION
+    //add status visuals
+
+    //draw enemies on fire
+    for (Enemy* e : enemies)
+    {
+        if (e->isActive && e->GetStatusEffects()[Burning] % 8 == 7) effectManager->DisplayFire(e->GetPosition(), 1.0f);
+    }
+
+
+    //draw bullet on fire
+    for (Bullet* b : bullets)
+    {
+        if (b->isActive && b->GetID() == 3 && this->frameCount % 2 == 0)
+        {
+            effectManager->DisplayFire(b->GetPosition(), 0.4f);
+        }
+    }
+
+
     //draw and update visual effects
     this->effectManager->UpdateAndDraw();
 
@@ -124,21 +145,10 @@ void Game::Update()
     mousePos = { GetMousePosition().x, GetMousePosition().y };
 
     //update hotbar buttons
-    this->hotbar->Update(this->frameCount, this->abilityCharges);
+    this->hotbar->Update(this->frameCount, this->gameStats->abilityCharges);
 
-    //activate each active abilities respective ability
-    for (TurretAbility a : this->hotbar->GetActiveAbilityButtons())
-    {
-        if (a == Rapidfire)
-        {
-            if (this->abilityCharges[Rapidfire].first > 0)
-            {
-                this->turret->SetRapidFire(240);
-                this->abilityCharges[Rapidfire].first -= 1;
-            }
-            
-        }
-    }
+    //if an ability button is pressed, activate its ability if it has a charge.
+    this->ActivateUsedAbilities();
     
     //update turret
     this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);
@@ -168,6 +178,36 @@ void Game::Update()
 
 }
 
+void Game::ActivateUsedAbilities()
+{
+    //if an ability button is pressed, activate its ability if it has a charge.
+    for (TurretAbility a : this->hotbar->GetActiveAbilityButtons())
+    {
+        bool success = false;
+        switch (a)
+        {
+        case Rapidfire:
+            //if there is an availible chrage, use one.
+            if (this->gameStats->abilityCharges[Rapidfire].first > 0)
+            {
+                this->turret->SetRapidFire(240);
+                this->gameStats->abilityCharges[Rapidfire].first -= 1;
+                success = true;
+            }
+
+            break;
+
+        default:
+            std::cout << a << "Ability does not exist.";
+            break;
+        }
+
+        //if (!success) not availible splash
+        
+    }
+}
+
+
 //check if bullets hits enemys
 void Game::HandleCollisions()
 {
@@ -182,26 +222,43 @@ void Game::HandleCollisions()
                     //maybe make this a function?
                     this->effectManager->DisplayExplosion(b->GetPosition());
                    
-                    //switch here maybe?
-                    if (e->GetID() != 3)
+                    //DAMAGE AND KNOCKBACK
+                    switch (e->GetID())
                     {
+                    //RED KOOPA
+                    case 3:
+                        //only apply dmg and kb if not in shell
+                        if (dynamic_cast<RedKoopaEnemy*>(e)->shellForm) break;
+
+                    default:
                         e->SetHealth(e->GetHealth() - b->GetBaseDamage());
                         e->ApplyKnockback(b);
+
+
+                        break;
+
+                    }     
+
+                    //STATUS EFFECT
+
+                    switch (b->GetID())
+                    {
+                    // fire bullet
+                    case 3:
+                        //apply burning for 4 seconds
+                        e->ApplyStatusEffect(Burning, 240);
+                        break;
+
+                    default:
+                        break;
                     }
 
-                   
-                    // TEMP SOLUTION TO INVINCIBLE SHELL
-                    //if its  red koopa only dmg when out of shell
-                    else if (!dynamic_cast<RedKoopaEnemy*>(e)->shellForm)
-                    {
-                        e->SetHealth(e->GetHealth() - b->GetBaseDamage());
-                        e->ApplyKnockback(b);
-                    }
+
 
                     // if enemy died, add coin amount. and display coin effect
                     if (e->GetHealth() <= 0)
                     {
-                        this->gameStats->coins += e->GetCoinDropAmount();
+                        this->gameStats->coinsCollectedInLevel += e->GetCoinDropAmount();
                         this->effectManager->DisplayCoinSplash(e->GetPosition(), e->GetCoinDropAmount());
                     }
 
@@ -234,8 +291,11 @@ void Game::HandleInput()
     
     }
 
-    //check if each button isPressed. If it is, handle the event like rapidfire or something
+    //handle button clicking on hotbar
+    this->hotbar->HandleInput();
+
 }
+
 
 void Game::CleanBulletVector() // keep all active bullet, delete rest from memory. Then clear bullet vector and add the remaing active ones to it.
 {

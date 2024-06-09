@@ -1,6 +1,17 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include <iostream>
+#include "TextureLoop.h"
+
+Enemy::Enemy()
+{
+	this->tint = WHITE;
+	// for each status effect, set its frames to 0.
+	for (int i = 0; i <= 4; i++)
+	{
+		this->statusEffects[static_cast<StatusEffect>(i)] = 0;
+	}
+}
 
 void Enemy::Draw() //draws hitbox
 {
@@ -25,6 +36,31 @@ void Enemy::Update(unsigned int frame)
 		this->isActive = false;
 		delete this->textureLoop;
 	}
+
+	//HANDLE STATUS EFFECTS
+
+	//for eevery status effect
+	for (auto& effect : this->statusEffects)
+	{
+		//if it active
+		if (effect.second > 0)
+		{
+			switch (effect.first)
+			{
+			case Burning:
+				//-1 hp 2 times per second
+				if (frame % 30 == 0) this->health -= 1;
+				this->tint = ORANGE;
+
+				effect.second -= 1;
+				if (effect.second <= 0) this->tint = WHITE;
+				break;
+			}
+
+		}
+	}
+
+	this->textureLoop->SetTint(this->tint);
 }
 
 void Enemy::DrawHealthbar(int yOffset, float barSize)
@@ -39,6 +75,16 @@ void Enemy::DrawHealthbar(int yOffset, float barSize)
 void Enemy::ApplyKnockback(Bullet* b)
 {
 	this->knockbackFrames += b->GetBaseKnockbackDuration();
+}
+
+void Enemy::ApplyStatusEffect(StatusEffect effect, int frames)
+{
+	this->statusEffects[effect] += frames;
+}
+
+std::unordered_map<StatusEffect, int>& Enemy::GetStatusEffects()
+{
+	return this->statusEffects;
 }
 
 void Enemy::SetPosition(float x, float y)

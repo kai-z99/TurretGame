@@ -19,6 +19,7 @@ public:
 	void SetBulletSpeedMultiplier(float multiplier);
 	void SetBaseFirerate(float firerate);
 	void SetRapidFire(unsigned int frames);
+	void SetSpecialFirerate(float firerate);
 
 	float GetCurrentFirerate();
 	const std::unordered_map<int, BulletCooldownInfo*>& GetBulletCooldownMap();
@@ -44,5 +45,6 @@ private:
 	float baseFirerate;
 	float rapidFirerate;
 	float currentFirerate;
+	float specialFirerate; //firerate of speical bullets
 	int rapidFireFrames;
 };

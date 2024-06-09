@@ -1,12 +1,12 @@
-#include "TurretBullet.h"
+#include "FireBullet.h"
 #include "textures.h"
-#include "helpers.h"
-TurretBullet::TurretBullet()
+
+FireBullet::FireBullet()
 {
-	this->id = 1;
-	this->baseSpeed = 30.0f;
-	this->baseDamage = 1.0f;
-	this->baseKnockbackDuration = 4;
+	this->id = 3;
+	this->baseSpeed = 25.0f;
+	this->baseDamage = 2.0f;
+	this->baseKnockbackDuration = 1;
 	this->hitBoxRadius = 10.0f;
 
 	//Texture init
@@ -16,25 +16,24 @@ TurretBullet::TurretBullet()
 	this->textureSourceRec = { 0.0f, 0.0f, (float)this->textureWidth, (float)this->textureHeight };
 	this->textureDestRec = { this->position.x, this->position.y, (float)this->textureWidth * 0.75f, (float)this->textureHeight * 0.75f };
 	this->textureOriginPoint = { this->textureWidth / 2.0f, this->textureHeight / 2.0f };
-
 }
 
-void TurretBullet::Draw() // sould draw sprite
+void FireBullet::Draw()
 {
-	Color tint = WHITE;
+	Color tint = RED;
 	//DrawCircle(this->position.x, this->position.y, this->hitBoxRadius, GRAY);
 	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, this->angle * RAD2DEG, tint);
 	//Bullet::Draw(); // hitbopxc for debug
 }
 
-void TurretBullet::Update(unsigned int frame)
+void FireBullet::Update(unsigned int frame)
 {
 	Bullet::Update(frame);
 
 	//update the destination rectangle
 	this->textureDestRec = { this->position.x, this->position.y,
-						 (float)this->textureWidth * 0.75f,
-						 (float)this->textureHeight * 0.75f };
+						 (float)this->textureWidth,
+						 (float)this->textureHeight };
+
 
 }
-

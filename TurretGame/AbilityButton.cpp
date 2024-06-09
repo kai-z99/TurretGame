@@ -1,5 +1,7 @@
 #include "AbilityButton.h"
+#include <iostream>
 #include <string>
+#include "textures.h"
 
 const int AbilityButton::width = 100;
 const int AbilityButton::height = 100;
@@ -8,6 +10,19 @@ AbilityButton::AbilityButton(int posX, int posY, TurretAbility ability)
 {
 	this->position = { (float)posX, (float)posY };
 	this->ability = ability;
+
+	switch (ability)
+	{
+	case (Rapidfire):
+		this->texture = &textures[10];
+		break;
+		
+	default:
+		std::cout << "No texture found. Drawing default texture." << '\n';
+		this->texture = &textures[2];
+		break;
+	}
+	
 }
 
 void AbilityButton::Draw()
@@ -20,18 +35,21 @@ void AbilityButton::Draw()
 
 	DrawRectangle(this->position.x, this->position.y, this->width, this->height, col );
 
+	DrawTexture(*this->texture, this->position.x + 10, this->position.y + 10, WHITE);
 	//draw progress bar
 	int w = 70;
 	int h = 10;
 
 	this->progress = (float)this->currentCharges / this->totalCharges;
 
-	DrawRectangle((this->position.x + (AbilityButton::width / 2)) - (w / 2), this->position.y + 80, w, h, RED);
-	DrawRectangle((this->position.x + (AbilityButton::width / 2)) - (w / 2), this->position.y + 80, w * progress, h, GREEN);
+	DrawRectangle((this->position.x + (AbilityButton::width / 2)) - (w / 2), this->position.y + 108, w, h, RED);
+	DrawRectangle((this->position.x + (AbilityButton::width / 2)) - (w / 2), this->position.y + 108, w * progress, h, GREEN);
 
 
 	//draw id, temp
 	DrawText(std::to_string(this->ability).c_str(), this->position.x, this->position.y, 20.0f, RED);
+
+	
 }
 
 void AbilityButton::Update(int mouseX, int mouseY)

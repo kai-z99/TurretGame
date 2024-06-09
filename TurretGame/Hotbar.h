@@ -13,6 +13,8 @@ public:
 	Hotbar();
 	void Draw(GameStats* gameStats);
 	void Update(unsigned int frame, std::unordered_map<TurretAbility, std::pair<int, int>> charges);
+	void HandleInput();
+
 	std::vector<TurretAbility> GetActiveAbilityButtons();
 
 
