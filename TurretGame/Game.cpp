@@ -64,8 +64,8 @@ void Game::Initialize()
 
 
     //init db
-    this->abilityDB[Rapidfire] = { 300,0,5,5 };
-    this->abilityDB[SpecialRapidfire] = { 500,0,3,3 };
+    this->abilityDB[Rapidfire] = { 300,INT_MIN,5,5 };
+    this->abilityDB[SpecialRapidfire] = { 500,INT_MIN,3,3 };
 
 
     this->frameCount = 0;
@@ -188,11 +188,6 @@ void Game::Update()
     this->ActivateUsedAbilities();
     
     //ability
-    //for (auto x : this->gameStats->abilityStates)
-    //{
-    //    x.second.
-    //}
-
 
     //update turret
     this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);
@@ -226,7 +221,7 @@ void Game::Update()
 void Game::ActivateUsedAbilities()
 {
     //if an ability button is pressed, activate its ability if it has a charge.
-    for (TurretAbility a : this->hotbar->GetActiveAbilityButtons())
+    for (TurretAbility a : this->hotbar->GetActiveAbilityButtons(this->frameCount, this->gameStats->abilityStates))
     {
         bool success = false;
         switch (a)
@@ -237,6 +232,7 @@ void Game::ActivateUsedAbilities()
             {
                 this->turret->SetRapidFire(240);
                 this->gameStats->abilityStates[Rapidfire].charges -= 1;
+                this->gameStats->abilityStates[Rapidfire].lastUsedFrame = this->frameCount;
                 success = true;
             }
             break;
@@ -247,6 +243,7 @@ void Game::ActivateUsedAbilities()
             {
                 this->turret->SetSpecialRapidfire(240);
                 this->gameStats->abilityStates[SpecialRapidfire].charges -= 1;
+                this->gameStats->abilityStates[SpecialRapidfire].lastUsedFrame = this->frameCount;
                 success = true;
             }
             break;
@@ -257,7 +254,7 @@ void Game::ActivateUsedAbilities()
             break;
         }
 
-        //if (!success) not availible splash
+       // if (!success)
         
     }
 }

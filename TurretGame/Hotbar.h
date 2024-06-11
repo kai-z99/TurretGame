@@ -15,7 +15,7 @@ public:
 	void Update(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& charges);
 	void HandleInput();
 
-	std::vector<TurretAbility> GetActiveAbilityButtons();
+	std::vector<TurretAbility> GetActiveAbilityButtons(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& abilityStates);
 
 private:
 	std::vector<Button*> buttons;

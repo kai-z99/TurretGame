@@ -41,7 +41,6 @@ struct AbilityInfo
 {
 	int cooldown;
 	int lastUsedFrame;
-	//bool canUse;
 
 	short maxCharges;
 	short charges;

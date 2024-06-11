@@ -99,14 +99,15 @@ void Hotbar::HandleInput()
 	}
 }
 
-std::vector<TurretAbility> Hotbar::GetActiveAbilityButtons()
+std::vector<TurretAbility> Hotbar::GetActiveAbilityButtons(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& abilityStates)
 {
 	std::vector<TurretAbility> v = {};
 
 	//go through each ability button and check if its clicked. if it is, add to return vector
 	for (int i = 0; i <= 5; i++)
 	{
-		if (this->buttons[i]->isClicked)
+		TurretAbility ability = static_cast<TurretAbility>(i);
+		if (this->buttons[i]->isClicked && (frame - abilityStates[ability].lastUsedFrame) >= abilityStates[ability].cooldown)
 		{
 			v.push_back(dynamic_cast<AbilityButton*>(this->buttons[i])->GetAbility());
 		}
