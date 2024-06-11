@@ -64,8 +64,12 @@ void Game::Initialize()
 
 
     //init db
-    this->abilityDB[Rapidfire] = { 300,INT_MIN,5,5 };
-    this->abilityDB[SpecialRapidfire] = { 500,INT_MIN,3,3 };
+    this->abilityDB[Rapidfire] = { 550,INT_MIN,5,5 };
+    this->abilityDB[SpecialRapidfire] = { 700,INT_MIN,3,3 };
+    this->abilityDB[placeholder] = { 550,INT_MIN,5,5 };
+    this->abilityDB[Explosive] = { 550,INT_MIN,5,5 };
+    this->abilityDB[Knockback] = { 550,INT_MIN,5,5 };
+    this->abilityDB[Burn] = { 550,INT_MIN,5,5 };
 
 
     this->frameCount = 0;
@@ -220,42 +224,49 @@ void Game::Update()
 //helper for update
 void Game::ActivateUsedAbilities()
 {
-    //if an ability button is pressed, activate its ability if it has a charge.
-    for (TurretAbility a : this->hotbar->GetActiveAbilityButtons(this->frameCount, this->gameStats->abilityStates))
+    //if an ability button is pressed, activate its ability if it has a charge and it is not on cooldown
+    for (TurretAbility a : this->hotbar->GetActiveAbilityButtons())
     {
-        bool success = false;
-        switch (a)
+        if (this->frameCount - this->gameStats->abilityStates[a].lastUsedFrame >= this->gameStats->abilityStates[a].cooldown)
         {
-        case Rapidfire:
-            //if there is an availible chrage, use one.
-            if (this->gameStats->abilityStates[Rapidfire].charges > 0)
+            bool success = false;
+            switch (a)
             {
-                this->turret->SetRapidFire(240);
-                this->gameStats->abilityStates[Rapidfire].charges -= 1;
-                this->gameStats->abilityStates[Rapidfire].lastUsedFrame = this->frameCount;
-                success = true;
+            case Rapidfire:
+                //if there is an availible chrage, use one.
+                if (this->gameStats->abilityStates[Rapidfire].charges > 0)
+                {
+                    this->turret->SetRapidFire(240);
+                    this->gameStats->abilityStates[Rapidfire].charges -= 1;
+                    this->gameStats->abilityStates[Rapidfire].lastUsedFrame = this->frameCount;
+                    success = true;
+                }
+                break;
+
+            case SpecialRapidfire:
+                //if there is an availible chrage, use one.
+                if (this->gameStats->abilityStates[SpecialRapidfire].charges > 0)
+                {
+                    this->turret->SetSpecialRapidfire(240);
+                    this->gameStats->abilityStates[SpecialRapidfire].charges -= 1;
+                    this->gameStats->abilityStates[SpecialRapidfire].lastUsedFrame = this->frameCount;
+                    success = true;
+                }
+                break;
+
+
+            default:
+                std::cout << a << "Ability does not exist.";
+                break;
             }
-            break;
 
-        case SpecialRapidfire:
-            //if there is an availible chrage, use one.
-            if (this->gameStats->abilityStates[SpecialRapidfire].charges > 0)
-            {
-                this->turret->SetSpecialRapidfire(240);
-                this->gameStats->abilityStates[SpecialRapidfire].charges -= 1;
-                this->gameStats->abilityStates[SpecialRapidfire].lastUsedFrame = this->frameCount;
-                success = true;
-            }
-            break;
-
-
-        default:
-            std::cout << a << "Ability does not exist.";
-            break;
+            if (!success); //ability is not ready splash
         }
 
-       // if (!success)
-        
+        else
+        {
+            //ability is not ready splash
+        }  
     }
 }
 

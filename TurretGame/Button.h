@@ -9,7 +9,7 @@ public:
 
 	bool isHovering = false;
 	bool isClicked = false;
-	bool isHeld = false;
+	bool isHeld = false; 
 
 protected:
 	virtual bool MouseCollide(int mouseX, int mouseY) = 0;

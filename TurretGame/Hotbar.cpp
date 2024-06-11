@@ -69,6 +69,21 @@ void Hotbar::Update(unsigned int frame, std::unordered_map<TurretAbility, Abilit
 		//set its charges to the games amount
 		b->SetCurrentCharges(charges[b->GetAbility()].charges);
 
+		//set cooldown bar
+		int x = charges[b->GetAbility()].lastUsedFrame;
+
+		if (x < 0)
+		{
+			b->SetCooldownProgress(0.0f);
+		}
+
+		else
+		{
+			float progress = (float)(frame - x) / (float)charges[b->GetAbility()].cooldown;
+			b->SetCooldownProgress(1.0f - progress);
+		}
+		
+
 		//replace that spot in the buttons vector with the updated amount
 		this->buttons[i] = b;
 
@@ -99,7 +114,7 @@ void Hotbar::HandleInput()
 	}
 }
 
-std::vector<TurretAbility> Hotbar::GetActiveAbilityButtons(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& abilityStates)
+std::vector<TurretAbility> Hotbar::GetActiveAbilityButtons()
 {
 	std::vector<TurretAbility> v = {};
 
@@ -107,7 +122,7 @@ std::vector<TurretAbility> Hotbar::GetActiveAbilityButtons(unsigned int frame, s
 	for (int i = 0; i <= 5; i++)
 	{
 		TurretAbility ability = static_cast<TurretAbility>(i);
-		if (this->buttons[i]->isClicked && (frame - abilityStates[ability].lastUsedFrame) >= abilityStates[ability].cooldown)
+		if (this->buttons[i]->isClicked)
 		{
 			v.push_back(dynamic_cast<AbilityButton*>(this->buttons[i])->GetAbility());
 		}

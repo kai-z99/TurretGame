@@ -46,10 +46,13 @@ void AbilityButton::Draw()
 	int w = 70;
 	int h = 10;
 
-	this->progress = (float)this->currentCharges / this->totalCharges;
+	this->barProgress = (float)this->currentCharges / this->totalCharges;
 
 	DrawRectangle((this->position.x + (AbilityButton::width / 2)) - (w / 2), this->position.y + 108, w, h, RED);
-	DrawRectangle((this->position.x + (AbilityButton::width / 2)) - (w / 2), this->position.y + 108, w * progress, h, GREEN);
+	DrawRectangle((this->position.x + (AbilityButton::width / 2)) - (w / 2), this->position.y + 108, w * barProgress, h, GREEN);
+
+	DrawRectangle(this->position.x, this->position.y, this->width, this->height * this->cooldownProgress, {0,0,0,170});
+	//draw cooldown opaque bar
 
 
 	//draw id, temp?
@@ -69,9 +72,9 @@ bool AbilityButton::MouseCollide(int mouseX, int mouseY)
 	return CheckCollisionPointRec({ (float)mouseX, (float)mouseY }, {rec});
 }
 
-void AbilityButton::SetProgress(float progress)
+void AbilityButton::SetProgress(float barProgress)
 {
-	this->progress = progress;
+	this->barProgress = barProgress;
 }
 
 void AbilityButton::SetTotalCharges(int charges)
@@ -82,6 +85,11 @@ void AbilityButton::SetTotalCharges(int charges)
 void AbilityButton::SetCurrentCharges(int charges)
 {
 	this->currentCharges = charges;
+}
+
+void AbilityButton::SetCooldownProgress(float barProgress)
+{
+	this->cooldownProgress = barProgress;
 }
 
 TurretAbility AbilityButton::GetAbility()
