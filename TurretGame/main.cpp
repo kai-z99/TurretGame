@@ -24,3 +24,4 @@ int main(void)
 //enemies can drop abilities that can be clicked
 //splash damage bullety
 //move db to sep file
+//make ability charges vbar on AbilityButton be handled in game instead of the button

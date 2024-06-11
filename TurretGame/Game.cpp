@@ -190,8 +190,6 @@ void Game::Update()
 
     //if an ability button is pressed, activate its ability if it has a charge.
     this->ActivateUsedAbilities();
-    
-    //ability
 
     //update turret
     this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);

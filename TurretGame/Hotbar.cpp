@@ -6,17 +6,13 @@
 
 Hotbar::Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& abilityDB)
 {
+	//create the buttons
+
 	int buttonY = (menuBoundaryY / 2) - (AbilityButton::height / 2);
+
 	for (int i = 0; i <= 5; i++)
 	{
 		this->buttons.push_back(new AbilityButton(300 + i * 150, buttonY, static_cast<TurretAbility>(i)));
-
-		//temp, set all abilities to 5 charges
-		dynamic_cast<AbilityButton*>(this->buttons[i])->SetTotalCharges(abilityDB[static_cast<TurretAbility>(i)].maxCharges);
-		dynamic_cast<AbilityButton*>(this->buttons[i])->SetCurrentCharges(abilityDB[static_cast<TurretAbility>(i)].maxCharges);
-
-		//if its an ability button, set its duration to full
-		//dynamic_cast<ProgressButton*>(this->buttons[i])->SetProgress(1.0f);
 	}
 }
 
@@ -51,40 +47,33 @@ void Hotbar::Draw(GameStats* gameStats)
 
 }
 
-void Hotbar::Update(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& charges)
+void Hotbar::Update(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& abilityStates)
 {
-	//int i = 0;
-	//for (const auto& pair : charges)
-	//{
-	//	dynamic_cast<AbilityButton*>(this->buttons[i])->SetCurrentCharges(pair.second.first);
-	//	i++;
-	//}
-
-	// for every ability button, set its charges based on the games charges.
+	// for every ability button set its charge bar and cooldown progress accorrding to thye gamestate
 	for (int i = 0; i <= 5; i++)
 	{
-		//cast button to abilityButton to access GetAbility()
+		//cast button to abilityButton
 		AbilityButton* b = dynamic_cast<AbilityButton*>(this->buttons[i]);
 
-		//set its charges to the games amount
-		b->SetCurrentCharges(charges[b->GetAbility()].charges);
-
-		//set cooldown bar
-		int x = charges[b->GetAbility()].lastUsedFrame;
-
-		if (x < 0)
-		{
-			b->SetCooldownProgress(0.0f);
-		}
-
-		else
-		{
-			float progress = (float)(frame - x) / (float)charges[b->GetAbility()].cooldown;
-			b->SetCooldownProgress(1.0f - progress);
-		}
+		//set cooldown bar based on the ability's cooldown and last use
+		//onote: progress == how much the bar is shaded
+		float progress = 1.0f - ((float)(frame - abilityStates[b->GetAbility()].lastUsedFrame) / (float)abilityStates[b->GetAbility()].cooldown);
 		
+		if (progress > 1.0f) progress = 1.0f;
+		else if (progress < 0.0f) progress = 0.0f;
 
-		//replace that spot in the buttons vector with the updated amount
+		//always shade it fully when no charges are left
+		if (abilityStates[b->GetAbility()].charges <= 0)
+		{
+			progress = 1.0f;
+		}
+
+		b->SetCooldownProgress(progress);
+
+		//set charge bar
+		b->SetBarProgress((float)abilityStates[b->GetAbility()].charges / (float)abilityStates[b->GetAbility()].maxCharges);
+
+		//replace that spot in the buttons vector with the updated button
 		this->buttons[i] = b;
 
 		//THIS COULD BE ONE LINE BUT ITS NOT READABLE.

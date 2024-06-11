@@ -9,11 +9,9 @@ public:
 
 	virtual void Draw() override;
 	virtual void Update(int mouseX, int mouseY) override;
-	void SetProgress(float barProgress);
-	void SetTotalCharges(int charges);
-	void SetCurrentCharges(int charges);
+	void SetBarProgress(float barProgress);
 	void SetCooldownProgress(float barProgress);
-
+	
 	TurretAbility GetAbility();
 	int GetCurrentCharges() const;
 
@@ -26,8 +24,6 @@ private:
 	TurretAbility ability;
 	float barProgress = 0.0f; //how much bar is filled
 	float cooldownProgress = 0.0f; //how much the bar is shaded
-	int totalCharges;
-	int currentCharges;
 	Texture2D* texture;
 
 };

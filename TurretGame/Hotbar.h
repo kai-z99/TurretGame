@@ -12,7 +12,7 @@ class Hotbar
 public:
 	Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& abilityDB);
 	void Draw(GameStats* gameStats);
-	void Update(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& charges);
+	void Update(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& abilityStates);
 	void HandleInput();
 
 	std::vector<TurretAbility> GetActiveAbilityButtons();
