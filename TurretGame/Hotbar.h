@@ -10,13 +10,12 @@ class Button;
 class Hotbar
 {
 public:
-	Hotbar();
+	Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& abilityDB);
 	void Draw(GameStats* gameStats);
-	void Update(unsigned int frame, std::unordered_map<TurretAbility, std::pair<int, int>> charges);
+	void Update(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& charges);
 	void HandleInput();
 
 	std::vector<TurretAbility> GetActiveAbilityButtons();
-
 
 private:
 	std::vector<Button*> buttons;

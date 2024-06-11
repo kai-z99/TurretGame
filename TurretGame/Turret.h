@@ -18,11 +18,15 @@ public:
 
 	void SetBulletSpeedMultiplier(float multiplier);
 	void SetBaseFirerate(float firerate);
+	void SetBaseSpecialFirerate(float firerate);
 	void SetRapidFire(unsigned int frames);
-	void SetSpecialFirerate(float firerate);
+	void SetSpecialRapidfire(unsigned int frames);
+	
 
 	float GetCurrentFirerate();
 	const std::unordered_map<int, BulletCooldownInfo*>& GetBulletCooldownMap();
+
+	
 
 private:
 	void UpdateAngle(int mouseX, int mouseY);
@@ -42,9 +46,17 @@ private:
 	//GAME PROPERTIES------------------
 	std::unordered_map<int, BulletCooldownInfo*> bulletCooldownMap; // bullet id : info
 	float bulletSpeedMultiplier;
+
 	float baseFirerate;
-	float rapidFirerate;
 	float currentFirerate;
-	float specialFirerate; //firerate of speical bullets
+	float rapidFirerate;
 	int rapidFireFrames;
+
+	float baseSpecialFirerate;
+	float currentSpecialFirerate; //firerate of speical bullets
+	float rapidSpecialFirerate;
+	int specialRapidfireFrames;
+	
+
+	
 };

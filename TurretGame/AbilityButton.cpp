@@ -17,6 +17,10 @@ AbilityButton::AbilityButton(int posX, int posY, TurretAbility ability)
 		this->texture = &textures[10];
 		break;
 		
+	case (SpecialRapidfire):
+		this->texture = &textures[12];
+		break;
+
 	default:
 		std::cout << "No texture found. Drawing default texture." << '\n';
 		this->texture = &textures[2];
@@ -35,7 +39,9 @@ void AbilityButton::Draw()
 
 	DrawRectangle(this->position.x, this->position.y, this->width, this->height, col );
 
+	//draw icon
 	DrawTexture(*this->texture, this->position.x + 10, this->position.y + 10, WHITE);
+
 	//draw progress bar
 	int w = 70;
 	int h = 10;
@@ -46,8 +52,8 @@ void AbilityButton::Draw()
 	DrawRectangle((this->position.x + (AbilityButton::width / 2)) - (w / 2), this->position.y + 108, w * progress, h, GREEN);
 
 
-	//draw id, temp
-	DrawText(std::to_string(this->ability).c_str(), this->position.x, this->position.y, 20.0f, RED);
+	//draw id, temp?
+	DrawText(std::to_string(this->ability).c_str(), this->position.x - 15, this->position.y, 20.0f, DARKBLUE);
 
 	
 }

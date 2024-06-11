@@ -4,7 +4,7 @@
 #include "AbilityButton.h"
 
 
-Hotbar::Hotbar()
+Hotbar::Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& abilityDB)
 {
 	int buttonY = (menuBoundaryY / 2) - (AbilityButton::height / 2);
 	for (int i = 0; i <= 5; i++)
@@ -12,8 +12,8 @@ Hotbar::Hotbar()
 		this->buttons.push_back(new AbilityButton(300 + i * 150, buttonY, static_cast<TurretAbility>(i)));
 
 		//temp, set all abilities to 5 charges
-		dynamic_cast<AbilityButton*>(this->buttons[i])->SetTotalCharges(5);
-		dynamic_cast<AbilityButton*>(this->buttons[i])->SetCurrentCharges(5);
+		dynamic_cast<AbilityButton*>(this->buttons[i])->SetTotalCharges(abilityDB[static_cast<TurretAbility>(i)].maxCharges);
+		dynamic_cast<AbilityButton*>(this->buttons[i])->SetCurrentCharges(abilityDB[static_cast<TurretAbility>(i)].maxCharges);
 
 		//if its an ability button, set its duration to full
 		//dynamic_cast<ProgressButton*>(this->buttons[i])->SetProgress(1.0f);
@@ -43,6 +43,7 @@ void Hotbar::Draw(GameStats* gameStats)
 
 	DrawTextEx(GetFontDefault(), text.c_str(), { xPos ,yPos }, fontsize, spacing, RED);
 
+	//draw buttons
 	for (Button* b : this->buttons)
 	{
 		b->Draw();
@@ -50,7 +51,7 @@ void Hotbar::Draw(GameStats* gameStats)
 
 }
 
-void Hotbar::Update(unsigned int frame, std::unordered_map<TurretAbility, std::pair<int, int>> charges)
+void Hotbar::Update(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& charges)
 {
 	//int i = 0;
 	//for (const auto& pair : charges)
@@ -66,7 +67,7 @@ void Hotbar::Update(unsigned int frame, std::unordered_map<TurretAbility, std::p
 		AbilityButton* b = dynamic_cast<AbilityButton*>(this->buttons[i]);
 
 		//set its charges to the games amount
-		b->SetCurrentCharges(charges[b->GetAbility()].first);
+		b->SetCurrentCharges(charges[b->GetAbility()].charges);
 
 		//replace that spot in the buttons vector with the updated amount
 		this->buttons[i] = b;

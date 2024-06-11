@@ -3,9 +3,19 @@
 #include "ExplosionEffect.h"
 #include "FireEffect.h"
 
+#include <iostream>
+
 
 VisualEffectsManager::VisualEffectsManager()
 {
+}
+
+VisualEffectsManager::~VisualEffectsManager()
+{
+    for (VisualEffect* element : this->tasks)
+    {
+        delete element;
+    }
 }
 
 void VisualEffectsManager::DisplayCoinSplash(Vector2 pos, int amount)
@@ -28,8 +38,32 @@ void VisualEffectsManager::DisplayFire(Vector2 pos, float scale)
 
 void VisualEffectsManager::UpdateAndDraw()
 {
-	for (const auto& element : this->tasks) 
+    if (this->tasks.size() > 300) this->CleanTasks();
+
+	for (VisualEffect* element : this->tasks) 
 	{
 		element->UpdateAndDraw();
 	}
 }
+
+void VisualEffectsManager::CleanTasks() //see clean bullet vector
+{
+    std::cout << "size before: " << this->tasks.size() << '\n';
+    std::vector<VisualEffect*> temp;
+
+    for (VisualEffect* v : this->tasks)
+    {
+        if (v->isActive())
+        {
+            temp.push_back(v);
+        }
+
+        else delete v;
+    }
+
+    this->tasks.clear(); 
+
+    this->tasks.insert(this->tasks.end(), temp.begin(), temp.end());
+    std::cout << "size after: " << this->tasks.size() << '\n';
+}
+

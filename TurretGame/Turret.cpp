@@ -1,6 +1,7 @@
 #include "Turret.h"
 #include <iostream>
 #include "raymath.h"
+#include "types.h"
 #include "helpers.h"
 #include "TurretBullet.h"
 #include "ShockwaveBullet.h"
@@ -21,11 +22,17 @@ Turret::Turret()
 
     //gun settings
     this->bulletSpeedMultiplier = 1.0f;
+
     this->baseFirerate = 1.5f; // in shots per second for turretBullet
+    this->currentFirerate = this->baseFirerate;
     this->rapidFirerate = this->baseFirerate * 3.0f;
     this->rapidFireFrames = 0;
 
-    this->specialFirerate = 1.0f;
+    this->baseSpecialFirerate = 1.0f;
+    this->currentSpecialFirerate = this->baseSpecialFirerate;
+    this->rapidSpecialFirerate = this->baseSpecialFirerate * 3.0f;
+    this->specialRapidfireFrames = 0;
+
     
     //initate bullet cooldown map
     for (int i = 1; i <= 3; i++)
@@ -35,6 +42,8 @@ Turret::Turret()
         this->bulletCooldownMap[i]->lastShotFrame = 0;
         this->bulletCooldownMap[i]->shotThisFrame = false;
     }
+
+    
 
 }
 
@@ -55,6 +64,15 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
     }
          
     else this->currentFirerate = this->baseFirerate;
+
+
+    if (this->specialRapidfireFrames > 0)
+    {
+        this->currentSpecialFirerate = this->rapidSpecialFirerate;
+        this->specialRapidfireFrames -= 1;
+    }
+
+    else this->currentSpecialFirerate = this->baseSpecialFirerate;
 
 
     //update bullet cooldowns
@@ -81,13 +99,13 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
         //shockwave bullet
         else if (pair.first == 2) //not affected by firerate rn, figure a cool implelention maybe
         {
-            if (frame - pair.second->lastShotFrame > 150 / this->specialFirerate) pair.second->canShoot = true;
+            if (frame - pair.second->lastShotFrame > 150 / this->currentSpecialFirerate) pair.second->canShoot = true;
         }
 
         //Firebullet
         else if (pair.first == 3) //not affected by firerate rn, figure a cool implelention maybe
         {
-            if (frame - pair.second->lastShotFrame > 180 / this->specialFirerate) pair.second->canShoot = true;
+            if (frame - pair.second->lastShotFrame > 180 / this->currentSpecialFirerate) pair.second->canShoot = true;
         }
         
     }
@@ -158,9 +176,14 @@ void Turret::SetRapidFire(unsigned int frames)
     this->rapidFireFrames += frames;
 }
 
-void Turret::SetSpecialFirerate(float firerate)
+void Turret::SetSpecialRapidfire(unsigned int frames)
 {
-    this->specialFirerate = firerate;
+    this->specialRapidfireFrames += frames;
+}
+
+void Turret::SetBaseSpecialFirerate(float firerate)
+{
+    this->baseSpecialFirerate = firerate;
 }
 
 float Turret::GetCurrentFirerate()

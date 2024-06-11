@@ -10,7 +10,7 @@ class Enemy;
 class Hotbar;
 class VisualEffectsManager;
 
-struct GameStats;
+
 
 class Game
 {
@@ -23,9 +23,11 @@ public:
 private:
 	void Initialize();
 	void Draw();
+	void DrawVisualEffects();
 	void Update();
 
 	void HandleCollisions();
+	void HandleBulletCollideEnemy(Enemy* e, Bullet* b);
 	void HandleInput();
 	void HandleEnemySpawning();
 
@@ -44,4 +46,7 @@ private:
 
 	Vector2 mousePos;
 	unsigned int frameCount;
+
+	//DATA BASE
+	 std::unordered_map<TurretAbility, AbilityInfo> abilityDB;
 };

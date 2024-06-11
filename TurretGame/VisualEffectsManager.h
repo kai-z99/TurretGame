@@ -8,6 +8,7 @@ class VisualEffectsManager
 {
 public:
 	VisualEffectsManager();
+	~VisualEffectsManager();
 	void DisplayCoinSplash(Vector2 pos, int amount);
 	void DisplayExplosion(Vector2 pos);
 	void DisplayFire(Vector2 pos, float scale);
@@ -15,5 +16,6 @@ public:
 
 private:
 	std::vector<VisualEffect*> tasks; // animationtype, frames remaining
+	void CleanTasks();
 
 };

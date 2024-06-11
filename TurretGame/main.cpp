@@ -11,6 +11,9 @@ int main(void)
 
 }
 
+//finsh turret ablitlies (one does faster special atks)
+
+//make a clean vector function for visual effectrs manmager
 //more enemis
 //different projectiles
 //make damage spalsh
@@ -20,3 +23,4 @@ int main(void)
 //resolve warnings
 //enemies can drop abilities that can be clicked
 //splash damage bullety
+//move db to sep file
