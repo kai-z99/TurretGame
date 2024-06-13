@@ -43,6 +43,7 @@ private:
 	std::vector<Bullet*> bullets;
 	std::vector<Enemy*> enemies;
 	
+	bool bombMode;
 
 	Vector2 mousePos;
 	unsigned int frameCount;

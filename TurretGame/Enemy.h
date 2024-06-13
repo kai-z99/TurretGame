@@ -10,6 +10,7 @@ class Enemy
 {
 public:
 	Enemy();
+	~Enemy();
 	virtual void Draw(); // default just draws its hitbox.
 	virtual void Update(unsigned int frame); // defulat update is just pos and velocity, and does status effects
 

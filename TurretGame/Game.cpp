@@ -46,7 +46,7 @@ void Game::Run()
     {
         this->Update();
         this->HandleEnemySpawning();
-        this->HandleCollisions();
+       // this->HandleCollisions();
         this->HandleInput();
         this->Draw();
     }
@@ -66,8 +66,8 @@ void Game::Initialize()
     //init db
     this->abilityDB[Rapidfire] = { 550,INT_MIN,5,5 };
     this->abilityDB[SpecialRapidfire] = { 700,INT_MIN,3,3 };
+    this->abilityDB[Explosive] = { 800,INT_MIN,2,2 };
     this->abilityDB[placeholder] = { 550,INT_MIN,5,5 };
-    this->abilityDB[Explosive] = { 550,INT_MIN,5,5 };
     this->abilityDB[Knockback] = { 550,INT_MIN,5,5 };
     this->abilityDB[Burn] = { 550,INT_MIN,5,5 };
 
@@ -83,20 +83,14 @@ void Game::Initialize()
     this->gameStats->totalCoins = 0;
     this->gameStats->coinsCollectedInLevel = 0;
 
+    this->bombMode = false;
+
     //temp, fill all charges with 5
     for (int i = 0; i <= 5; i++)
     { 
         TurretAbility ability = static_cast<TurretAbility>(i);
         this->gameStats->abilityStates[ability] = this->abilityDB[ability];
     }
-    
-    //
-    //int y;
-    //testa tt(3); // tt{3}
-    ////testa th = testa();
-    //std::cout << tt.data << std::endl;
-    //return;
-
     
 }
 
@@ -128,7 +122,6 @@ void Game::Draw()
         {
             b->Draw();
         }
-
     }
 
     //draw rolling effects
@@ -205,18 +198,28 @@ void Game::Update()
 	{
         if (e->isActive)
         {
-            e->Update(this->frameCount);
+            e->Update(this->frameCount); //move enemy, apply effects, apply knockback. apply tint
+
+            // if enemy died, add coin amount. and display coin effect
+            if (e->GetHealth() <= 0)
+            {
+                this->gameStats->coinsCollectedInLevel += e->GetCoinDropAmount();
+                this->effectManager->DisplayCoinSplash(e->GetPosition(), e->GetCoinDropAmount());
+                e->isActive = false;
+            }
 
             //check if enemy has infiltrated the base
-            if (e->GetPosition().x <= deathBoundaryX)
+            else if (e->GetPosition().x <= deathBoundaryX)
             {
-                e->isActive = false;
                 this->gameStats->health -= e->GetDamage();
+                e->isActive = false;
             }
         }
 		
 	}
 
+    //handle collisions
+    this->HandleCollisions();
 }
 
 //helper for update
@@ -252,6 +255,15 @@ void Game::ActivateUsedAbilities()
                 }
                 break;
 
+            case Explosive:
+                if (this->gameStats->abilityStates[Explosive].charges > 0)
+                {
+                    this->bombMode = true;
+                    this->gameStats->abilityStates[Explosive].charges -= 1;
+                    this->gameStats->abilityStates[Explosive].lastUsedFrame = this->frameCount;
+                    success = true;
+                }
+                break;
 
             default:
                 std::cout << a << "Ability does not exist.";
@@ -286,6 +298,8 @@ void Game::HandleCollisions()
             }
         }
     }
+
+
 }
 
 void Game::HandleBulletCollideEnemy(Enemy* e, Bullet* b)
@@ -331,33 +345,41 @@ void Game::HandleBulletCollideEnemy(Enemy* e, Bullet* b)
         break;
     }
 
-    // if enemy died, add coin amount. and display coin effect
-    if (e->GetHealth() <= 0)
-    {
-        this->gameStats->coinsCollectedInLevel += e->GetCoinDropAmount();
-        this->effectManager->DisplayCoinSplash(e->GetPosition(), e->GetCoinDropAmount());
-    }
-
     b->isActive = false;
 }
 
 void Game::HandleInput()
 {
-    if (IsMouseButtonDown(0)) //check if turret shoot
+    if (this->bombMode)
     {
-        //go through each bullet type
-        for (const auto& cooldown : this->turret->GetBulletCooldownMap()) // bulletid : cooldownInfo
-        {
-            //if that type isnt on cooldown
-            if (cooldown.second->canShoot)
-            {
-                //shoot that bullet type once.
-                this->turret->ShootBullet(this->bullets, cooldown.first);
-            }
-        }
 
-        if (bullets.size() > this->bulletLimit) this->CleanBulletVector(); //if the bullet vector is too big, cleanup
-    
+        // if MouseButtonPressed:
+        //      release bomb at x,y
+
+                                                  
+
+
+
+
+    }
+
+    else
+    {
+        if (IsMouseButtonDown(0))
+        {
+            //go through each bullet type
+            for (const auto& cooldown : this->turret->GetBulletCooldownMap()) // bulletid : cooldownInfo
+            {
+                //if that type isnt on cooldown
+                if (cooldown.second->canShoot)
+                {
+                    //shoot that bullet type once.
+                    this->turret->ShootBullet(this->bullets, cooldown.first);
+                }
+            }
+
+            if (bullets.size() > this->bulletLimit) this->CleanBulletVector(); //if the bullet vector is too big, cleanup
+        }
     }
 
     //handle button clicking on hotbar

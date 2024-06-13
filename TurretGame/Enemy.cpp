@@ -13,6 +13,11 @@ Enemy::Enemy()
 	}
 }
 
+Enemy::~Enemy()
+{
+	delete this->textureLoop;
+}
+
 void Enemy::Draw() //draws hitbox
 {
 	DrawRectangleLines(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
@@ -31,14 +36,6 @@ void Enemy::Update(unsigned int frame)
 		this->knockbackFrames -= 1;
 	}
 	
-	if (this->health <= 0)
-	{
-		this->isActive = false;
-		delete this->textureLoop;
-	}
-
-	//HANDLE STATUS EFFECTS
-
 	//for eevery status effect
 	for (auto& effect : this->statusEffects)
 	{
