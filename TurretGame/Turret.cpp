@@ -152,7 +152,7 @@ void Turret::ShootBullet(std::vector<Bullet*>& bullets, int id)
 
     //set its pos and velocity
     b->SetPosition(this->position.x, this->position.y);
-    b->SetVelocity(b->GetBaseSpeed() * this->bulletSpeedMultiplier * cosf(this->angle), b->GetBaseSpeed() * this->bulletSpeedMultiplier * sinf(this->angle));
+    b->SetCurrentVelocity(b->GetBaseSpeed() * this->bulletSpeedMultiplier * cosf(this->angle), b->GetBaseSpeed() * this->bulletSpeedMultiplier * sinf(this->angle));
 
     bullets.push_back(b);
     

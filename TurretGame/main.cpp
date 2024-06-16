@@ -12,7 +12,7 @@ int main(void)
 }
 
 //finsh turret ablitlies (one does faster special atks)
-
+//firebomb childf of bomb
 //make a clean vector function for visual effectrs manmager
 //more enemis
 //different projectiles

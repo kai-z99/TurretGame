@@ -11,7 +11,8 @@ RedKoopaEnemy::RedKoopaEnemy()
 	this->coinDropAmount = GetRandomValue(20,30);
 
 	this->knockbackMultiplier = 0.0f;
-	this->velocity = { -4.0f,0.0f };
+	this->baseVelocity = { -1.2f,0.0f }; //walking speed
+	this->currentVelocity = { -4.0f, 0.0f }; //shell speed
 	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 }; //50 and 100 are the hitbox dimensions... minus half for centering purpose
 	this->textureLoop = new TextureLoop(&textures[4], 4, 4.0f, this->position);
 	this->shellTextureLoop = new TextureLoop(&textures[5], 4, 4.0f, this->position);
@@ -28,13 +29,13 @@ void RedKoopaEnemy::Update(unsigned int frame)
 	Enemy::Update(frame);
 
 	//update distance walked
-	this->distanceWalked -= this->velocity.x;
+	this->distanceWalked -= this->currentVelocity.x;
 
 	//check if koopa should unshell
-	if (this->distanceWalked >= deShellThreshold)
+	if (this->distanceWalked >= deShellThreshold && this->shellForm)
 	{
 		this->shellForm = false;
-		this->velocity.x = -1.2f;
+		this->currentVelocity = this->baseVelocity;
 		this->knockbackMultiplier = 0.65f;
 	}
 

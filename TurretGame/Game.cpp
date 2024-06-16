@@ -13,6 +13,8 @@
 #include "helpers.h"
 #include "VisualEffectsManager.h"
 #include "types.h"
+#include "BombExplosion.h"
+#include "IceSheet.h"
 
 Game::Game()
 {
@@ -40,13 +42,11 @@ Game::~Game()
 
 void Game::Run()
 {
-
-
     while (!WindowShouldClose())
     {
         this->Update();
         this->HandleEnemySpawning();
-       // this->HandleCollisions();
+        //this->HandleCollisions();
         this->HandleInput();
         this->Draw();
     }
@@ -67,7 +67,7 @@ void Game::Initialize()
     this->abilityDB[Rapidfire] = { 550,INT_MIN,5,5 };
     this->abilityDB[SpecialRapidfire] = { 700,INT_MIN,3,3 };
     this->abilityDB[Explosive] = { 800,INT_MIN,2,2 };
-    this->abilityDB[placeholder] = { 550,INT_MIN,5,5 };
+    this->abilityDB[Ice] = { 550,INT_MIN,5,5 };
     this->abilityDB[Knockback] = { 550,INT_MIN,5,5 };
     this->abilityDB[Burn] = { 550,INT_MIN,5,5 };
 
@@ -83,9 +83,9 @@ void Game::Initialize()
     this->gameStats->totalCoins = 0;
     this->gameStats->coinsCollectedInLevel = 0;
 
-    this->bombMode = false;
+    this->inputMode = false;
 
-    //temp, fill all charges with 5
+    //fill all charges
     for (int i = 0; i <= 5; i++)
     { 
         TurretAbility ability = static_cast<TurretAbility>(i);
@@ -109,19 +109,31 @@ void Game::Draw()
     //draw turret
     this->turret->Draw();
 
+    //DRAW ICE UNDER
+    for (AreaEffect* a : this->areaEffects)
+    {
+        //id 2 is ice
+        if (a->isActive && a->GetID() == 2) a->Draw();
+    }
+
+
     //draw enemies based on type. elsewise default enemy drawing behavoir.
-    for (Enemy* e : enemies)
+    for (Enemy* e : this->enemies)
     {
         if (e->isActive) e->Draw();      
     }
 
     //draw bullets based on type. elsewise default enemy drawing behavoir.
-    for (Bullet* b : bullets)
+    for (Bullet* b : this->bullets)
     {
-        if (b->isActive)
-        {
-            b->Draw();
-        }
+        if (b->isActive) b->Draw();
+    }
+
+    //DRAW EXPLOSION ON TOP
+    for (AreaEffect* a : this->areaEffects)
+    {
+        //id 1 is bomb
+        if (a->isActive && a->GetID() == 1) a->Draw();
     }
 
     //draw rolling effects
@@ -133,8 +145,18 @@ void Game::Draw()
     //draw hotbar
     this->hotbar->Draw(this->gameStats);
 
-    //draw mouse temp
-    DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5, BLUE);
+    //draw mouse
+    if (!this->inputMode) DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5.0f, BLUE);
+
+    //draw mouse in place mode
+    else
+    {
+        DrawCircleLines((int)this->mousePos.x, (int)this->mousePos.y, 35.0f, RED);
+        DrawLineEx({ this->mousePos.x - 30, this->mousePos.y - 30 }, { this->mousePos.x + 30, this->mousePos.y + 30 }, 1.0f, RED);
+        DrawLineEx({ this->mousePos.x + 30, this->mousePos.y - 30 }, { this->mousePos.x - 30, this->mousePos.y + 30 }, 1.0f, RED);
+    }
+        
+       
 
     EndDrawing();
 }
@@ -168,6 +190,26 @@ void Game::DrawVisualEffects()
             effectManager->DisplayFire(firePos, 0.5f + scaleMod);
         }
     }
+
+    //draw sparkles on ice sheet
+    for (AreaEffect* a : this->areaEffects)
+    {
+        //id 2 is ice
+        if (a->isActive && a->GetID() == 2)
+        {
+            Rectangle icebox = dynamic_cast<IceSheet*>(a)->GetHitbox();
+
+            float offsetX = GetRandomValue(-(icebox.width / 2), (icebox.width / 2));
+            float offsetY = GetRandomValue(-(icebox.height / 2), (icebox.height / 2));
+
+            Vector2 pos = a->GetPosition();
+            pos.x += offsetX;
+            pos.y += offsetY;
+
+
+            this->effectManager->DisplayIceSparkle(pos, GetRandomValue(-100, 100) * 0.02f);
+        }
+    }
 }
 
 void Game::Update()
@@ -188,13 +230,18 @@ void Game::Update()
     this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);
 
     //handle bullets
-	for (Bullet* b : bullets)
+	for (Bullet* b : this->bullets)
 	{
         if (b->isActive) b->Update(this->frameCount);
 	}
 
+    for (AreaEffect* a : this->areaEffects)
+    {
+        if (a->isActive) a->Update(this->frameCount);
+    }
+
     //handle enemies
-	for (Enemy* e : enemies)
+	for (Enemy* e : this->enemies)
 	{
         if (e->isActive)
         {
@@ -228,49 +275,44 @@ void Game::ActivateUsedAbilities()
     //if an ability button is pressed, activate its ability if it has a charge and it is not on cooldown
     for (TurretAbility a : this->hotbar->GetActiveAbilityButtons())
     {
+        // if the ability is ready,
         if (this->frameCount - this->gameStats->abilityStates[a].lastUsedFrame >= this->gameStats->abilityStates[a].cooldown)
         {
-            bool success = false;
-            switch (a)
+            //if there is an availible chrage, use one.
+            if (this->gameStats->abilityStates[a].charges > 0)
             {
-            case Rapidfire:
-                //if there is an availible chrage, use one.
-                if (this->gameStats->abilityStates[Rapidfire].charges > 0)
+                this->gameStats->abilityStates[a].charges -= 1;
+                this->gameStats->abilityStates[a].lastUsedFrame = this->frameCount;
+
+                switch (a)
                 {
+                case Rapidfire:
                     this->turret->SetRapidFire(240);
-                    this->gameStats->abilityStates[Rapidfire].charges -= 1;
-                    this->gameStats->abilityStates[Rapidfire].lastUsedFrame = this->frameCount;
-                    success = true;
-                }
-                break;
+                    break;
 
-            case SpecialRapidfire:
-                //if there is an availible chrage, use one.
-                if (this->gameStats->abilityStates[SpecialRapidfire].charges > 0)
-                {
+                case SpecialRapidfire:
                     this->turret->SetSpecialRapidfire(240);
-                    this->gameStats->abilityStates[SpecialRapidfire].charges -= 1;
-                    this->gameStats->abilityStates[SpecialRapidfire].lastUsedFrame = this->frameCount;
-                    success = true;
-                }
-                break;
+                    break;
 
-            case Explosive:
-                if (this->gameStats->abilityStates[Explosive].charges > 0)
-                {
-                    this->bombMode = true;
-                    this->gameStats->abilityStates[Explosive].charges -= 1;
-                    this->gameStats->abilityStates[Explosive].lastUsedFrame = this->frameCount;
-                    success = true;
-                }
-                break;
+                case Explosive:
+                    this->inputMode = 1; //1 is bomb place mode
+                    break;
 
-            default:
-                std::cout << a << "Ability does not exist.";
-                break;
+                case Ice:
+                    this->inputMode = 2; //2 is ice mode
+                    break;
+
+                default:
+                    std::cout << a << "Ability does not exist.";
+                    break;
+                }
             }
 
-            if (!success); //ability is not ready splash
+            else
+            {
+                // no charges splash
+            }
+            
         }
 
         else
@@ -281,10 +323,10 @@ void Game::ActivateUsedAbilities()
 }
 
 
-//check if bullets hits enemys
 void Game::HandleCollisions()
 {
-    for (Bullet* b : bullets)
+    //bullet collisions
+    for (Bullet* b : this->bullets)
     {
         if (b->isActive)
         {
@@ -299,7 +341,49 @@ void Game::HandleCollisions()
         }
     }
 
+    //AOE collisions
+    for (AreaEffect* a : this->areaEffects)
+    {
+        if (a->isActive)
+        {
+            switch (a->GetID())
+            {
+            //BOMB EXPLOSTION
+            case 1:
+                for (Enemy* e : enemies)
+                {
+                    BombExplosion* exp = dynamic_cast<BombExplosion*>(a);
+                    if (e->isActive && exp->isDetonateFrame && exp->EnemyCollided(e))
+                    {
+                        e->SetHealth(e->GetHealth() - exp->GetDamage());
+                        e->ApplyKnockback(exp->GetKnockbackFrames());
+                    }
+                }
 
+                break;
+
+            //ice sheet
+            case 2:
+                for (Enemy* e : enemies)
+                {
+                    IceSheet* i = dynamic_cast<IceSheet*>(a);
+                    if (e->isActive && i->isActive && i->EnemyCollided(e))
+                    {
+                        //id 3 is red koopa
+                        if (e->GetID() != 3) e->ApplyStatusEffect(Chilled, 150);
+                        //only chill when its not in shell
+                        else if (!dynamic_cast<RedKoopaEnemy*>(e)->shellForm) e->ApplyStatusEffect(Chilled, 150);
+                    }
+                }
+
+                break;
+
+
+            default:
+                break;
+            }
+        }
+    }
 }
 
 void Game::HandleBulletCollideEnemy(Enemy* e, Bullet* b)
@@ -350,21 +434,35 @@ void Game::HandleBulletCollideEnemy(Enemy* e, Bullet* b)
 
 void Game::HandleInput()
 {
-    if (this->bombMode)
+    //bomb and ice place mode
+    if (this->inputMode == 1 || this->inputMode == 2)
     {
+        //if mouse is clicked in bounds
+        if (IsMouseButtonPressed(0) && this->mousePos.y > menuBoundaryY)
+        {
+            switch (this->inputMode)
+            {
+            //bomb
+            case 1:
+                //push bomb in vector at x,y
+                this->areaEffects.push_back(new BombExplosion(this->mousePos.x, this->mousePos.y));
+                break;
+            //ice
+            case 2:
+                this->areaEffects.push_back(new IceSheet(this->mousePos.x, this->mousePos.y, 350));
+                break;
+            }
 
-        // if MouseButtonPressed:
-        //      release bomb at x,y
-
-                                                  
-
-
-
-
+            this->inputMode = 0;
+        }
     }
 
+    //standard shooting 
     else
     {
+        //handle button clicking on hotbar (NOTE when in other input more this wont update so it will get stuck in a blue background after clikcing bomb or ice)
+        this->hotbar->HandleInput();
+
         if (IsMouseButtonDown(0))
         {
             //go through each bullet type
@@ -382,9 +480,7 @@ void Game::HandleInput()
         }
     }
 
-    //handle button clicking on hotbar
-    this->hotbar->HandleInput();
-
+    
 }
 
 

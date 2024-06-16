@@ -20,6 +20,14 @@ AbilityButton::AbilityButton(int posX, int posY, TurretAbility ability)
 	case (SpecialRapidfire):
 		this->texture = &textures[12];
 		break;
+	
+	case (Explosive):
+		this->texture = &textures[13];
+		break;
+
+	case (Ice):
+		this->texture = &textures[15];
+		break;
 
 	default:
 		std::cout << "No texture found. Drawing default texture." << '\n';

@@ -15,9 +15,10 @@ public:
 	virtual void Update(unsigned int frame); // defulat update is just pos and velocity, and does status effects
 
 	void SetPosition(float x, float y);
-	void SetVelocity(float x, float y);
+	void SetCurrentVelocity(float x, float y);
 	void SetHealth(float health);
 	void ApplyKnockback(Bullet* b);
+	void ApplyKnockback(int frames);
 	void ApplyStatusEffect(StatusEffect effect, int frames);
 
 	//constant?
@@ -26,6 +27,7 @@ public:
 	int GetID() const;
 	Rectangle GetHitbox() const;
 	Vector2 GetPosition() const;
+	Vector2 GetBaseVelocity() const;
 	float GetHealth();
 	float GetMaxHealth();
 	int GetDamage() const;
@@ -36,7 +38,8 @@ protected:
 	void DrawHealthbar(int yOffset, float barSize); //yOffset: how many px up from middle of image
 
 	Vector2 position = {-300, -300};
-	Vector2 velocity;
+	Vector2 currentVelocity;
+	Vector2 baseVelocity;
 	Rectangle hitbox;
 
 	TextureLoop* textureLoop;

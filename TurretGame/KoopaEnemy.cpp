@@ -11,7 +11,8 @@ KoopaEnemy::KoopaEnemy()
 	this->coinDropAmount = GetRandomValue(12,18);
 
 	this->knockbackMultiplier = 0.5f;
-	this->velocity = { -1.5,0 };
+	this->baseVelocity = { -1.5,0.0f };
+	this->currentVelocity = this->baseVelocity;
 	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 }; //50 and 100 are the hitbox dimensions... minus half for centering purpose
 	this->textureLoop = new TextureLoop(&textures[3], 2, 4.0f, this->position);
 }

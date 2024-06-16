@@ -11,9 +11,9 @@ public:
 	Vector2 GetPosition() const;
 
 	void SetPosition(float x, float y);
-	void SetVelocity(float x, float y);
+	void SetCurrentVelocity(float x, float y);
 
 protected:
 	Vector2 position = {-300, -300}; //default position is off site
-	Vector2 velocity;
+	Vector2 currentVelocity;
 };

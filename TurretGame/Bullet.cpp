@@ -20,7 +20,7 @@ void Bullet::Update(unsigned int frame)
     } 
 
     //update the angle of the bullet based on velocity
-    this->angle = CalculateAngle(this->velocity.x, this->velocity.y);
+    this->angle = CalculateAngle(this->currentVelocity.x, this->currentVelocity.y);
 }
 
 bool Bullet::EnemyCollided(Enemy* e)

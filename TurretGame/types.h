@@ -5,7 +5,7 @@ enum TurretAbility
 {
 	Rapidfire,
 	SpecialRapidfire,
-	placeholder,
+	Ice,
 	Explosive,
 	Knockback,
 	Burn,

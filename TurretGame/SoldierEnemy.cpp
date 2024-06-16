@@ -11,7 +11,10 @@ SoldierEnemy::SoldierEnemy()
 	this->coinDropAmount = 10;
 
 	this->knockbackMultiplier = 1.0f;
-	this->velocity = { -4,0 };
+
+	this->baseVelocity = { -4,0 };
+	this->currentVelocity = this->baseVelocity;
+
 	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100}; //50 and100 are the hitbox dimensions... minus half for centering purpose
 	this->textureLoop = new TextureLoop(&textures[0], 6, 1.0f, this->position);
 	this->textureLoop->ToggleMirrorImage();

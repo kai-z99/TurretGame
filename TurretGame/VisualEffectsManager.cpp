@@ -2,6 +2,7 @@
 #include "CoinSplashEffect.h"
 #include "ExplosionEffect.h"
 #include "FireEffect.h"
+#include "IceSparkleEffect.h"
 
 #include <iostream>
 
@@ -35,6 +36,13 @@ void VisualEffectsManager::DisplayFire(Vector2 pos, float scale)
 	VisualEffect* v = new FireEffect(pos, scale);
 	this->tasks.push_back(v);
 }
+
+void VisualEffectsManager::DisplayIceSparkle(Vector2 pos, float scale)
+{
+    VisualEffect* v = new IceSparkleEffect(pos, scale);
+    this->tasks.push_back(v);
+}
+
 
 void VisualEffectsManager::UpdateAndDraw()
 {

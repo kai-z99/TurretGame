@@ -6,6 +6,7 @@
 
 class Turret;
 class Bullet;
+class AreaEffect;
 class Enemy;
 class Hotbar;
 class VisualEffectsManager;
@@ -42,8 +43,9 @@ private:
 	const int bulletLimit = 200; //how many bullets can be on the screen
 	std::vector<Bullet*> bullets;
 	std::vector<Enemy*> enemies;
+	std::vector<AreaEffect*> areaEffects;
 	
-	bool bombMode;
+	int inputMode; //0: standard, 1: bomb, 2 : ice
 
 	Vector2 mousePos;
 	unsigned int frameCount;

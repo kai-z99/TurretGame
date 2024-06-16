@@ -26,8 +26,8 @@ void Enemy::Draw() //draws hitbox
 void Enemy::Update(unsigned int frame)
 {
 
-	this->position.x += this->velocity.x;
-	this->position.y += this->velocity.y;
+	this->position.x += this->currentVelocity.x;
+	this->position.y += this->currentVelocity.y;
 	
 
 	if (this->knockbackFrames > 0)
@@ -52,6 +52,20 @@ void Enemy::Update(unsigned int frame)
 				effect.second -= 1;
 				if (effect.second <= 0) this->tint = WHITE;
 				break;
+
+			case Chilled:
+				//slow movement
+				this->currentVelocity.x = this->baseVelocity.x * 0.3f;
+				this->currentVelocity.y = this->baseVelocity.y * 0.3f;
+				this->tint = BLUE; //tint blue 
+
+				effect.second -= 1;
+				if (effect.second <= 0)
+				{
+					this->currentVelocity = this->baseVelocity;
+					this->tint = WHITE;
+				}
+				break;
 			}
 
 		}
@@ -74,9 +88,14 @@ void Enemy::ApplyKnockback(Bullet* b)
 	this->knockbackFrames += b->GetBaseKnockbackDuration();
 }
 
+void Enemy::ApplyKnockback(int frames)
+{
+	this->knockbackFrames += frames;
+}
+
 void Enemy::ApplyStatusEffect(StatusEffect effect, int frames)
 {
-	this->statusEffects[effect] += frames;
+	this->statusEffects[effect] = frames;
 }
 
 std::unordered_map<StatusEffect, int>& Enemy::GetStatusEffects()
@@ -89,9 +108,9 @@ void Enemy::SetPosition(float x, float y)
 	this->position = { x,y };
 }
 
-void Enemy::SetVelocity(float x, float y)
+void Enemy::SetCurrentVelocity(float x, float y)
 {
-	this->velocity = { x,y };
+	this->currentVelocity = { x,y };
 }
 
 void Enemy::SetHealth(float health)
@@ -113,6 +132,11 @@ Rectangle Enemy::GetHitbox() const
 Vector2 Enemy::GetPosition() const
 {
 	return this->position;
+}
+
+Vector2 Enemy::GetBaseVelocity() const
+{
+	return this->baseVelocity;
 }
 
 float Enemy::GetHealth()

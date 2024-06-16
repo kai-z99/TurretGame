@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AreaEffect.cpp" />
+    <ClCompile Include="BombExplosion.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CoinSplashEffect.cpp" />
@@ -137,6 +139,8 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="Hotbar.cpp" />
+    <ClCompile Include="IceSheet.cpp" />
+    <ClCompile Include="IceSparkleEffect.cpp" />
     <ClCompile Include="KoopaEnemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Projectile.cpp" />
@@ -152,6 +156,8 @@
     <ClCompile Include="VisualEffectsManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AreaEffect.h" />
+    <ClInclude Include="BombExplosion.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="CoinSplashEffect.h" />
@@ -163,6 +169,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="helpers.h" />
     <ClInclude Include="Hotbar.h" />
+    <ClInclude Include="IceSheet.h" />
+    <ClInclude Include="IceSparkleEffect.h" />
     <ClInclude Include="KoopaEnemy.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="RedKoopaEnemy.h" />
