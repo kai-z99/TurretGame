@@ -7,7 +7,7 @@ BombExplosion::BombExplosion(int posX, int posY)
 {
 	this->id = 1;
 	this->position = { (float)posX, (float)posY };
-	this->hitboxRadius = 250.0f;
+	this->hitboxRadius = 300.0f;
 	this->isActive = true;
 	this->isDetonateFrame = true;
 	this->framesLeft = 90;

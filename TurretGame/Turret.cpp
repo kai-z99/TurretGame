@@ -6,6 +6,7 @@
 #include "TurretBullet.h"
 #include "ShockwaveBullet.h"
 #include "FireBullet.h"
+#include "SniperBullet.h"
 #include "textures.h" 
 
 Turret::Turret()
@@ -35,7 +36,7 @@ Turret::Turret()
 
     
     //initate bullet cooldown map
-    for (int i = 1; i <= 3; i++)
+    for (int i = 1; i <= 4; i++)
     {
         this->bulletCooldownMap[i] = new BulletCooldownInfo();
         this->bulletCooldownMap[i]->canShoot = true;
@@ -107,6 +108,12 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
         {
             if (frame - pair.second->lastShotFrame > 180 / this->currentSpecialFirerate) pair.second->canShoot = true;
         }
+
+        //Sniper
+        else if (pair.first == 4) //not affected by firerate rn, figure a cool implelention maybe
+        {
+            if (frame - pair.second->lastShotFrame > 190 / this->currentSpecialFirerate) pair.second->canShoot = true;
+        }
         
     }
 
@@ -142,6 +149,10 @@ void Turret::ShootBullet(std::vector<Bullet*>& bullets, int id)
 
     case 3:
         b = new FireBullet();
+        break;
+    
+    case 4:
+        b = new SniperBullet();
         break;
 
     default: //fallback to turretbbullet on failure

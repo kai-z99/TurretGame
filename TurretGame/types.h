@@ -7,7 +7,7 @@ enum TurretAbility
 	SpecialRapidfire,
 	Ice,
 	Explosive,
-	Knockback,
+	Shock,
 	Burn,
 
 };

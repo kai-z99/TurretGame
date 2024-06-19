@@ -25,17 +25,6 @@ void Enemy::Draw() //draws hitbox
 
 void Enemy::Update(unsigned int frame)
 {
-
-	this->position.x += this->currentVelocity.x;
-	this->position.y += this->currentVelocity.y;
-	
-
-	if (this->knockbackFrames > 0)
-	{
-		this->position.x += 9 * this->knockbackMultiplier;
-		this->knockbackFrames -= 1;
-	}
-	
 	//for eevery status effect
 	for (auto& effect : this->statusEffects)
 	{
@@ -69,6 +58,16 @@ void Enemy::Update(unsigned int frame)
 			}
 
 		}
+	}
+
+	this->position.x += this->currentVelocity.x;
+	this->position.y += this->currentVelocity.y;
+
+
+	if (this->knockbackFrames > 0)
+	{
+		this->position.x += 9 * this->knockbackMultiplier;
+		this->knockbackFrames -= 1;
 	}
 
 	this->textureLoop->SetTint(this->tint);

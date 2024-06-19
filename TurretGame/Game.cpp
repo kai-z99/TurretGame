@@ -15,6 +15,8 @@
 #include "types.h"
 #include "BombExplosion.h"
 #include "IceSheet.h"
+#include "WolfEnemy.h"
+#include "BatEnemy.h"
 
 Game::Game()
 {
@@ -23,6 +25,7 @@ Game::Game()
 
 Game::~Game()
 {
+    //this should be unload level
 	for (Bullet* b : this->bullets)
 	{
 		delete b;
@@ -32,6 +35,11 @@ Game::~Game()
 	{
 		delete e;
 	}
+
+    for (AreaEffect* a : this->areaEffects)
+    {
+        delete a;
+    }
 
     delete this->gameStats;
 
@@ -68,7 +76,7 @@ void Game::Initialize()
     this->abilityDB[SpecialRapidfire] = { 700,INT_MIN,3,3 };
     this->abilityDB[Explosive] = { 800,INT_MIN,2,2 };
     this->abilityDB[Ice] = { 550,INT_MIN,5,5 };
-    this->abilityDB[Knockback] = { 550,INT_MIN,5,5 };
+    this->abilityDB[Shock] = { 550,INT_MIN,5,5 };
     this->abilityDB[Burn] = { 550,INT_MIN,5,5 };
 
 
@@ -133,7 +141,7 @@ void Game::Draw()
     for (AreaEffect* a : this->areaEffects)
     {
         //id 1 is bomb
-        if (a->isActive && a->GetID() == 1) a->Draw();
+        if (a->isActive && a->GetID() != 2) a->Draw();
     }
 
     //draw rolling effects
@@ -508,26 +516,39 @@ void Game::CleanBulletVector() // keep all active bullet, delete rest from memor
 
 void Game::HandleEnemySpawning()
 {
-    if (this->frameCount % 300 == 0)
+    //if (this->frameCount % 300 == 0)
+    //{
+    //    SoldierEnemy* s = new SoldierEnemy();
+    //    s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+    //    this->enemies.push_back(s);
+    //}
+
+    //if (this->frameCount % 500 == 0)
+    //{
+    //    KoopaEnemy* k = new KoopaEnemy();
+    //    k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+    //    this->enemies.push_back(k);
+    //}
+
+    //if (this->frameCount % 400 == 0)
+    //{
+    //    RedKoopaEnemy* k = new RedKoopaEnemy();
+    //    k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+    //    this->enemies.push_back(k);
+    //}
+
+    //if (this->frameCount % 410 == 0)
+    //{
+    //    WolfEnemy* k = new WolfEnemy();
+    //    k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+    //    this->enemies.push_back(k);
+    //}
+
+    if (this->frameCount % 30 == 0)
     {
-        SoldierEnemy* s = new SoldierEnemy();
+        BatEnemy* s = new BatEnemy();
         s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
         this->enemies.push_back(s);
     }
-
-    if (this->frameCount % 500 == 0)
-    {
-        KoopaEnemy* k = new KoopaEnemy();
-        k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-        this->enemies.push_back(k);
-    }
-
-    if (this->frameCount % 400 == 0)
-    {
-        RedKoopaEnemy* k = new RedKoopaEnemy();
-        k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-        this->enemies.push_back(k);
-    }
-
 }
 

@@ -22,7 +22,6 @@ IceSheet::IceSheet(int posX, int posY, int frames)
 
 void IceSheet::Update(unsigned int frame)
 {
-	//UPDATE TEXRTURE HERE
 	if (this->framesLeft > 0)
 	{
 		//if its on its first 30 frames, fade in

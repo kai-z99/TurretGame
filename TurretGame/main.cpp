@@ -11,7 +11,7 @@ int main(void)
 
 }
 
-//finsh turret ablitlies (one does faster special atks)
+//IN SLOW MOVEMENT FLAG
 //firebomb childf of bomb
 //make a clean vector function for visual effectrs manmager
 //more enemis
@@ -25,3 +25,4 @@ int main(void)
 //splash damage bullety
 //move db to sep file
 //make ability charges vbar on AbilityButton be handled in game instead of the button
+//draw effec ton turret when ability is activated
