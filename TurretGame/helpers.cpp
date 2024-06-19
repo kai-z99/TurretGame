@@ -1,4 +1,5 @@
 #include "helpers.h"
+#include "raylib.h"
 #include "raymath.h"
 
 
@@ -23,4 +24,16 @@ float CalculateAngle(int x, int y)
 
     if (x < 0.0f) return angle + PI;
     return angle;
+}
+
+float GetRandomFloat(float min, float max) {
+    int intMin = 0;
+    int intMax = 10000;  // This determines the precision
+
+    int randomInt = GetRandomValue(intMin, intMax);
+
+    //range is [0, 1]
+    float randomFloat = static_cast<float>(randomInt) / intMax;
+
+    return min + randomFloat * (max - min);
 }

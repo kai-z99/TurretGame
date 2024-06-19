@@ -2,6 +2,7 @@
 #include "textures.h"
 #include "TextureLoop.h"
 
+
 BatEnemy::BatEnemy()
 {
 	this->id = 5;
@@ -19,6 +20,8 @@ BatEnemy::BatEnemy()
 	this->textureLoop = new TextureLoop(&textures[8], 4, 3.0f, this->position);
 
 	this->localFrameCount = 0;
+	this->amplitude = 3.0f; //default
+	this->upStart = false; //default
 }
 
 void BatEnemy::Update(unsigned int frame)
@@ -28,8 +31,12 @@ void BatEnemy::Update(unsigned int frame)
 	// update position and velocity and check if death
 	Enemy::Update(frame);
 
-	this->currentVelocity.y = 3 * sin(this->localFrameCount * 0.03);
+	//update y velocity with a sin wave
+	if (this->upStart) this->currentVelocity.y = this->amplitude * -sin(this->localFrameCount * 0.03);
+	else this->currentVelocity.y = this->amplitude * sin(this->localFrameCount * 0.03);
 
+
+	
 	//update postion of texture
 	this->textureLoop->SetPosition(this->position.x, this->position.y);
 
@@ -53,4 +60,9 @@ void BatEnemy::Draw()
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
 
 	//Enemy::Draw(); // draw hitbox
+}
+
+void BatEnemy::SetAmplitude(float amplitude)
+{
+	this->amplitude = amplitude;
 }

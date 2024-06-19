@@ -133,6 +133,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CoinSplashEffect.cpp" />
+    <ClCompile Include="Database.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="ExplosionEffect.cpp" />
     <ClCompile Include="FireBullet.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="IceSheet.cpp" />
     <ClCompile Include="IceSparkleEffect.cpp" />
     <ClCompile Include="KoopaEnemy.cpp" />
+    <ClCompile Include="LevelHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="RedKoopaEnemy.cpp" />
@@ -166,6 +168,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="CoinSplashEffect.h" />
     <ClInclude Include="constants.h" />
+    <ClInclude Include="Database.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="ExplosionEffect.h" />
     <ClInclude Include="FireBullet.h" />
@@ -176,6 +179,7 @@
     <ClInclude Include="IceSheet.h" />
     <ClInclude Include="IceSparkleEffect.h" />
     <ClInclude Include="KoopaEnemy.h" />
+    <ClInclude Include="LevelHandler.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="RedKoopaEnemy.h" />
     <ClInclude Include="ShockwaveBullet.h" />

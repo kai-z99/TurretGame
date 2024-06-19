@@ -33,12 +33,14 @@ void WolfEnemy::Update(unsigned int frame)
 	this->textureLoop->SetPosition(this->position.x, this->position.y);
 	this->runTexture->SetPosition(this->position.x, this->position.y);
 
+	//if the wolf hasnt run yet and its past the threahold, make it run
 	if (this->ran == false && this->position.x < this->runThreshold)
 	{
 		this->ran = true;
 		this->runFrames += 120;
 	}
 		
+	//  make the wolf faster when its running
 	if (this->runFrames > 0 && this->currentVelocity.x != this->runSpeed)
 	{
 		this->currentVelocity.x = this->runSpeed;
@@ -80,5 +82,5 @@ void WolfEnemy::Draw()
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
 
 
-	Enemy::Draw(); // draw hitbox
+	//Enemy::Draw(); // draw hitbox
 }

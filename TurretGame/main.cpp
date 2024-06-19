@@ -11,18 +11,16 @@ int main(void)
 
 }
 
-//IN SLOW MOVEMENT FLAG
-//firebomb childf of bomb
-//make a clean vector function for visual effectrs manmager
-//more enemis
-//different projectiles
-//make damage spalsh
+//IN SLOW MOVEMENT FLAG TO FIX CHILL EFFECT FOR NON CONVENTIAL VELOCITY
 //texureStill for non looping textures (but still ned rotation)maybe
-//make function in game that handles interactions between collision and enemy OR make a switch staement in HandleCollsions.
-//use a loop in the texture.cpp so you can just add name of file and be done.
+//handle button clicking on hotbar (NOTE when in other input more this wont update so it will get stuck in a blue background after clikcing bomb or ice)
+//create collision manager so game doesnt need access to enemy children
+////THIS SHOULD BE IN VISUAL EFFECTS MANAGER void DrawVisualEffects(); this can have a game pointer, its ok.
+
 //resolve warnings
 //enemies can drop abilities that can be clicked
 //splash damage bullety
 //move db to sep file
 //make ability charges vbar on AbilityButton be handled in game instead of the button
 //draw effec ton turret when ability is activated
+//firebomb childf of bomb

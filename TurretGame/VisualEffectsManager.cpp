@@ -46,12 +46,22 @@ void VisualEffectsManager::DisplayIceSparkle(Vector2 pos, float scale)
 
 void VisualEffectsManager::UpdateAndDraw()
 {
-    if (this->tasks.size() > 300) this->CleanTasks();
+    if (this->tasks.size() > 700) this->CleanTasks();
 
 	for (VisualEffect* element : this->tasks) 
 	{
 		element->UpdateAndDraw();
 	}
+}
+
+void VisualEffectsManager::Clear()
+{
+    for (VisualEffect* v : this->tasks)
+    {
+        delete v;
+    }
+
+    this->tasks.clear();
 }
 
 void VisualEffectsManager::CleanTasks() //see clean bullet vector

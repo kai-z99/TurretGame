@@ -3,9 +3,6 @@
 #include <string>
 #include "Turret.h"
 #include "Enemy.h"
-#include "SoldierEnemy.h"
-#include "KoopaEnemy.h"
-#include "RedKoopaEnemy.h"
 #include "Bullet.h"
 #include "TurretBullet.h"
 #include "Hotbar.h"
@@ -15,8 +12,8 @@
 #include "types.h"
 #include "BombExplosion.h"
 #include "IceSheet.h"
-#include "WolfEnemy.h"
-#include "BatEnemy.h"
+#include "RedKoopaEnemy.h"
+#include "LevelHandler.h"
 
 Game::Game()
 {
@@ -62,6 +59,27 @@ void Game::Run()
     CloseWindow();
 }
 
+void Game::CleanVectors()
+{
+    for (Enemy* e : this->enemies)
+    {
+        delete e;
+    }
+
+    for (Bullet* b : this->bullets)
+    {
+        delete b;
+    }
+
+    for (AreaEffect* a : this->areaEffects)
+    {
+        delete a;
+    }
+
+    //cleans task vector
+    this->effectManager->Clear();
+}
+
 void Game::Initialize()
 {
     InitWindow(screenWidth, screenHeight, "TurretGame window");
@@ -70,36 +88,64 @@ void Game::Initialize()
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
 
-
-    //init db
-    this->abilityDB[Rapidfire] = { 550,INT_MIN,5,5 };
-    this->abilityDB[SpecialRapidfire] = { 700,INT_MIN,3,3 };
-    this->abilityDB[Explosive] = { 800,INT_MIN,2,2 };
-    this->abilityDB[Ice] = { 550,INT_MIN,5,5 };
-    this->abilityDB[Shock] = { 550,INT_MIN,5,5 };
-    this->abilityDB[Burn] = { 550,INT_MIN,5,5 };
-
-
     this->frameCount = 0;
     this->mousePos = { 0,0 };
-    this->turret = new Turret();
-    //this->turret->SetFirerate(10.0f);
-    this->hotbar = new Hotbar(this->abilityDB);
+
+    this->turret = nullptr;
+    this->hotbar = nullptr;
+
+    this->gameState = InLevel;
+    
     this->gameStats = new GameStats();
+    
     this->effectManager = new VisualEffectsManager();
-    this->gameStats->health = 100;
+
     this->gameStats->totalCoins = 0;
-    this->gameStats->coinsCollectedInLevel = 0;
+    
+    this->currentLevel = 2;
 
     this->inputMode = false;
 
-    //fill all charges
-    for (int i = 0; i <= 5; i++)
-    { 
-        TurretAbility ability = static_cast<TurretAbility>(i);
-        this->gameStats->abilityStates[ability] = this->abilityDB[ability];
-    }
     
+
+    //temp
+    this->gameStats->initialAbilityValues =
+    {
+        // type, {cooldown, lastshotframe, maxcharges, charges}
+        {Rapidfire, {550, INT_MIN, 5, 5}},
+        {SpecialRapidfire, {700, INT_MIN, 3, 3}},
+        {Explosive, {800, INT_MIN, 2, 2}},
+        {Ice, {750, INT_MIN, 5, 5}},
+        {Shock, {550, INT_MIN, 5, 5}},
+        {Burn, {550, INT_MIN, 5, 5}}
+    };
+
+    this->levelHandler = new LevelHandler(this);
+
+
+
+    this->StartCurrentLevel();
+
+    //this->hotbar = new Hotbar(this->levelHandler->currentLevelStats->abilityStates); 
+    
+}
+
+void Game::StartCurrentLevel()
+{
+    this->levelHandler->InitializeCurrentLevel();
+    this->hotbar = new Hotbar(this->levelHandler->currentLevelStats->abilityStates);
+    this->turret = new Turret();
+}
+
+void Game::ExitCurrentLevel()
+{
+    this->levelHandler->HandleLevelExit();
+
+    delete this->hotbar;
+    this->hotbar = nullptr;
+
+    delete this->turret;
+    this->turret = nullptr;
 }
 
 void Game::Draw()
@@ -107,6 +153,28 @@ void Game::Draw()
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
+    switch (this->gameState)
+    {
+    case InLevel:
+        this->DrawInLevel();
+        break;
+    }
+
+    //draw mouse
+    if (!this->inputMode) DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5.0f, BLUE);
+
+    //draw mouse in place mode
+    else
+    {
+        DrawCircleLines((int)this->mousePos.x, (int)this->mousePos.y, 35.0f, RED);
+        DrawLineEx({ this->mousePos.x - 30, this->mousePos.y - 30 }, { this->mousePos.x + 30, this->mousePos.y + 30 }, 1.0f, RED);
+        DrawLineEx({ this->mousePos.x + 30, this->mousePos.y - 30 }, { this->mousePos.x - 30, this->mousePos.y + 30 }, 1.0f, RED);
+    }
+    EndDrawing();
+}
+
+void Game::DrawInLevel()
+{
     //draw bg
     DrawTexture(textures[6], 0, 0, WHITE);
 
@@ -124,11 +192,10 @@ void Game::Draw()
         if (a->isActive && a->GetID() == 2) a->Draw();
     }
 
-
     //draw enemies based on type. elsewise default enemy drawing behavoir.
     for (Enemy* e : this->enemies)
     {
-        if (e->isActive) e->Draw();      
+        if (e->isActive) e->Draw();
     }
 
     //draw bullets based on type. elsewise default enemy drawing behavoir.
@@ -151,24 +218,10 @@ void Game::Draw()
     this->effectManager->UpdateAndDraw();
 
     //draw hotbar
-    this->hotbar->Draw(this->gameStats);
-
-    //draw mouse
-    if (!this->inputMode) DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5.0f, BLUE);
-
-    //draw mouse in place mode
-    else
-    {
-        DrawCircleLines((int)this->mousePos.x, (int)this->mousePos.y, 35.0f, RED);
-        DrawLineEx({ this->mousePos.x - 30, this->mousePos.y - 30 }, { this->mousePos.x + 30, this->mousePos.y + 30 }, 1.0f, RED);
-        DrawLineEx({ this->mousePos.x + 30, this->mousePos.y - 30 }, { this->mousePos.x - 30, this->mousePos.y + 30 }, 1.0f, RED);
-    }
-        
-       
-
-    EndDrawing();
+    this->hotbar->Draw(*this->levelHandler->currentLevelStats);
 }
 
+//THIS SHOULD BE IN VISUAL EFFECTS MANAGER.
 void Game::DrawVisualEffects()
 {
     //--------------
@@ -220,6 +273,7 @@ void Game::DrawVisualEffects()
     }
 }
 
+
 void Game::Update()
 {
     //update frame
@@ -228,8 +282,18 @@ void Game::Update()
     //update mouse position
     mousePos = { GetMousePosition().x, GetMousePosition().y };
 
+    
+
+    //split this in future
+    // 
+    //-----------------------------------------------------------------------
+    // IN GAME UPDATE //
+    //-----------------------------------------------------------------------
+
+    this->levelHandler->Update(this->frameCount);
+
     //update hotbar buttons
-    this->hotbar->Update(this->frameCount, this->gameStats->abilityStates);
+    if (this->hotbar != nullptr) this->hotbar->Update(this->frameCount, this->levelHandler->currentLevelStats->abilityStates);
 
     //if an ability button is pressed, activate its ability if it has a charge.
     this->ActivateUsedAbilities();
@@ -258,7 +322,7 @@ void Game::Update()
             // if enemy died, add coin amount. and display coin effect
             if (e->GetHealth() <= 0)
             {
-                this->gameStats->coinsCollectedInLevel += e->GetCoinDropAmount();
+                this->levelHandler->currentLevelStats->coinsCollected += e->GetCoinDropAmount();
                 this->effectManager->DisplayCoinSplash(e->GetPosition(), e->GetCoinDropAmount());
                 e->isActive = false;
             }
@@ -266,7 +330,7 @@ void Game::Update()
             //check if enemy has infiltrated the base
             else if (e->GetPosition().x <= deathBoundaryX)
             {
-                this->gameStats->health -= e->GetDamage();
+                this->levelHandler->currentLevelStats->health -= e->GetDamage();
                 e->isActive = false;
             }
         }
@@ -275,22 +339,35 @@ void Game::Update()
 
     //handle collisions
     this->HandleCollisions();
+
+    //CHECK HERE IF ENEMY VECTOR IS TOO BIG. IF IT IS, CLEAN IT.
+    //SAME AS AOE HERE
+
+    //-----------------------------------------------------------------------
+    // MENU UPDATE //
+    //-----------------------------------------------------------------------
 }
+
 
 //helper for update
 void Game::ActivateUsedAbilities()
 {
     //if an ability button is pressed, activate its ability if it has a charge and it is not on cooldown
-    for (TurretAbility a : this->hotbar->GetActiveAbilityButtons())
+
+    //go through every ablity that was clicked this frame
+    for (const TurretAbility& a : this->hotbar->GetActiveAbilityButtons())
     {
+        //info of the current ability
+        AbilityInfo& info = this->levelHandler->currentLevelStats->abilityStates[a];
+
         // if the ability is ready,
-        if (this->frameCount - this->gameStats->abilityStates[a].lastUsedFrame >= this->gameStats->abilityStates[a].cooldown)
+        if (this->frameCount - info.lastUsedFrame >= info.cooldown)
         {
             //if there is an availible chrage, use one.
-            if (this->gameStats->abilityStates[a].charges > 0)
+            if (info.charges > 0)
             {
-                this->gameStats->abilityStates[a].charges -= 1;
-                this->gameStats->abilityStates[a].lastUsedFrame = this->frameCount;
+                info.charges -= 1;
+                info.lastUsedFrame = this->frameCount;
 
                 switch (a)
                 {
@@ -516,39 +593,6 @@ void Game::CleanBulletVector() // keep all active bullet, delete rest from memor
 
 void Game::HandleEnemySpawning()
 {
-    //if (this->frameCount % 300 == 0)
-    //{
-    //    SoldierEnemy* s = new SoldierEnemy();
-    //    s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-    //    this->enemies.push_back(s);
-    //}
-
-    //if (this->frameCount % 500 == 0)
-    //{
-    //    KoopaEnemy* k = new KoopaEnemy();
-    //    k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-    //    this->enemies.push_back(k);
-    //}
-
-    //if (this->frameCount % 400 == 0)
-    //{
-    //    RedKoopaEnemy* k = new RedKoopaEnemy();
-    //    k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-    //    this->enemies.push_back(k);
-    //}
-
-    //if (this->frameCount % 410 == 0)
-    //{
-    //    WolfEnemy* k = new WolfEnemy();
-    //    k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-    //    this->enemies.push_back(k);
-    //}
-
-    if (this->frameCount % 30 == 0)
-    {
-        BatEnemy* s = new BatEnemy();
-        s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-        this->enemies.push_back(s);
-    }
+    this->levelHandler->HandleCurrentLevelSpawning();  
 }
 

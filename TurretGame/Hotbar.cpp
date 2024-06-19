@@ -4,7 +4,7 @@
 #include "AbilityButton.h"
 
 
-Hotbar::Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& abilityDB)
+Hotbar::Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& initialAbilityValues)
 {
 	//create the buttons
 
@@ -16,13 +16,13 @@ Hotbar::Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& abilityDB)
 	}
 }
 
-void Hotbar::Draw(GameStats* gameStats)
+void Hotbar::Draw(CurrentLevelStats& currentLevelStats)
 {
 	//draw the background
 	DrawRectangle(0, 0, screenWidth, menuBoundaryY, GRAY);
 
 	//draw health
-	std::string text = "HP: " + std::to_string(gameStats->health);
+	std::string text = "HP: " + std::to_string(currentLevelStats.health);
 	float fontsize = 36.0f;
 	float spacing = 4.0f;
 	Vector2 textDimensions = MeasureTextEx(GetFontDefault(), text.c_str(), fontsize, 5);
@@ -32,7 +32,7 @@ void Hotbar::Draw(GameStats* gameStats)
 	DrawTextEx(GetFontDefault(), text.c_str(), { xPos ,yPos }, fontsize, spacing, RED);
 
 	//draw coins (same fontsize and spacing as health)
-	text = "Coins: " + std::to_string(gameStats->coinsCollectedInLevel);
+	text = "Coins: " + std::to_string(currentLevelStats.coinsCollected);
 	textDimensions = MeasureTextEx(GetFontDefault(), text.c_str(), fontsize, 5);
 	xPos = ((float)deathBoundaryX / 2) - (textDimensions.x / 2);
 	yPos = (2*(float)menuBoundaryY / 3) - (textDimensions.y / 2);

@@ -15,6 +15,8 @@ public:
 	void DisplayIceSparkle(Vector2 pos, float scale);
 	void UpdateAndDraw();
 
+	void Clear();
+
 private:
 	std::vector<VisualEffect*> tasks; // animationtype, frames remaining
 	void CleanTasks();

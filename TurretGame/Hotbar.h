@@ -10,8 +10,8 @@ class Button;
 class Hotbar
 {
 public:
-	Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& abilityDB);
-	void Draw(GameStats* gameStats);
+	Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& initialAbilityValues);
+	void Draw(CurrentLevelStats& currentLevelStats);
 	void Update(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& abilityStates);
 	void HandleInput();
 
