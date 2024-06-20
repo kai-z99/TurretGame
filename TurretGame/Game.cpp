@@ -1,19 +1,23 @@
 #include "Game.h"
 #include <iostream>
 #include <string>
-#include "Turret.h"
-#include "Enemy.h"
-#include "Bullet.h"
-#include "TurretBullet.h"
-#include "Hotbar.h"
-#include "textures.h"
-#include "helpers.h"
-#include "VisualEffectsManager.h"
+
 #include "types.h"
+#include "helpers.h"
+
+#include "Enemy.h"
+#include "RedKoopaEnemy.h"
+#include "Bullet.h"
 #include "BombExplosion.h"
 #include "IceSheet.h"
-#include "RedKoopaEnemy.h"
+#include "Turret.h"
+#include "Hotbar.h"
+
+#include "VisualEffectsManager.h"
 #include "LevelHandler.h"
+#include "CollisionHandler.h"
+
+#include "textures.h"
 
 Game::Game()
 {
@@ -49,32 +53,37 @@ void Game::Run()
 {
     while (!WindowShouldClose())
     {
+        this->HandleInput();
         this->Update();
         this->HandleEnemySpawning();
-        //this->HandleCollisions();
-        this->HandleInput();
         this->Draw();
     }
 
     CloseWindow();
 }
 
-void Game::CleanVectors()
+void Game::ClearVectors()
 {
     for (Enemy* e : this->enemies)
     {
         delete e;
     }
 
+    this->enemies.clear();
+
     for (Bullet* b : this->bullets)
     {
         delete b;
     }
 
+    this->bullets.clear();
+
     for (AreaEffect* a : this->areaEffects)
     {
         delete a;
     }
+
+    this->areaEffects.clear();
 
     //cleans task vector
     this->effectManager->Clear();
@@ -102,12 +111,11 @@ void Game::Initialize()
 
     this->gameStats->totalCoins = 0;
     
-    this->currentLevel = 2;
+    this->currentLevel = 1;
 
     this->inputMode = false;
 
     
-
     //temp
     this->gameStats->initialAbilityValues =
     {
@@ -121,8 +129,7 @@ void Game::Initialize()
     };
 
     this->levelHandler = new LevelHandler(this);
-
-
+    this->collisionHandler = new CollisionHandler(this);
 
     this->StartCurrentLevel();
 
@@ -139,7 +146,7 @@ void Game::StartCurrentLevel()
 
 void Game::ExitCurrentLevel()
 {
-    this->levelHandler->HandleLevelExit();
+    this->levelHandler->ExitCurrentLevel();
 
     delete this->hotbar;
     this->hotbar = nullptr;
@@ -158,6 +165,11 @@ void Game::Draw()
     case InLevel:
         this->DrawInLevel();
         break;
+
+    case LevelSelectMenu:
+        this->DrawLevelSelectMenu();
+        break;
+
     }
 
     //draw mouse
@@ -170,6 +182,7 @@ void Game::Draw()
         DrawLineEx({ this->mousePos.x - 30, this->mousePos.y - 30 }, { this->mousePos.x + 30, this->mousePos.y + 30 }, 1.0f, RED);
         DrawLineEx({ this->mousePos.x + 30, this->mousePos.y - 30 }, { this->mousePos.x - 30, this->mousePos.y + 30 }, 1.0f, RED);
     }
+
     EndDrawing();
 }
 
@@ -219,6 +232,19 @@ void Game::DrawInLevel()
 
     //draw hotbar
     this->hotbar->Draw(*this->levelHandler->currentLevelStats);
+}
+
+void Game::DrawLevelSelectMenu()
+{
+
+    ClearBackground(RAYWHITE); // temp
+
+    DrawTexture(textures[1], 500, 500, WHITE);
+    DrawTexture(textures[1], 800, 500, WHITE);
+    DrawTexture(textures[1], 500, 1000, WHITE);
+    DrawTexture(textures[1], 500, 200, WHITE);
+    DrawTexture(textures[1], 100, 800, WHITE);
+
 }
 
 //THIS SHOULD BE IN VISUAL EFFECTS MANAGER.
@@ -282,14 +308,35 @@ void Game::Update()
     //update mouse position
     mousePos = { GetMousePosition().x, GetMousePosition().y };
 
-    
+    switch (this->gameState)
+    {
+    case InLevel:
+        this->UpdateInLevel();
+        break;
 
+    case LevelSelectMenu:
+        this->UpdateLevelSelectMenu();
+        break;
+    }
+    
     //split this in future
     // 
     //-----------------------------------------------------------------------
     // IN GAME UPDATE //
     //-----------------------------------------------------------------------
 
+    
+
+    //CHECK HERE IF ENEMY VECTOR IS TOO BIG. IF IT IS, CLEAN IT.
+    //SAME AS AOE HERE
+
+    //-----------------------------------------------------------------------
+    // MENU UPDATE //
+    //-----------------------------------------------------------------------
+}
+
+void Game::UpdateInLevel()
+{
     this->levelHandler->Update(this->frameCount);
 
     //update hotbar buttons
@@ -302,10 +349,10 @@ void Game::Update()
     this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);
 
     //handle bullets
-	for (Bullet* b : this->bullets)
-	{
+    for (Bullet* b : this->bullets)
+    {
         if (b->isActive) b->Update(this->frameCount);
-	}
+    }
 
     for (AreaEffect* a : this->areaEffects)
     {
@@ -313,8 +360,8 @@ void Game::Update()
     }
 
     //handle enemies
-	for (Enemy* e : this->enemies)
-	{
+    for (Enemy* e : this->enemies)
+    {
         if (e->isActive)
         {
             e->Update(this->frameCount); //move enemy, apply effects, apply knockback. apply tint
@@ -334,18 +381,16 @@ void Game::Update()
                 e->isActive = false;
             }
         }
-		
-	}
+
+    }
 
     //handle collisions
     this->HandleCollisions();
+}
 
-    //CHECK HERE IF ENEMY VECTOR IS TOO BIG. IF IT IS, CLEAN IT.
-    //SAME AS AOE HERE
+void Game::UpdateLevelSelectMenu()
+{
 
-    //-----------------------------------------------------------------------
-    // MENU UPDATE //
-    //-----------------------------------------------------------------------
 }
 
 
@@ -407,117 +452,54 @@ void Game::ActivateUsedAbilities()
     }
 }
 
-
 void Game::HandleCollisions()
 {
-    //bullet collisions
-    for (Bullet* b : this->bullets)
-    {
-        if (b->isActive)
-        {
-            for (Enemy* e : enemies)
-            {
-                if (e->isActive && b->EnemyCollided(e)) //if collide, remove buullet and deal damage
-                {
-                    this->HandleBulletCollideEnemy(e,b);
-                }
-                
-            }
-        }
-    }
-
-    //AOE collisions
-    for (AreaEffect* a : this->areaEffects)
-    {
-        if (a->isActive)
-        {
-            switch (a->GetID())
-            {
-            //BOMB EXPLOSTION
-            case 1:
-                for (Enemy* e : enemies)
-                {
-                    BombExplosion* exp = dynamic_cast<BombExplosion*>(a);
-                    if (e->isActive && exp->isDetonateFrame && exp->EnemyCollided(e))
-                    {
-                        e->SetHealth(e->GetHealth() - exp->GetDamage());
-                        e->ApplyKnockback(exp->GetKnockbackFrames());
-                    }
-                }
-
-                break;
-
-            //ice sheet
-            case 2:
-                for (Enemy* e : enemies)
-                {
-                    IceSheet* i = dynamic_cast<IceSheet*>(a);
-                    if (e->isActive && i->isActive && i->EnemyCollided(e))
-                    {
-                        //id 3 is red koopa
-                        if (e->GetID() != 3) e->ApplyStatusEffect(Chilled, 150);
-                        //only chill when its not in shell
-                        else if (!dynamic_cast<RedKoopaEnemy*>(e)->shellForm) e->ApplyStatusEffect(Chilled, 150);
-                    }
-                }
-
-                break;
-
-
-            default:
-                break;
-            }
-        }
-    }
-}
-
-void Game::HandleBulletCollideEnemy(Enemy* e, Bullet* b)
-{
-    //display the explosion
-    this->effectManager->DisplayExplosion(b->GetPosition());
-
-    //DAMAGE AND KNOCKBACK
-    switch (e->GetID())
-    {
-    //RED KOOPA
-    case 3:
-        //only apply dmg and kb if not in shell
-        if (dynamic_cast<RedKoopaEnemy*>(e)->shellForm) break;
-
-    default:
-        e->SetHealth(e->GetHealth() - b->GetBaseDamage());
-        e->ApplyKnockback(b);
-        break;
-
-    }
-
-    //STATUS EFFECT
-    switch (b->GetID())
-    {
-    // fire bullet
-    case 3:
-        //apply burning for 4 seconds if not a red koopa
-        if (e->GetID() != 3)
-        {
-            e->ApplyStatusEffect(Burning, 240);
-            break;
-        }
-        
-        //dont apply burn if red koopa in shell
-        else if (!dynamic_cast<RedKoopaEnemy*>(e)->shellForm)
-        {
-            e->ApplyStatusEffect(Burning, 240);
-        }
-        break;
-
-    default:
-        break;
-    }
-
-    b->isActive = false;
+    this->collisionHandler->HandleEnemyCollisions();
 }
 
 void Game::HandleInput()
+{
+    switch (this->gameState)
+    {
+    case InLevel:
+        this->HandleInputInLevel();
+        break;
+
+    case LevelSelectMenu:
+        this->HandleInputLevelSelectMenu();
+        break;
+
+    case MainMenu:
+        break;
+
+    case UpgradeMenu:
+        break;
+
+    default:
+        break;
+    }
+    
+    //debug
+    if (IsKeyPressed(KEY_RIGHT))
+    {
+        this->ExitCurrentLevel();
+        this->currentLevel++;
+        this->StartCurrentLevel();
+    }
+    else if (IsKeyPressed(KEY_LEFT))
+    {
+        this->ExitCurrentLevel();
+        this->currentLevel--;
+        this->StartCurrentLevel();
+    }
+    else if (IsKeyPressed(KEY_UP))
+    {
+        this->ExitCurrentLevel();
+        this->gameState = LevelSelectMenu;
+    }
+}
+
+void Game::HandleInputInLevel()
 {
     //bomb and ice place mode
     if (this->inputMode == 1 || this->inputMode == 2)
@@ -527,12 +509,12 @@ void Game::HandleInput()
         {
             switch (this->inputMode)
             {
-            //bomb
+                //bomb
             case 1:
                 //push bomb in vector at x,y
                 this->areaEffects.push_back(new BombExplosion((int)this->mousePos.x, (int)this->mousePos.y));
                 break;
-            //ice
+                //ice
             case 2:
                 this->areaEffects.push_back(new IceSheet((int)this->mousePos.x, (int)this->mousePos.y, 350));
                 break;
@@ -565,7 +547,12 @@ void Game::HandleInput()
         }
     }
 
-    
+
+}
+
+void Game::HandleInputLevelSelectMenu()
+{
+
 }
 
 

@@ -12,7 +12,7 @@ public:
 
 	void InitializeCurrentLevel();
 	void HandleCurrentLevelSpawning();
-	void HandleLevelExit();
+	void ExitCurrentLevel();
 
 	CurrentLevelStats* currentLevelStats;
 
