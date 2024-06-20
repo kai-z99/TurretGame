@@ -11,13 +11,13 @@ int main(void)
 
 }
 
+// fix this line: if (this->frameCount - info.lastUsedFrame >= info.cooldown) , in activeusedabilitybuttons
 //texureStill for non looping textures (but still ned rotation)maybe
 //handle button clicking on hotbar (NOTE when in other input more this wont update so it will get stuck in a blue background after clikcing bomb or ice)
 //create collision manager so game doesnt need access to enemy children
 ////THIS SHOULD BE IN VISUAL EFFECTS MANAGER void DrawVisualEffects(); this can have a game pointer, its ok.
 //optimize Hotbar::GetActiveAbilityButtons()
 
-//resolve warnings
 //enemies can drop abilities that can be clicked
 //splash damage bullety
 //move db to sep file

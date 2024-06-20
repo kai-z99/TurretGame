@@ -5,7 +5,7 @@ class VisualEffect
 {
 public:
 	virtual void UpdateAndDraw();
-	bool isActive();
+	bool isActive() const;
 
 protected:
 	Vector2 position;

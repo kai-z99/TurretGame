@@ -57,11 +57,11 @@ void AbilityButton::Draw()
 	//this->barProgress = (float)this->currentCharges / this->totalCharges;
 
 	DrawRectangle((int)(this->position.x + (AbilityButton::width / 2.0f)) - (int)(w / 2.0f), (int)this->position.y + 108, w, h, RED);
-	DrawRectangle((int)(this->position.x + (AbilityButton::width / 2.0f)) - (int)(w / 2.0f), (int)this->position.y + 108, w * (int)barProgress, h, GREEN);
+	DrawRectangle((int)(this->position.x + (AbilityButton::width / 2.0f)) - (int)(w / 2.0f), (int)this->position.y + 108, (int)(w * barProgress), h, GREEN);
 
 
 	//draw cooldown opaque bar
-	DrawRectangle((int)this->position.x, (int)this->position.y, this->width, this->height * (int)this->cooldownProgress, {0,0,0,170});
+	DrawRectangle((int)this->position.x, (int)this->position.y, this->width, (int)(this->height * this->cooldownProgress), {0,0,0,170});
 	
 	//draw id, temp?
 	DrawText(std::to_string(this->ability + 1).c_str(), (int)this->position.x - 15, (int)this->position.y, 20, DARKBLUE);

@@ -8,7 +8,7 @@ void VisualEffect::UpdateAndDraw() //debug draw
 	DrawText("EFFECT HERE", (int)this->position.x, (int)this->position.y, 30, RED);
 }
 
-bool VisualEffect::isActive()
+bool VisualEffect::isActive() const
 {
 	return this->framesLeft > 0;
 }

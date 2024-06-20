@@ -361,7 +361,7 @@ void Game::ActivateUsedAbilities()
         AbilityInfo& info = this->levelHandler->currentLevelStats->abilityStates[a];
 
         // if the ability is ready,
-        if ((int)this->frameCount - info.lastUsedFrame >= info.cooldown)
+        if (this->frameCount - info.lastUsedFrame >= info.cooldown)
         {
             //if there is an availible chrage, use one.
             if (info.charges > 0)
