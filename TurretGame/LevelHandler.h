@@ -10,6 +10,8 @@ public:
 
 	void Update(unsigned int frame);
 
+	void Draw();
+
 	void InitializeCurrentLevel();
 	void HandleCurrentLevelSpawning();
 	void ExitCurrentLevel();
@@ -22,4 +24,8 @@ private:
 
 	void SpawnClassicEnemy(int id);
 	
+	void ActivateUsedAbilities();
+
+	void DrawVisualEffects();
+
 };

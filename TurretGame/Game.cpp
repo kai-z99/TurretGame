@@ -5,17 +5,17 @@
 #include "types.h"
 #include "helpers.h"
 
+#include "LevelHandler.h"
+#include "CollisionHandler.h"
+#include "VisualEffectsManager.h"
+
 #include "Enemy.h"
-#include "RedKoopaEnemy.h"
 #include "Bullet.h"
+
 #include "BombExplosion.h"
 #include "IceSheet.h"
 #include "Turret.h"
 #include "Hotbar.h"
-
-#include "VisualEffectsManager.h"
-#include "LevelHandler.h"
-#include "CollisionHandler.h"
 
 #include "textures.h"
 
@@ -55,7 +55,6 @@ void Game::Run()
     {
         this->HandleInput();
         this->Update();
-        this->HandleEnemySpawning();
         this->Draw();
     }
 
@@ -106,7 +105,6 @@ void Game::Initialize()
     this->gameState = InLevel;
     
     this->gameStats = new GameStats();
-    
     this->effectManager = new VisualEffectsManager();
 
     this->gameStats->totalCoins = 0;
@@ -188,50 +186,7 @@ void Game::Draw()
 
 void Game::DrawInLevel()
 {
-    //draw bg
-    DrawTexture(textures[6], 0, 0, WHITE);
-
-    //draw boundaries
-    DrawLine(deathBoundaryX, 0, deathBoundaryX, screenHeight, RED);
-    DrawLine(0, menuBoundaryY, screenWidth, menuBoundaryY, RED);
-
-    //draw turret
-    this->turret->Draw();
-
-    //DRAW ICE UNDER
-    for (AreaEffect* a : this->areaEffects)
-    {
-        //id 2 is ice
-        if (a->isActive && a->GetID() == 2) a->Draw();
-    }
-
-    //draw enemies based on type. elsewise default enemy drawing behavoir.
-    for (Enemy* e : this->enemies)
-    {
-        if (e->isActive) e->Draw();
-    }
-
-    //draw bullets based on type. elsewise default enemy drawing behavoir.
-    for (Bullet* b : this->bullets)
-    {
-        if (b->isActive) b->Draw();
-    }
-
-    //DRAW EXPLOSION ON TOP
-    for (AreaEffect* a : this->areaEffects)
-    {
-        //id 1 is bomb
-        if (a->isActive && a->GetID() != 2) a->Draw();
-    }
-
-    //draw rolling effects
-    this->DrawVisualEffects();
-
-    //update and draw the effects that are on screen
-    this->effectManager->UpdateAndDraw();
-
-    //draw hotbar
-    this->hotbar->Draw(*this->levelHandler->currentLevelStats);
+    this->levelHandler->Draw();
 }
 
 void Game::DrawLevelSelectMenu()
@@ -246,59 +201,6 @@ void Game::DrawLevelSelectMenu()
     DrawTexture(textures[1], 100, 800, WHITE);
 
 }
-
-//THIS SHOULD BE IN VISUAL EFFECTS MANAGER.
-void Game::DrawVisualEffects()
-{
-    //--------------
-    //FIRE EFFECTS
-
-    //draw burning enemies on fire
-    for (Enemy* e : enemies)
-    {
-        if (e->isActive && e->GetStatusEffects()[Burning] % 8 == 7) effectManager->DisplayFire(e->GetPosition(), 1.0f);
-    }
-
-
-    //draw firebullet on fire
-    for (Bullet* b : bullets)
-    {
-        if (b->isActive && b->GetID() == 3 && this->frameCount % 2 == 0)
-        {
-            Vector2 firePos = b->GetPosition();
-            firePos.y -= 10;
-            firePos.x -= 10;
-
-            //make it look a bit more sparratic
-            firePos.y += GetRandomValue(-5, 5);
-
-            float scaleMod = GetRandomValue(-100, 100) * 0.0015f;
-
-            effectManager->DisplayFire(firePos, 0.5f + scaleMod);
-        }
-    }
-
-    //draw sparkles on ice sheet
-    for (AreaEffect* a : this->areaEffects)
-    {
-        //id 2 is ice
-        if (a->isActive && a->GetID() == 2)
-        {
-            Rectangle icebox = dynamic_cast<IceSheet*>(a)->GetHitbox();
-
-            int offsetX = GetRandomValue((int)(-(icebox.width / 2)), (int)(icebox.width / 2));
-            int offsetY = GetRandomValue((int)(-(icebox.height / 2)), (int)(icebox.height / 2));
-
-            Vector2 pos = a->GetPosition();
-            pos.x += offsetX;
-            pos.y += offsetY;
-
-
-            this->effectManager->DisplayIceSparkle(pos, GetRandomValue(-100, 100) * 0.02f);
-        }
-    }
-}
-
 
 void Game::Update()
 {
@@ -318,74 +220,13 @@ void Game::Update()
         this->UpdateLevelSelectMenu();
         break;
     }
-    
-    //split this in future
-    // 
-    //-----------------------------------------------------------------------
-    // IN GAME UPDATE //
-    //-----------------------------------------------------------------------
-
-    
-
-    //CHECK HERE IF ENEMY VECTOR IS TOO BIG. IF IT IS, CLEAN IT.
-    //SAME AS AOE HERE
-
-    //-----------------------------------------------------------------------
-    // MENU UPDATE //
-    //-----------------------------------------------------------------------
 }
 
 void Game::UpdateInLevel()
 {
     this->levelHandler->Update(this->frameCount);
-
-    //update hotbar buttons
-    if (this->hotbar != nullptr) this->hotbar->Update(this->frameCount, this->levelHandler->currentLevelStats->abilityStates);
-
-    //if an ability button is pressed, activate its ability if it has a charge.
-    this->ActivateUsedAbilities();
-
-    //update turret
-    this->turret->Update(frameCount, (int)mousePos.x, (int)mousePos.y);
-
-    //handle bullets
-    for (Bullet* b : this->bullets)
-    {
-        if (b->isActive) b->Update(this->frameCount);
-    }
-
-    for (AreaEffect* a : this->areaEffects)
-    {
-        if (a->isActive) a->Update(this->frameCount);
-    }
-
-    //handle enemies
-    for (Enemy* e : this->enemies)
-    {
-        if (e->isActive)
-        {
-            e->Update(this->frameCount); //move enemy, apply effects, apply knockback. apply tint
-
-            // if enemy died, add coin amount. and display coin effect
-            if (e->GetHealth() <= 0)
-            {
-                this->levelHandler->currentLevelStats->coinsCollected += e->GetCoinDropAmount();
-                this->effectManager->DisplayCoinSplash(e->GetPosition(), e->GetCoinDropAmount());
-                e->isActive = false;
-            }
-
-            //check if enemy has infiltrated the base
-            else if (e->GetPosition().x <= deathBoundaryX)
-            {
-                this->levelHandler->currentLevelStats->health -= e->GetDamage();
-                e->isActive = false;
-            }
-        }
-
-    }
-
-    //handle collisions
-    this->HandleCollisions();
+    this->levelHandler->HandleCurrentLevelSpawning(); //part of update??:
+    this->collisionHandler->HandleEnemyCollisions();
 }
 
 void Game::UpdateLevelSelectMenu()
@@ -394,68 +235,7 @@ void Game::UpdateLevelSelectMenu()
 }
 
 
-//helper for update
-void Game::ActivateUsedAbilities()
-{
-    //if an ability button is pressed, activate its ability if it has a charge and it is not on cooldown
 
-    //go through every ablity that was clicked this frame
-    for (const TurretAbility& a : this->hotbar->GetActiveAbilityButtons())
-    {
-        //info of the current ability
-        AbilityInfo& info = this->levelHandler->currentLevelStats->abilityStates[a];
-
-        // if the ability is ready,
-        if (this->frameCount - info.lastUsedFrame >= info.cooldown)
-        {
-            //if there is an availible chrage, use one.
-            if (info.charges > 0)
-            {
-                info.charges -= 1;
-                info.lastUsedFrame = this->frameCount;
-
-                switch (a)
-                {
-                case Rapidfire:
-                    this->turret->SetRapidFire(240);
-                    break;
-
-                case SpecialRapidfire:
-                    this->turret->SetSpecialRapidfire(240);
-                    break;
-
-                case Explosive:
-                    this->inputMode = 1; //1 is bomb place mode
-                    break;
-
-                case Ice:
-                    this->inputMode = 2; //2 is ice mode
-                    break;
-
-                default:
-                    std::cout << a << "Ability does not exist.";
-                    break;
-                }
-            }
-
-            else
-            {
-                // no charges splash
-            }
-            
-        }
-
-        else
-        {
-            //ability is not ready splash
-        }  
-    }
-}
-
-void Game::HandleCollisions()
-{
-    this->collisionHandler->HandleEnemyCollisions();
-}
 
 void Game::HandleInput()
 {
@@ -575,11 +355,5 @@ void Game::CleanBulletVector() // keep all active bullet, delete rest from memor
 
     this->bullets.insert(this->bullets.end(), temp.begin(), temp.end()); // copy the active bullets in temp back to empty bullet vector
     //std::cout << "new vector size" << this->bullets.size() << std::endl;
-}
-
-
-void Game::HandleEnemySpawning()
-{
-    this->levelHandler->HandleCurrentLevelSpawning();  
 }
 

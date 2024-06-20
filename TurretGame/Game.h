@@ -26,13 +26,11 @@ public:
 	GameStats* gameStats;
 	int currentLevel;
 
-	std::vector<Enemy*> enemies;
-	std::vector<Bullet*> bullets;
-	std::vector<AreaEffect*> areaEffects;
-
-	VisualEffectsManager* effectManager;
 
 	void ClearVectors();
+
+	friend class LevelHandler;
+	friend class CollisionHandler;
 
 private:
 	void Initialize();
@@ -42,35 +40,35 @@ private:
 	void Draw();
 
 	void DrawInLevel();
-	void DrawVisualEffects();
 
 	void DrawLevelSelectMenu();
 	//----------------------------------------
 	void Update();
 
 	void UpdateInLevel();
-	void HandleCollisions();
 
 	void UpdateLevelSelectMenu();
 	//----------------------------------------
 	void HandleInput();
 
 	void HandleInputInLevel();
+
 	void HandleInputLevelSelectMenu();
 	//-----------------------------------------
 
-	
 	void StartCurrentLevel();
 	void ExitCurrentLevel();
 
-	void HandleEnemySpawning();
-
-	void ActivateUsedAbilities();
 	void CleanBulletVector();
 
 	Turret* turret;
 	Hotbar* hotbar;
 
+	std::vector<Enemy*> enemies;
+	std::vector<Bullet*> bullets;
+	std::vector<AreaEffect*> areaEffects;
+	
+	VisualEffectsManager* effectManager;
 	LevelHandler* levelHandler;
 	CollisionHandler* collisionHandler;
 
