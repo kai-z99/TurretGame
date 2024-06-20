@@ -63,7 +63,9 @@ private:
 
 	LevelHandler* levelHandler;
 
-	const int bulletLimit = 200; //how many bullets can be on the screen
+	const int bulletLimit = 1000; //how many bullets can be on the screen
+	const int enemyLimit = 800;
+	const int AOELimit = 800;
 	
 	int inputMode; //0: standard, 1: bomb, 2 : ice
 	Vector2 mousePos;

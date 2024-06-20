@@ -2,8 +2,8 @@
 
 void Button::Draw()
 {
-	DrawRectangle(this->position.x, this->position.y, 100, 100, RED);
-	DrawText("BUTTON HERE", this->position.x, this->position.y, 30.0f, RED);
+	DrawRectangle((int)this->position.x, (int)this->position.y, 100, 100, RED);
+	DrawText("BUTTON HERE", (int)this->position.x, (int)this->position.y, 30, RED);
 }
 
 void Button::Update(int mouseX, int mouseY)

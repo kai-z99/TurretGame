@@ -129,7 +129,7 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
 
 void Turret::UpdateAngle(int mouseX, int mouseY)
 {
-    this->angle = CalculateAngle(this->position.x, this->position.y, mouseX, mouseY);
+    this->angle = CalculateAngle((int)this->position.x, (int)this->position.y, mouseX, mouseY);
 }
 
 void Turret::ShootBullet(std::vector<Bullet*>& bullets, int id)

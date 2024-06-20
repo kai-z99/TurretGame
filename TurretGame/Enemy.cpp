@@ -6,6 +6,7 @@
 Enemy::Enemy()
 {
 	this->tint = WHITE;
+	this->movementChilled = false;
 	// for each status effect, set its frames to 0.
 	for (int i = 0; i <= 4; i++)
 	{
@@ -20,7 +21,7 @@ Enemy::~Enemy()
 
 void Enemy::Draw() //draws hitbox
 {
-	DrawRectangleLines(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
+	DrawRectangleLines((int)this->hitbox.x, (int)this->hitbox.y, (int)this->hitbox.width, (int)this->hitbox.height, RED);
 }
 
 void Enemy::Update(unsigned int frame)
@@ -44,14 +45,13 @@ void Enemy::Update(unsigned int frame)
 
 			case Chilled:
 				//slow movement
-				this->currentVelocity.x = this->baseVelocity.x * 0.3f;
-				this->currentVelocity.y = this->baseVelocity.y * 0.3f;
+				this->movementChilled = true;
 				this->tint = BLUE; //tint blue 
 
 				effect.second -= 1;
 				if (effect.second <= 0)
 				{
-					this->currentVelocity = this->baseVelocity;
+					this->movementChilled = false;
 					this->tint = WHITE;
 				}
 				break;
@@ -60,10 +60,20 @@ void Enemy::Update(unsigned int frame)
 		}
 	}
 
-	this->position.x += this->currentVelocity.x;
-	this->position.y += this->currentVelocity.y;
+	//MOVE
+	if (!this->movementChilled)
+	{
+		this->position.x += this->currentVelocity.x;
+		this->position.y += this->currentVelocity.y;
+	}
 
-
+	else
+	{
+		this->position.x += this->currentVelocity.x * 0.3f;
+		this->position.y += this->currentVelocity.y * 0.3f;
+	}
+	
+	//KB
 	if (this->knockbackFrames > 0)
 	{
 		this->position.x += 9 * this->knockbackMultiplier;
@@ -75,11 +85,11 @@ void Enemy::Update(unsigned int frame)
 
 void Enemy::DrawHealthbar(int yOffset, float barSize)
 {
-	int barWidth = 30 * barSize;
-	int barHeight = 3 * barSize;
+	float barWidth = 30 * barSize;
+	float barHeight = 3 * barSize;
 
-	DrawRectangle(this->position.x - (barWidth / 2), this->position.y - yOffset, barWidth, barHeight, RED);
-	DrawRectangle(this->position.x - (barWidth / 2), this->position.y - yOffset, barWidth * (this->health / this->maxHealth), barHeight, GREEN);
+	DrawRectangle((int)(this->position.x - (barWidth / 2)), (int)(this->position.y - yOffset), (int)barWidth, (int)barHeight, RED);
+	DrawRectangle((int)(this->position.x - (barWidth / 2)), (int)(this->position.y - yOffset), (int)(barWidth * (this->health / this->maxHealth)), (int)barHeight, GREEN);
 }
 
 void Enemy::ApplyKnockback(Bullet* b)

@@ -30,8 +30,8 @@ void WolfEnemy::Update(unsigned int frame)
 	Enemy::Update(frame);
 
 	//update postion of texture
-	this->textureLoop->SetPosition(this->position.x, this->position.y);
-	this->runTexture->SetPosition(this->position.x, this->position.y);
+	this->textureLoop->SetPosition((int)this->position.x, (int)this->position.y);
+	this->runTexture->SetPosition((int)this->position.x, (int)this->position.y);
 
 	//if the wolf hasnt run yet and its past the threahold, make it run
 	if (this->ran == false && this->position.x < this->runThreshold)

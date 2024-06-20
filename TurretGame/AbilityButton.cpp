@@ -45,10 +45,10 @@ void AbilityButton::Draw()
 	else if (this->isHovering) col = { 0, 0, 255, 50 };
 	else col = WHITE;
 
-	DrawRectangle(this->position.x, this->position.y, this->width, this->height, col );
+	DrawRectangle((int)this->position.x, (int)this->position.y, this->width, this->height, col );
 
 	//draw icon
-	DrawTexture(*this->texture, this->position.x + 10, this->position.y + 10, WHITE);
+	DrawTexture(*this->texture, (int)this->position.x + 10, (int)this->position.y + 10, WHITE);
 
 	//draw progress bar
 	int w = 70;
@@ -56,15 +56,15 @@ void AbilityButton::Draw()
 
 	//this->barProgress = (float)this->currentCharges / this->totalCharges;
 
-	DrawRectangle((this->position.x + (AbilityButton::width / 2)) - (w / 2), this->position.y + 108, w, h, RED);
-	DrawRectangle((this->position.x + (AbilityButton::width / 2)) - (w / 2), this->position.y + 108, w * barProgress, h, GREEN);
+	DrawRectangle((int)(this->position.x + (AbilityButton::width / 2.0f)) - (int)(w / 2.0f), (int)this->position.y + 108, w, h, RED);
+	DrawRectangle((int)(this->position.x + (AbilityButton::width / 2.0f)) - (int)(w / 2.0f), (int)this->position.y + 108, w * (int)barProgress, h, GREEN);
 
 
 	//draw cooldown opaque bar
-	DrawRectangle(this->position.x, this->position.y, this->width, this->height * this->cooldownProgress, {0,0,0,170});
+	DrawRectangle((int)this->position.x, (int)this->position.y, this->width, this->height * (int)this->cooldownProgress, {0,0,0,170});
 	
 	//draw id, temp?
-	DrawText(std::to_string(this->ability + 1).c_str(), this->position.x - 15, this->position.y, 20.0f, DARKBLUE);
+	DrawText(std::to_string(this->ability + 1).c_str(), (int)this->position.x - 15, (int)this->position.y, 20, DARKBLUE);
 
 	
 }

@@ -32,13 +32,13 @@ void BatEnemy::Update(unsigned int frame)
 	Enemy::Update(frame);
 
 	//update y velocity with a sin wave
-	if (this->upStart) this->currentVelocity.y = this->amplitude * -sin(this->localFrameCount * 0.03);
-	else this->currentVelocity.y = this->amplitude * sin(this->localFrameCount * 0.03);
+	if (this->upStart) this->currentVelocity.y = this->amplitude * -sinf(this->localFrameCount * 0.03f);
+	else this->currentVelocity.y = this->amplitude * sinf(this->localFrameCount * 0.03f);
 
 
 	
 	//update postion of texture
-	this->textureLoop->SetPosition(this->position.x, this->position.y);
+	this->textureLoop->SetPosition((int)this->position.x, (int)this->position.y);
 
 	//update the animation state
 	if (frame % 10 == 0) this->textureLoop->NextFrame();

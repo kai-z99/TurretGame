@@ -29,7 +29,7 @@ void RedKoopaEnemy::Update(unsigned int frame)
 	Enemy::Update(frame);
 
 	//update distance walked
-	this->distanceWalked -= this->currentVelocity.x;
+	this->distanceWalked -= (int)this->currentVelocity.x;
 
 	//check if koopa should unshell
 	if (this->distanceWalked >= deShellThreshold && this->shellForm)
@@ -40,8 +40,8 @@ void RedKoopaEnemy::Update(unsigned int frame)
 	}
 
 	//update postion of texture
-	this->textureLoop->SetPosition(this->position.x, this->position.y);
-	this->shellTextureLoop->SetPosition(this->position.x, this->position.y);
+	this->textureLoop->SetPosition((int)this->position.x, (int)this->position.y);
+	this->shellTextureLoop->SetPosition((int)this->position.x, (int)this->position.y);
 
 	//update the animation state
 	if (this->shellForm && frame % 7 == 0) this->shellTextureLoop->NextFrame();

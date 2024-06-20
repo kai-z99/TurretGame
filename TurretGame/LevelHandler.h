@@ -19,5 +19,7 @@ public:
 private:
 	Game* game;
 	unsigned int currentLevelFrameCount;
+
+	void SpawnClassicEnemy(int id);
 	
 };

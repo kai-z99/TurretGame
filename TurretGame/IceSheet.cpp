@@ -49,7 +49,7 @@ void IceSheet::Update(unsigned int frame)
 
 void IceSheet::Draw()
 {
-	int alpha = 70 * this->alphaModifier;
+	int alpha = (int)(70 * this->alphaModifier);
 	if (alpha < 0) alpha = 0;
 	DrawRectangleRec(this->hitbox, { 87, 157, 255,(unsigned char)alpha});
 }

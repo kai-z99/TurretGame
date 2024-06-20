@@ -4,8 +4,8 @@
 
 void VisualEffect::UpdateAndDraw() //debug draw
 {
-	DrawCircleLines(this->position.x, this->position.y, 20.0f, BLUE);
-	DrawText("EFFECT HERE", this->position.x, this->position.y, 30.0f, RED);
+	DrawCircleLines((int)this->position.x, (int)this->position.y, 20.0f, BLUE);
+	DrawText("EFFECT HERE", (int)this->position.x, (int)this->position.y, 30, RED);
 }
 
 bool VisualEffect::isActive()

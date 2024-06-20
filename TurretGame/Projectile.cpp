@@ -2,7 +2,7 @@
 
 void Projectile::Draw() // default draw is a circle. ONLY FOR DEBUG
 {
-	DrawCircle(this->position.x, this->position.y, 10, BLACK); //temp
+	DrawCircle((int)this->position.x, (int)this->position.y, 10, BLACK); //temp
 }
 
 void Projectile::Update(unsigned int frame) // default is pos and velocty update

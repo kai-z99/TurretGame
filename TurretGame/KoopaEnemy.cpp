@@ -23,7 +23,7 @@ void KoopaEnemy::Update(unsigned int frame)
 	Enemy::Update(frame); 
 
 	//update postion of texture
-	this->textureLoop->SetPosition(this->position.x, this->position.y);
+	this->textureLoop->SetPosition((int)this->position.x, (int)this->position.y);
 
 	//update the animation state
 	if (frame % 20 == 0) this->textureLoop->NextFrame(); 

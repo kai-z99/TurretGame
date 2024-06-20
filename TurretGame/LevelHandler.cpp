@@ -58,6 +58,7 @@ void LevelHandler::HandleLevelExit()
     this->currentLevelFrameCount = 0;
 }
 
+
 void LevelHandler::HandleCurrentLevelSpawning()
 {
     switch (this->game->currentLevel)
@@ -115,7 +116,7 @@ void LevelHandler::HandleCurrentLevelSpawning()
             this->game->enemies.push_back(k);
         }
 
-        if (this->game->frameCount % 30 == 0)
+        if (this->game->frameCount % 300 == 0)
         {
             BatEnemy* s = new BatEnemy();
             s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
@@ -135,4 +136,7 @@ void LevelHandler::HandleCurrentLevelSpawning()
     }
 }
 
+void LevelHandler::SpawnClassicEnemy(int id)
+{
 
+}

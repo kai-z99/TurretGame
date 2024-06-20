@@ -19,8 +19,8 @@ TextureLoop::TextureLoop(Texture2D* texture, int segments, float scale, Vector2 
 
 void TextureLoop::SetPosition(int x, int y)
 {
-	this->position.x = x;
-	this->position.y = y;
+	this->position.x = (float)x;
+	this->position.y = (float)y;
 }
 
 void TextureLoop::ToggleMirrorImage()

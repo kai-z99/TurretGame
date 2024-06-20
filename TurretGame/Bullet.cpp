@@ -6,7 +6,7 @@
 
 void Bullet::Draw() //default draw is a red circle hitbox; debug only
 {
-    DrawCircleLines(this->position.x, this->position.y, this->hitBoxRadius, RED); //temp
+    DrawCircleLines((int)this->position.x, (int)this->position.y, this->hitBoxRadius, RED); //temp
 }
 
 void Bullet::Update(unsigned int frame)
@@ -20,7 +20,7 @@ void Bullet::Update(unsigned int frame)
     } 
 
     //update the angle of the bullet based on velocity
-    this->angle = CalculateAngle(this->currentVelocity.x, this->currentVelocity.y);
+    this->angle = CalculateAngle((int)this->currentVelocity.x, (int)this->currentVelocity.y);
 }
 
 bool Bullet::EnemyCollided(Enemy* e)

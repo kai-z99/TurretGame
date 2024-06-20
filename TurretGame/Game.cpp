@@ -260,8 +260,8 @@ void Game::DrawVisualEffects()
         {
             Rectangle icebox = dynamic_cast<IceSheet*>(a)->GetHitbox();
 
-            float offsetX = GetRandomValue(-(icebox.width / 2), (icebox.width / 2));
-            float offsetY = GetRandomValue(-(icebox.height / 2), (icebox.height / 2));
+            int offsetX = GetRandomValue((int)(-(icebox.width / 2)), (int)(icebox.width / 2));
+            int offsetY = GetRandomValue((int)(-(icebox.height / 2)), (int)(icebox.height / 2));
 
             Vector2 pos = a->GetPosition();
             pos.x += offsetX;
@@ -361,7 +361,7 @@ void Game::ActivateUsedAbilities()
         AbilityInfo& info = this->levelHandler->currentLevelStats->abilityStates[a];
 
         // if the ability is ready,
-        if (this->frameCount - info.lastUsedFrame >= info.cooldown)
+        if ((int)this->frameCount - info.lastUsedFrame >= info.cooldown)
         {
             //if there is an availible chrage, use one.
             if (info.charges > 0)
@@ -530,11 +530,11 @@ void Game::HandleInput()
             //bomb
             case 1:
                 //push bomb in vector at x,y
-                this->areaEffects.push_back(new BombExplosion(this->mousePos.x, this->mousePos.y));
+                this->areaEffects.push_back(new BombExplosion((int)this->mousePos.x, (int)this->mousePos.y));
                 break;
             //ice
             case 2:
-                this->areaEffects.push_back(new IceSheet(this->mousePos.x, this->mousePos.y, 350));
+                this->areaEffects.push_back(new IceSheet((int)this->mousePos.x, (int)this->mousePos.y, 350));
                 break;
             }
 
