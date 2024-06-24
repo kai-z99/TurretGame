@@ -1,6 +1,9 @@
 #pragma once
+#include <vector>
 
 class Game;
+class Enemy;
+class LevelBuilder;
 struct CurrentLevelStats;
 
 class LevelHandler
@@ -12,17 +15,22 @@ public:
 
 	void Draw();
 
+	void HandleInput();
+
 	void InitializeCurrentLevel();
 	void HandleCurrentLevelSpawning();
 	void ExitCurrentLevel();
 
 	CurrentLevelStats* currentLevelStats;
 
+	friend class LevelBuilder;
+
 private:
 	Game* game;
-	unsigned int currentLevelFrameCount;
+	LevelBuilder* levelBuilder;
+	std::vector<Enemy*>* enemiesRef;
 
-	void SpawnClassicEnemy(int id);
+	unsigned int currentLevelFrameCount;
 	
 	void ActivateUsedAbilities();
 

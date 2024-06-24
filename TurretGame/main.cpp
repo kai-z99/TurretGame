@@ -16,6 +16,7 @@ int main(void)
 //handle button clicking on hotbar (NOTE when in other input more this wont update so it will get stuck in a blue background after clikcing bomb or ice)
 ////THIS SHOULD BE IN VISUAL EFFECTS MANAGER void DrawVisualEffects(); this can have a game pointer, its ok.
 //optimize Hotbar::GetActiveAbilityButtons()
+//fix public levelin game
 
 //enemies can drop abilities that can be clicked
 //splash damage bullety

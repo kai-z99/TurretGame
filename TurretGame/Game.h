@@ -12,6 +12,8 @@ class Hotbar;
 class VisualEffectsManager;
 class LevelHandler;
 class CollisionHandler;
+class LevelSelectHandler;
+class LevelButton;
 
 class Game
 {
@@ -21,20 +23,15 @@ public:
 
 	void Run();
 
-	unsigned int frameCount;
-
-	GameStats* gameStats;
-	int currentLevel;
-
-
-	void ClearVectors();
-
 	friend class LevelHandler;
 	friend class CollisionHandler;
+	friend class LevelSelectHandler;
 
 private:
 	void Initialize();
+
 	GameState gameState;
+	unsigned int frameCount;
 
 	//----------------------------------------
 	void Draw();
@@ -56,22 +53,30 @@ private:
 	void HandleInputLevelSelectMenu();
 	//-----------------------------------------
 
+	void PlayLevel(int level);
+
 	void StartCurrentLevel();
 	void ExitCurrentLevel();
 
 	void CleanBulletVector();
+	void ClearVectors();
 
 	Turret* turret;
 	Hotbar* hotbar;
+	GameStats* gameStats;
 
 	std::vector<Enemy*> enemies;
 	std::vector<Bullet*> bullets;
 	std::vector<AreaEffect*> areaEffects;
+
+	std::vector<LevelButton*> levelButtons;
 	
 	VisualEffectsManager* effectManager;
 	LevelHandler* levelHandler;
 	CollisionHandler* collisionHandler;
+	LevelSelectHandler* levelSelectHandler;
 
+	int currentLevel;
 	const int bulletLimit = 1000; //how many bullets can be on the screen
 	const int enemyLimit = 800;
 	const int AOELimit = 800;

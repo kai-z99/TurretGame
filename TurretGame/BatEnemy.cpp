@@ -45,8 +45,8 @@ void BatEnemy::Update(unsigned int frame)
 
 	//update hitbox position
 	//this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
-	this->hitbox.x = this->position.x - (50 / 2);
-	this->hitbox.y = this->position.y - (50 / 2);
+	this->hitbox.x = this->position.x - (50.0f / 2);
+	this->hitbox.y = this->position.y - (50.0f / 2);
 
 
 	//update texture proteries based on new position

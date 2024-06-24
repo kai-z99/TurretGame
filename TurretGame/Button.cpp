@@ -41,5 +41,15 @@ void Button::Update(int mouseX, int mouseY)
 	}
 }
 
+void Button::SetPosition(int posX, int posY)
+{
+	this->position = { (float)posX, (float)posY };
+}
+
+Vector2 Button::GetPosition() const
+{
+	return this->position;
+}
+
 
 	

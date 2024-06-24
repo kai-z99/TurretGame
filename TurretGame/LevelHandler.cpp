@@ -1,6 +1,7 @@
 #include "LevelHandler.h"
 #include <iostream>
 #include "Game.h"
+#include "LevelBuilder.h"
 
 #include "types.h"
 #include "constants.h"
@@ -11,6 +12,7 @@
 
 #include "AreaEffect.h"
 #include "IceSheet.h"
+#include "BombExplosion.h"
 
 #include "BatEnemy.h"
 #include "SoldierEnemy.h"
@@ -27,6 +29,8 @@
 LevelHandler::LevelHandler(Game* game)
 {
 	this->game = game;
+    this->levelBuilder = new LevelBuilder(this);
+    this->enemiesRef = &game->enemies;
     this->currentLevelStats = new CurrentLevelStats();
     this->currentLevelFrameCount = 0;
 }
@@ -189,6 +193,57 @@ void LevelHandler::Draw()
     this->game->hotbar->Draw(*this->currentLevelStats);
 }
 
+void LevelHandler::HandleInput()
+{
+    Game* g = this->game;
+
+    //bomb and ice place mode
+    if (g->inputMode == 1 || g->inputMode == 2)
+    {
+        //if mouse is clicked in bounds
+        if (IsMouseButtonPressed(0) && g->mousePos.y > menuBoundaryY)
+        {
+            switch (g->inputMode)
+            {
+                //bomb
+            case 1:
+                //push bomb in vector at x,y
+                g->areaEffects.push_back(new BombExplosion((int)g->mousePos.x, (int)g->mousePos.y));
+                break;
+                //ice
+            case 2:
+                g->areaEffects.push_back(new IceSheet((int)g->mousePos.x, (int)g->mousePos.y, 350));
+                break;
+            }
+
+            g->inputMode = 0;
+        }
+    }
+
+    //standard shooting 
+    else
+    {
+        //handle button clicking on hotbar (NOTE when in other input more this wont update so it will get stuck in a blue background after clikcing bomb or ice)
+        g->hotbar->HandleInput();
+
+        if (IsMouseButtonDown(0))
+        {
+            //go through each bullet type
+            for (const auto& cooldown : g->turret->GetBulletCooldownMap()) // bulletid : cooldownInfo
+            {
+                //if that type isnt on cooldown
+                if (cooldown.second->canShoot)
+                {
+                    //shoot that bullet type once.
+                    g->turret->ShootBullet(g->bullets, cooldown.first);
+                }
+            }
+
+            if (g->bullets.size() > g->bulletLimit) g->CleanBulletVector(); //if the bullet vector is too big, cleanup
+        }
+    }
+}
+
 void LevelHandler::InitializeCurrentLevel()
 {
     this->currentLevelFrameCount = 0;
@@ -208,7 +263,6 @@ void LevelHandler::InitializeCurrentLevel()
 void LevelHandler::ExitCurrentLevel()
 {
     //display end screen here
-
     this->game->ClearVectors();
     this->game->gameStats->totalCoins += this->currentLevelStats->coinsCollected;
 
@@ -220,84 +274,82 @@ void LevelHandler::ExitCurrentLevel()
 
 void LevelHandler::HandleCurrentLevelSpawning()
 {
-    switch (this->game->currentLevel)
-    {
-    case 0:
-        //menu
-        break;
+    this->levelBuilder->SetSpawnMap(this->game->currentLevel);
+    this->levelBuilder->HandleCurrentLevelSpawning();
 
-    //---------------------------------------------------------------------------------------------------//
-    // LEVEL DIVIDER //----------------------------------------------------------------------------------//
-    //---------------------------------------------------------------------------------------------------//
+    //switch (this->game->currentLevel)
+    //{
+    //case 0:
+    //    //menu
+    //    break;
 
-    case 1:
-        if (this->currentLevelFrameCount % 30 == 0 && this->currentLevelFrameCount < 240)
-        {
-            BatEnemy* s = new BatEnemy();
-            s->SetPosition((float)screenWidth, 500);
-            s->SetAmplitude(3.0f);
-            s->upStart = true;
-            this->game->enemies.push_back(s);
+    ////---------------------------------------------------------------------------------------------------//
+    //// LEVEL DIVIDER //----------------------------------------------------------------------------------//
+    ////---------------------------------------------------------------------------------------------------//
 
-        }
-        break;
+    //case 1:
+    //    if (this->currentLevelFrameCount % 30 == 0 && this->currentLevelFrameCount < 240)
+    //    {
+    //        BatEnemy* s = new BatEnemy();
+    //        s->SetPosition((float)screenWidth, 500);
+    //        s->SetAmplitude(3.0f);
+    //        s->upStart = true;
+    //        this->game->enemies.push_back(s);
 
-    //---------------------------------------------------------------------------------------------------//
-    // LEVEL DIVIDER //----------------------------------------------------------------------------------//
-    //---------------------------------------------------------------------------------------------------//
+    //    }
+    //    break;
 
-    case 2:
-        if (this->currentLevelFrameCount % 30 == 0)
-        {
-            SoldierEnemy* s = new SoldierEnemy();
-            s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-            this->game->enemies.push_back(s);
-        }
+    ////---------------------------------------------------------------------------------------------------//
+    //// LEVEL DIVIDER //----------------------------------------------------------------------------------//
+    ////---------------------------------------------------------------------------------------------------//
 
-        if (this->currentLevelFrameCount % 500 == 0)
-        {
-            KoopaEnemy* k = new KoopaEnemy();
-            k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-            this->game->enemies.push_back(k);
-        }
+    //case 2:
+    //    if (this->currentLevelFrameCount % 30 == 0)
+    //    {
+    //        SoldierEnemy* s = new SoldierEnemy();
+    //        s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+    //        this->game->enemies.push_back(s);
+    //    }
 
-        if (this->currentLevelFrameCount % 400 == 0)
-        {
-            RedKoopaEnemy* k = new RedKoopaEnemy();
-            k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-            this->game->enemies.push_back(k);
-        }
+    //    if (this->currentLevelFrameCount % 500 == 0)
+    //    {
+    //        KoopaEnemy* k = new KoopaEnemy();
+    //        k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+    //        this->game->enemies.push_back(k);
+    //    }
 
-        if (this->currentLevelFrameCount % 410 == 0)
-        {
-            WolfEnemy* k = new WolfEnemy();
-            k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-            this->game->enemies.push_back(k);
-        }
+    //    if (this->currentLevelFrameCount % 400 == 0)
+    //    {
+    //        RedKoopaEnemy* k = new RedKoopaEnemy();
+    //        k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+    //        this->game->enemies.push_back(k);
+    //    }
 
-        if (this->currentLevelFrameCount % 300 == 0)
-        {
-            BatEnemy* s = new BatEnemy();
-            s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-            s->SetAmplitude(GetRandomFloat(1, 10));
-            if (GetRandomValue(1, 2) == 1) s->upStart = true;
-            this->game->enemies.push_back(s);
-        }
-        break;
+    //    if (this->currentLevelFrameCount % 410 == 0)
+    //    {
+    //        WolfEnemy* k = new WolfEnemy();
+    //        k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+    //        this->game->enemies.push_back(k);
+    //    }
 
-    //---------------------------------------------------------------------------------------------------//
-    // LEVEL DIVIDER //----------------------------------------------------------------------------------//
-    //---------------------------------------------------------------------------------------------------//  
+    //    if (this->currentLevelFrameCount % 300 == 0)
+    //    {
+    //        BatEnemy* s = new BatEnemy();
+    //        s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+    //        s->SetAmplitude(GetRandomFloat(1, 10));
+    //        if (GetRandomValue(1, 2) == 1) s->upStart = true;
+    //        this->game->enemies.push_back(s);
+    //    }
+    //    break;
 
-    default:
-        std::cout << "WARNING: Level " << this->game->currentLevel << " does not exist.";
-        break;
-    }
-}
+    ////---------------------------------------------------------------------------------------------------//
+    //// LEVEL DIVIDER //----------------------------------------------------------------------------------//
+    ////---------------------------------------------------------------------------------------------------//  
 
-void LevelHandler::SpawnClassicEnemy(int id)
-{
-
+    //default:
+    //    std::cout << "WARNING: Level " << this->game->currentLevel << " does not exist.";
+    //    break;
+    //}
 }
 
 

@@ -8,6 +8,7 @@
 #include "LevelHandler.h"
 #include "CollisionHandler.h"
 #include "VisualEffectsManager.h"
+#include "LevelSelectMenuHandler.h"
 
 #include "Enemy.h"
 #include "Bullet.h"
@@ -128,11 +129,20 @@ void Game::Initialize()
 
     this->levelHandler = new LevelHandler(this);
     this->collisionHandler = new CollisionHandler(this);
+    this->levelSelectHandler = new LevelSelectHandler(this);
 
     this->StartCurrentLevel();
 
     //this->hotbar = new Hotbar(this->levelHandler->currentLevelStats->abilityStates); 
     
+}
+
+void Game::PlayLevel(int level)
+{
+    this->gameState = InLevel;
+    this->ExitCurrentLevel();
+    this->currentLevel = level;
+    this->StartCurrentLevel();
 }
 
 void Game::StartCurrentLevel()
@@ -152,6 +162,8 @@ void Game::ExitCurrentLevel()
     delete this->turret;
     this->turret = nullptr;
 }
+
+//------------------------------------------------------------------------------------
 
 void Game::Draw()
 {
@@ -191,16 +203,13 @@ void Game::DrawInLevel()
 
 void Game::DrawLevelSelectMenu()
 {
-
     ClearBackground(RAYWHITE); // temp
 
-    DrawTexture(textures[1], 500, 500, WHITE);
-    DrawTexture(textures[1], 800, 500, WHITE);
-    DrawTexture(textures[1], 500, 1000, WHITE);
-    DrawTexture(textures[1], 500, 200, WHITE);
-    DrawTexture(textures[1], 100, 800, WHITE);
+    this->levelSelectHandler->Draw();
 
 }
+
+//------------------------------------------------------------------------------------
 
 void Game::Update()
 {
@@ -231,11 +240,10 @@ void Game::UpdateInLevel()
 
 void Game::UpdateLevelSelectMenu()
 {
-
+    this->levelSelectHandler->Update(this->frameCount);
 }
 
-
-
+//------------------------------------------------------------------------------------
 
 void Game::HandleInput()
 {
@@ -281,60 +289,15 @@ void Game::HandleInput()
 
 void Game::HandleInputInLevel()
 {
-    //bomb and ice place mode
-    if (this->inputMode == 1 || this->inputMode == 2)
-    {
-        //if mouse is clicked in bounds
-        if (IsMouseButtonPressed(0) && this->mousePos.y > menuBoundaryY)
-        {
-            switch (this->inputMode)
-            {
-                //bomb
-            case 1:
-                //push bomb in vector at x,y
-                this->areaEffects.push_back(new BombExplosion((int)this->mousePos.x, (int)this->mousePos.y));
-                break;
-                //ice
-            case 2:
-                this->areaEffects.push_back(new IceSheet((int)this->mousePos.x, (int)this->mousePos.y, 350));
-                break;
-            }
-
-            this->inputMode = 0;
-        }
-    }
-
-    //standard shooting 
-    else
-    {
-        //handle button clicking on hotbar (NOTE when in other input more this wont update so it will get stuck in a blue background after clikcing bomb or ice)
-        this->hotbar->HandleInput();
-
-        if (IsMouseButtonDown(0))
-        {
-            //go through each bullet type
-            for (const auto& cooldown : this->turret->GetBulletCooldownMap()) // bulletid : cooldownInfo
-            {
-                //if that type isnt on cooldown
-                if (cooldown.second->canShoot)
-                {
-                    //shoot that bullet type once.
-                    this->turret->ShootBullet(this->bullets, cooldown.first);
-                }
-            }
-
-            if (bullets.size() > this->bulletLimit) this->CleanBulletVector(); //if the bullet vector is too big, cleanup
-        }
-    }
-
-
+    this->levelHandler->HandleInput();
 }
 
 void Game::HandleInputLevelSelectMenu()
 {
-
+    this->levelSelectHandler->HandleInput();
 }
 
+//------------------------------------------------------------------------------
 
 void Game::CleanBulletVector() // keep all active bullet, delete rest from memory. Then clear bullet vector and add the remaing active ones to it.
 {
