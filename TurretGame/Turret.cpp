@@ -24,28 +24,26 @@ Turret::Turret()
     //gun settings
     this->bulletSpeedMultiplier = 1.0f;
 
-    this->baseFirerate = 1.5f; // in shots per second for turretBullet
+    this->baseFirerate = 1.0f; // in shots per second for turretBullet
     this->currentFirerate = this->baseFirerate;
-    this->rapidFirerate = this->baseFirerate * 3.0f;
+    this->rapidFirerate = this->baseFirerate * 2.0f;
     this->rapidFireFrames = 0;
 
-    this->baseSpecialFirerate = 1.0f;
-    this->currentSpecialFirerate = this->baseSpecialFirerate;
-    this->rapidSpecialFirerate = this->baseSpecialFirerate * 3.0f;
-    this->specialRapidfireFrames = 0;
-
-    
     //initate bullet cooldown map
+    std::unordered_map<int, BulletCooldownInfo*>& bcm = this->bulletCooldownMap;
+
     for (int i = 1; i <= 4; i++)
     {
-        this->bulletCooldownMap[i] = new BulletCooldownInfo();
-        this->bulletCooldownMap[i]->canShoot = true;
-        this->bulletCooldownMap[i]->lastShotFrame = 0;
-        this->bulletCooldownMap[i]->shotThisFrame = false;
+        bcm[i] = new BulletCooldownInfo();
+
+        if (i == 1) bcm[i]->unlocked = true;
+        else bcm[i]->unlocked = false;
+
+        bcm[i]->canShoot = true;
+        bcm[i]->lastShotFrame = 0;
+        bcm[i]->shotThisFrame = false;
+        bcm[i]->firerate = 1.0f;
     }
-
-    
-
 }
 
 void Turret::Draw()
@@ -67,20 +65,18 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
     else this->currentFirerate = this->baseFirerate;
 
 
-    if (this->specialRapidfireFrames > 0)
-    {
-        this->currentSpecialFirerate = this->rapidSpecialFirerate;
-        this->specialRapidfireFrames -= 1;
-    }
-
-    else this->currentSpecialFirerate = this->baseSpecialFirerate;
-
-
     //update bullet cooldowns
 
     //go through each bullet type
     for (auto& pair : this->bulletCooldownMap)
     {
+        //if the bullet isnt unlocked, it cannot shoot no matter what.
+        if (!pair.second->unlocked)
+        {
+            pair.second->canShoot = false;
+            continue;
+        }
+
         //if this was the frame it shot, update its last shot frame.
         if (pair.second->shotThisFrame)
         {
@@ -94,25 +90,25 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
         if (pair.first == 1) 
         {
             //if its been long enough. set canShoot to be true in its BulletCooldownInfo.
-            if (frame - pair.second->lastShotFrame > 60 / this->currentFirerate) pair.second->canShoot = true;
+            if (frame - pair.second->lastShotFrame > (60 / this->bulletCooldownMap[1]->firerate) / this->currentFirerate) pair.second->canShoot = true;
         }
 
         //shockwave bullet
         else if (pair.first == 2) //not affected by firerate rn, figure a cool implelention maybe
         {
-            if (frame - pair.second->lastShotFrame > 150 / this->currentSpecialFirerate) pair.second->canShoot = true;
+            if (frame - pair.second->lastShotFrame > (150 / this->bulletCooldownMap[2]->firerate / this->currentFirerate)) pair.second->canShoot = true;
         }
 
         //Firebullet
         else if (pair.first == 3) //not affected by firerate rn, figure a cool implelention maybe
         {
-            if (frame - pair.second->lastShotFrame > 180 / this->currentSpecialFirerate) pair.second->canShoot = true;
+            if (frame - pair.second->lastShotFrame > (180 / this->bulletCooldownMap[3]->firerate / this->currentFirerate)) pair.second->canShoot = true;
         }
 
         //Sniper
         else if (pair.first == 4) //not affected by firerate rn, figure a cool implelention maybe
         {
-            if (frame - pair.second->lastShotFrame > 190 / this->currentSpecialFirerate) pair.second->canShoot = true;
+            if (frame - pair.second->lastShotFrame > (190 / this->bulletCooldownMap[4]->firerate / this->currentFirerate)) pair.second->canShoot = true;
         }
         
     }
@@ -187,24 +183,34 @@ void Turret::SetRapidFire(unsigned int frames)
     this->rapidFireFrames += frames;
 }
 
-void Turret::SetSpecialRapidfire(unsigned int frames)
+void Turret::SetFirerate(int id, float firerate)
 {
-    this->specialRapidfireFrames += frames;
+    this->bulletCooldownMap[id]->firerate = firerate;
 }
 
-void Turret::SetBaseSpecialFirerate(float firerate)
-{
-    this->baseSpecialFirerate = firerate;
-}
-
-float Turret::GetCurrentFirerate()
+float Turret::GetCurrentBaseFirerate()
 {
     return this->currentFirerate;
+}
+
+float Turret::GetFirerate(int id)
+{
+    return this->bulletCooldownMap[id]->firerate;
 }
 
 const std::unordered_map<int, BulletCooldownInfo*>& Turret::GetBulletCooldownMap()
 {
     return this->bulletCooldownMap;
+}
+
+bool Turret::IsBulletUnlocked(int id)
+{
+    return this->bulletCooldownMap[id]->unlocked;
+}
+
+void Turret::UnlockBullet(int id)
+{
+    this->bulletCooldownMap[id]->unlocked = true;
 }
 
 

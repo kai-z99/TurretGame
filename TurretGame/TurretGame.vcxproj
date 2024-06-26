@@ -145,7 +145,7 @@
     <ClCompile Include="IceSheet.cpp" />
     <ClCompile Include="IceSparkleEffect.cpp" />
     <ClCompile Include="KoopaEnemy.cpp" />
-    <ClCompile Include="LevelBuilder.cpp" />
+    <ClCompile Include="LevelSpawner.cpp" />
     <ClCompile Include="LevelButton.cpp" />
     <ClCompile Include="LevelHandler.cpp" />
     <ClCompile Include="LevelSelectMenuHandler.cpp" />
@@ -160,6 +160,8 @@
     <ClCompile Include="Turret.cpp" />
     <ClCompile Include="TurretBullet.cpp" />
     <ClCompile Include="AbilityButton.cpp" />
+    <ClCompile Include="UpgradeButton.cpp" />
+    <ClCompile Include="UpgradeMenuHandler.cpp" />
     <ClCompile Include="VisualEffect.cpp" />
     <ClCompile Include="VisualEffectsManager.cpp" />
     <ClCompile Include="WolfEnemy.cpp" />
@@ -184,7 +186,7 @@
     <ClInclude Include="IceSheet.h" />
     <ClInclude Include="IceSparkleEffect.h" />
     <ClInclude Include="KoopaEnemy.h" />
-    <ClInclude Include="LevelBuilder.h" />
+    <ClInclude Include="LevelSpawner.h" />
     <ClInclude Include="LevelButton.h" />
     <ClInclude Include="LevelHandler.h" />
     <ClInclude Include="LevelSelectMenuHandler.h" />
@@ -199,6 +201,8 @@
     <ClInclude Include="TurretBullet.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="AbilityButton.h" />
+    <ClInclude Include="UpgradeButton.h" />
+    <ClInclude Include="UpgradeMenuHandler.h" />
     <ClInclude Include="VisualEffect.h" />
     <ClInclude Include="VisualEffectsManager.h" />
     <ClInclude Include="WolfEnemy.h" />

@@ -1,4 +1,8 @@
 #include "LevelSelectMenuHandler.h"
+#include <string>
+
+#include "constants.h"
+
 #include "Game.h"
 #include "LevelButton.h"
 
@@ -8,6 +12,7 @@ LevelSelectHandler::LevelSelectHandler(Game* g)
 
 	//temp
 
+	//inital states here
 	g->levelButtons.push_back(new LevelButton(500, 500, 1));
 	g->levelButtons.push_back(new LevelButton(700, 700, 2));
 	g->levelButtons.push_back(new LevelButton(200, 500, 3));
@@ -24,11 +29,11 @@ void LevelSelectHandler::Update(unsigned int frame)
 
 		if (b->isClicked)
 		{
-			g->PlayLevel(b->GetLevel());
+			g->currentLevel = b->GetLevel();
+			g->gameState = InLevel;
+			g->StartCurrentLevel();
 		}
 	}
-
-
 }
 
 void LevelSelectHandler::Draw()
@@ -39,6 +44,9 @@ void LevelSelectHandler::Draw()
 	{
 		b->Draw();
 	}
+
+	DrawText(std::to_string(g->gameStats->totalCoins).c_str(), 10, 10, 30, BLUE);
+	DrawText("WORLD 1", screenWidth / 2 - 70, 50, 50, BLACK);
 }
 
 void LevelSelectHandler::HandleInput()
@@ -57,7 +65,6 @@ void LevelSelectHandler::HandleInput()
 		}
 	}
 	
-
 	if (IsMouseButtonDown(0))
 	{
 		deltaMouseX = initialMouseX - (int)g->mousePos.x;
@@ -68,7 +75,4 @@ void LevelSelectHandler::HandleInput()
 			b->SetPosition((int)this->initialLevelButtonPositions[b].x - deltaMouseX, (int)this->initialLevelButtonPositions[b].y - deltaMouseY);
 		}
 	}
-
-
-
 }

@@ -7,13 +7,15 @@ class Game;
 class Enemy;
 class LevelHandler;
 
-class LevelBuilder
+class LevelSpawner
 {
 public:
-	LevelBuilder(LevelHandler* levelHandler);
+	LevelSpawner(LevelHandler* levelHandler);
 
 	void SetSpawnMap(int level);
 	void HandleCurrentLevelSpawning();
+
+	bool IsFinishedSpawning();
 
 private:
 	//better as map

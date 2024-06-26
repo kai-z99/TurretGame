@@ -1,4 +1,4 @@
-#include "LevelBuilder.h"
+#include "LevelSpawner.h"
 #include <iostream>
 #include "constants.h"
 #include "helpers.h"
@@ -12,17 +12,12 @@
 #include "WolfEnemy.h"
 #include "BatEnemy.h"
 
-LevelBuilder::LevelBuilder(LevelHandler* levelHandler)
+LevelSpawner::LevelSpawner(LevelHandler* levelHandler)
 {
 	this->levelHandler = levelHandler;
-
-	for (int i = 1; i <= 5; i++)
-	{
-		this->spawnMap[i] = {};
-	}
 }
 
-void LevelBuilder::HandleCurrentLevelSpawning()
+void LevelSpawner::HandleCurrentLevelSpawning()
 {
 	//for every enemy id
 	for (const auto& pair : this->spawnMap)
@@ -39,7 +34,20 @@ void LevelBuilder::HandleCurrentLevelSpawning()
 	}
 }
 
-void LevelBuilder::SpawnEnemyByID(int id)
+bool LevelSpawner::IsFinishedSpawning()
+{
+	int lastFrame = 0;
+
+	//find the frame of the last enemy spawned in this level
+	for (const auto& pair : this->spawnMap)
+	{
+		lastFrame = std::max((int)pair.second.back(), lastFrame);
+	}
+
+	return this->levelHandler->currentLevelFrameCount > lastFrame;
+}
+
+void LevelSpawner::SpawnEnemyByID(int id)
 {
 	Enemy* e;
 
@@ -80,7 +88,7 @@ void LevelBuilder::SpawnEnemyByID(int id)
 	this->levelHandler->enemiesRef->push_back(e);
 }
 
-void LevelBuilder::SetSpawnMap(int level)
+void LevelSpawner::SetSpawnMap(int level)
 {
 	this->spawnMap.clear();
 
@@ -95,16 +103,18 @@ void LevelBuilder::SetSpawnMap(int level)
 		break;
 
 	case 3:
-		for (int i = 0; i < 1000; i+= 50)
+		for (int i = 0; i < 8000; i+= 10)
 		{
 			this->spawnMap[5].push_back(i);
 		}
-		
 		break;
 
+	case 4:
+		this->spawnMap[3] = { 300,600 };
+		this->spawnMap[4] = { 200,500,550 };
 	default:
 		std::cout << "Cannot set spawnmap for level " << level << '\n';
+		break;
 
 	}
-	
 }

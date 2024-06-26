@@ -120,7 +120,13 @@
     <ClCompile Include="LevelSelectMenuHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LevelBuilder.cpp">
+    <ClCompile Include="LevelSpawner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UpgradeMenuHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UpgradeButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -233,7 +239,13 @@
     <ClInclude Include="LevelSelectMenuHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LevelBuilder.h">
+    <ClInclude Include="LevelSpawner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UpgradeMenuHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UpgradeButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

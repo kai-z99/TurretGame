@@ -9,6 +9,7 @@
 #include "CollisionHandler.h"
 #include "VisualEffectsManager.h"
 #include "LevelSelectMenuHandler.h"
+#include "UpgradeMenuHandler.h"
 
 #include "Enemy.h"
 #include "Bullet.h"
@@ -100,16 +101,17 @@ void Game::Initialize()
     this->frameCount = 0;
     this->mousePos = { 0,0 };
 
-    this->turret = nullptr;
+    this->turret = new Turret();
     this->hotbar = nullptr;
 
-    this->gameState = InLevel;
+    this->gameState = LevelSelectMenu;
     
     this->gameStats = new GameStats();
     this->effectManager = new VisualEffectsManager();
+   
+    this->gameStats->totalCoins = 10000;
+    this->gameStats->initialHealth = 100;
 
-    this->gameStats->totalCoins = 0;
-    
     this->currentLevel = 1;
 
     this->inputMode = false;
@@ -119,48 +121,57 @@ void Game::Initialize()
     this->gameStats->initialAbilityValues =
     {
         // type, {cooldown, lastshotframe, maxcharges, charges}
-        {Rapidfire, {550, INT_MIN, 5, 5}},
-        {SpecialRapidfire, {700, INT_MIN, 3, 3}},
-        {Explosive, {800, INT_MIN, 2, 2}},
-        {Ice, {750, INT_MIN, 5, 5}},
-        {Shock, {550, INT_MIN, 5, 5}},
-        {Burn, {550, INT_MIN, 5, 5}}
+        {Rapidfire, {550, INT_MIN, 1, 1}},
+        {SpecialRapidfire, {700, INT_MIN, 0, 0}},
+        {Explosive, {800, INT_MIN, 0, 0}},
+        {Ice, {750, INT_MIN, 0, 0}},
+        {Shock, {550, INT_MIN, 0, 0}},
+        {Burn, {550, INT_MIN, 0, 0}}
     };
+
+    //upgrade , {level,price,}
+    this->gameStats->upgradeStates =
+    {
+        
+        {TurretBulletU,{1, 50}},
+        {ShockwaveBulletU,{0, 150}},
+        {FireBulletU,{0, 150}},
+        {SniperBulletU,{0, 150}},
+        {RapidfireU,{0, 150}},
+        {SpecialRapidfireU,{1, 150}},
+        {IceU,{0, 150}},
+        {ExplosiveU, {0, 150}},
+    };
+
+
 
     this->levelHandler = new LevelHandler(this);
     this->collisionHandler = new CollisionHandler(this);
     this->levelSelectHandler = new LevelSelectHandler(this);
-
-    this->StartCurrentLevel();
+    this->upgradeMenuHandler = new UpgradeMenuHandler(this);
 
     //this->hotbar = new Hotbar(this->levelHandler->currentLevelStats->abilityStates); 
     
 }
 
-void Game::PlayLevel(int level)
-{
-    this->gameState = InLevel;
-    this->ExitCurrentLevel();
-    this->currentLevel = level;
-    this->StartCurrentLevel();
-}
+//-------------------------------------------------------------------------------------
 
 void Game::StartCurrentLevel()
 {
     this->levelHandler->InitializeCurrentLevel();
     this->hotbar = new Hotbar(this->levelHandler->currentLevelStats->abilityStates);
-    this->turret = new Turret();
+    //this->turret = new Turret();
 }
 
 void Game::ExitCurrentLevel()
 {
-    this->levelHandler->ExitCurrentLevel();
+    this->levelHandler->DeInitializeCurrentLevel();
 
     delete this->hotbar;
     this->hotbar = nullptr;
 
-    delete this->turret;
-    this->turret = nullptr;
+    //delete this->turret;
+    //this->turret = nullptr;
 }
 
 //------------------------------------------------------------------------------------
@@ -180,10 +191,14 @@ void Game::Draw()
         this->DrawLevelSelectMenu();
         break;
 
+    case UpgradeMenu:
+        this->DrawUpgradeMenu();
+        break;
     }
 
+    //make this a function
     //draw mouse
-    if (!this->inputMode) DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5.0f, BLUE);
+    if (!this->inputMode) DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5.0f, GREEN);
 
     //draw mouse in place mode
     else
@@ -209,6 +224,13 @@ void Game::DrawLevelSelectMenu()
 
 }
 
+void Game::DrawUpgradeMenu()
+{
+    ClearBackground(DARKGREEN);
+   
+    this->upgradeMenuHandler->Draw();
+}
+
 //------------------------------------------------------------------------------------
 
 void Game::Update()
@@ -228,19 +250,26 @@ void Game::Update()
     case LevelSelectMenu:
         this->UpdateLevelSelectMenu();
         break;
+
+    case UpgradeMenu:
+        this->UpdateUpgradeMenu();
     }
 }
 
 void Game::UpdateInLevel()
 {
     this->levelHandler->Update(this->frameCount);
-    this->levelHandler->HandleCurrentLevelSpawning(); //part of update??:
     this->collisionHandler->HandleEnemyCollisions();
 }
 
 void Game::UpdateLevelSelectMenu()
 {
     this->levelSelectHandler->Update(this->frameCount);
+}
+
+void Game::UpdateUpgradeMenu()
+{
+    this->upgradeMenuHandler->Update();
 }
 
 //------------------------------------------------------------------------------------
@@ -261,40 +290,41 @@ void Game::HandleInput()
         break;
 
     case UpgradeMenu:
+        this->HandleInputUpgradeMenu();
         break;
 
     default:
         break;
     }
     
+    
+}
+
+void Game::HandleInputInLevel()
+{
+    this->levelHandler->HandleInput();
+    
     //debug
-    if (IsKeyPressed(KEY_RIGHT))
-    {
-        this->ExitCurrentLevel();
-        this->currentLevel++;
-        this->StartCurrentLevel();
-    }
-    else if (IsKeyPressed(KEY_LEFT))
-    {
-        this->ExitCurrentLevel();
-        this->currentLevel--;
-        this->StartCurrentLevel();
-    }
-    else if (IsKeyPressed(KEY_UP))
+    if (IsKeyPressed(KEY_UP))
     {
         this->ExitCurrentLevel();
         this->gameState = LevelSelectMenu;
     }
 }
 
-void Game::HandleInputInLevel()
-{
-    this->levelHandler->HandleInput();
-}
-
 void Game::HandleInputLevelSelectMenu()
 {
     this->levelSelectHandler->HandleInput();
+
+    if (IsKeyPressed(KEY_UP))
+    {
+        this->gameState = UpgradeMenu;
+    }
+}
+
+void Game::HandleInputUpgradeMenu()
+{
+    this->upgradeMenuHandler->HandleInput();
 }
 
 //------------------------------------------------------------------------------

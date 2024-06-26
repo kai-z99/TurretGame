@@ -1,7 +1,7 @@
 #include "LevelHandler.h"
 #include <iostream>
 #include "Game.h"
-#include "LevelBuilder.h"
+#include "LevelSpawner.h"
 
 #include "types.h"
 #include "constants.h"
@@ -29,10 +29,13 @@
 LevelHandler::LevelHandler(Game* game)
 {
 	this->game = game;
-    this->levelBuilder = new LevelBuilder(this);
+    this->levelSpawner = new LevelSpawner(this);
     this->enemiesRef = &game->enemies;
     this->currentLevelStats = new CurrentLevelStats();
     this->currentLevelFrameCount = 0;
+
+    this->currentLevelComplete = false;
+    this->currentLevelLose = false;
 }
 
 void LevelHandler::Update(unsigned int frame)
@@ -48,7 +51,7 @@ void LevelHandler::Update(unsigned int frame)
     this->ActivateUsedAbilities();
 
     //update turret
-    g->turret->Update(g->frameCount, (int)g->mousePos.x, (int)g->mousePos.y);
+    if (!this->currentLevelComplete && !this->currentLevelLose) g->turret->Update(g->frameCount, (int)g->mousePos.x, (int)g->mousePos.y);
 
     //handle bullets
     for (Bullet* b : g->bullets)
@@ -80,11 +83,44 @@ void LevelHandler::Update(unsigned int frame)
             else if (e->GetPosition().x <= deathBoundaryX)
             {
                 this->currentLevelStats->health -= e->GetDamage();
+                if (this->currentLevelStats->health < 0) this->currentLevelStats->health = 0;
                 e->isActive = false;
             }
         }
     }   
+
+    if (!this->currentLevelLose) this->HandleCurrentLevelSpawning();
+
+
+    //check win/loss
+    if (this->currentLevelStats->health <= 0)
+    {
+        this->currentLevelLose = true;
+    }
+
+    else if (this->levelSpawner->IsFinishedSpawning() && this->NoActiveEnemies())
+    {
+        this->currentLevelComplete = true;
+    }
 }
+
+void LevelHandler::HandleCurrentLevelSpawning()
+{
+    this->levelSpawner->SetSpawnMap(this->game->currentLevel);
+    this->levelSpawner->HandleCurrentLevelSpawning();
+}
+
+//helper
+bool LevelHandler::NoActiveEnemies()
+{
+    for (Enemy* e : this->game->enemies)
+    {
+        if (e->isActive) return false;
+    }
+
+    return true;
+}
+
 
 void LevelHandler::ActivateUsedAbilities()
 {
@@ -114,7 +150,7 @@ void LevelHandler::ActivateUsedAbilities()
                     break;
 
                 case SpecialRapidfire:
-                    g->turret->SetSpecialRapidfire(240);
+                    ;//temp
                     break;
 
                 case Explosive:
@@ -191,57 +227,94 @@ void LevelHandler::Draw()
 
     //draw hotbar
     this->game->hotbar->Draw(*this->currentLevelStats);
+
+    if (this->currentLevelComplete)
+    {
+        DrawText("LEVEL COMPLETE\n\n\nPress Enter to exit", 700, 700, 50, RED);
+    }
+
+    else if (this->currentLevelLose)
+    {
+        DrawText("YOU DIED :(\n\n\nPress Enter to try again", 700, 700, 50, RED);
+    }
 }
 
 void LevelHandler::HandleInput()
 {
     Game* g = this->game;
 
-    //bomb and ice place mode
-    if (g->inputMode == 1 || g->inputMode == 2)
+    if (this->currentLevelLose)
     {
-        //if mouse is clicked in bounds
-        if (IsMouseButtonPressed(0) && g->mousePos.y > menuBoundaryY)
+        if (IsKeyPressed(KEY_ENTER))
         {
-            switch (g->inputMode)
-            {
-                //bomb
-            case 1:
-                //push bomb in vector at x,y
-                g->areaEffects.push_back(new BombExplosion((int)g->mousePos.x, (int)g->mousePos.y));
-                break;
-                //ice
-            case 2:
-                g->areaEffects.push_back(new IceSheet((int)g->mousePos.x, (int)g->mousePos.y, 350));
-                break;
-            }
-
-            g->inputMode = 0;
+            this->currentLevelLose = false;
+            this->DeInitializeCurrentLevel();
+            this->InitializeCurrentLevel();
         }
+        
     }
 
-    //standard shooting 
+    else if (this->currentLevelComplete)
+    {
+        if (IsKeyPressed(KEY_ENTER))
+        {
+            this->currentLevelComplete = false;
+            this->game->ExitCurrentLevel();
+            this->game->gameState = LevelSelectMenu;
+        }
+        
+        
+    }
+
     else
     {
-        //handle button clicking on hotbar (NOTE when in other input more this wont update so it will get stuck in a blue background after clikcing bomb or ice)
-        g->hotbar->HandleInput();
-
-        if (IsMouseButtonDown(0))
+        //bomb and ice place mode
+        if (g->inputMode == 1 || g->inputMode == 2)
         {
-            //go through each bullet type
-            for (const auto& cooldown : g->turret->GetBulletCooldownMap()) // bulletid : cooldownInfo
+            //if mouse is clicked in bounds
+            if (IsMouseButtonPressed(0) && g->mousePos.y > menuBoundaryY)
             {
-                //if that type isnt on cooldown
-                if (cooldown.second->canShoot)
+                switch (g->inputMode)
                 {
-                    //shoot that bullet type once.
-                    g->turret->ShootBullet(g->bullets, cooldown.first);
+                    //bomb
+                case 1:
+                    //push bomb in vector at x,y
+                    g->areaEffects.push_back(new BombExplosion((int)g->mousePos.x, (int)g->mousePos.y));
+                    break;
+                    //ice
+                case 2:
+                    g->areaEffects.push_back(new IceSheet((int)g->mousePos.x, (int)g->mousePos.y, 350));
+                    break;
                 }
-            }
 
-            if (g->bullets.size() > g->bulletLimit) g->CleanBulletVector(); //if the bullet vector is too big, cleanup
+                g->inputMode = 0;
+            }
+        }
+
+        //standard shooting 
+        else
+        {
+            //handle button clicking on hotbar (NOTE when in other input more this wont update so it will get stuck in a blue background after clikcing bomb or ice)
+            g->hotbar->HandleInput();
+
+            if (IsMouseButtonDown(0))
+            {
+                //go through each bullet type
+                for (const auto& cooldown : g->turret->GetBulletCooldownMap()) // bulletid : cooldownInfo
+                {
+                    //if that type isnt on cooldown
+                    if (cooldown.second->canShoot)
+                    {
+                        //shoot that bullet type once.
+                        g->turret->ShootBullet(g->bullets, cooldown.first);
+                    }
+                }
+
+                if (g->bullets.size() > g->bulletLimit) g->CleanBulletVector(); //if the bullet vector is too big, cleanup
+            }
         }
     }
+    
 }
 
 void LevelHandler::InitializeCurrentLevel()
@@ -257,10 +330,10 @@ void LevelHandler::InitializeCurrentLevel()
 
     //set initial money and health
     this->currentLevelStats->coinsCollected = 0;
-    this->currentLevelStats->health = 100;
+    this->currentLevelStats->health = this->game->gameStats->initialHealth;
 }
 
-void LevelHandler::ExitCurrentLevel()
+void LevelHandler::DeInitializeCurrentLevel()
 {
     //display end screen here
     this->game->ClearVectors();
@@ -270,88 +343,6 @@ void LevelHandler::ExitCurrentLevel()
     this->currentLevelStats->health = 100;
     this->currentLevelFrameCount = 0;
 }
-
-
-void LevelHandler::HandleCurrentLevelSpawning()
-{
-    this->levelBuilder->SetSpawnMap(this->game->currentLevel);
-    this->levelBuilder->HandleCurrentLevelSpawning();
-
-    //switch (this->game->currentLevel)
-    //{
-    //case 0:
-    //    //menu
-    //    break;
-
-    ////---------------------------------------------------------------------------------------------------//
-    //// LEVEL DIVIDER //----------------------------------------------------------------------------------//
-    ////---------------------------------------------------------------------------------------------------//
-
-    //case 1:
-    //    if (this->currentLevelFrameCount % 30 == 0 && this->currentLevelFrameCount < 240)
-    //    {
-    //        BatEnemy* s = new BatEnemy();
-    //        s->SetPosition((float)screenWidth, 500);
-    //        s->SetAmplitude(3.0f);
-    //        s->upStart = true;
-    //        this->game->enemies.push_back(s);
-
-    //    }
-    //    break;
-
-    ////---------------------------------------------------------------------------------------------------//
-    //// LEVEL DIVIDER //----------------------------------------------------------------------------------//
-    ////---------------------------------------------------------------------------------------------------//
-
-    //case 2:
-    //    if (this->currentLevelFrameCount % 30 == 0)
-    //    {
-    //        SoldierEnemy* s = new SoldierEnemy();
-    //        s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-    //        this->game->enemies.push_back(s);
-    //    }
-
-    //    if (this->currentLevelFrameCount % 500 == 0)
-    //    {
-    //        KoopaEnemy* k = new KoopaEnemy();
-    //        k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-    //        this->game->enemies.push_back(k);
-    //    }
-
-    //    if (this->currentLevelFrameCount % 400 == 0)
-    //    {
-    //        RedKoopaEnemy* k = new RedKoopaEnemy();
-    //        k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-    //        this->game->enemies.push_back(k);
-    //    }
-
-    //    if (this->currentLevelFrameCount % 410 == 0)
-    //    {
-    //        WolfEnemy* k = new WolfEnemy();
-    //        k->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-    //        this->game->enemies.push_back(k);
-    //    }
-
-    //    if (this->currentLevelFrameCount % 300 == 0)
-    //    {
-    //        BatEnemy* s = new BatEnemy();
-    //        s->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
-    //        s->SetAmplitude(GetRandomFloat(1, 10));
-    //        if (GetRandomValue(1, 2) == 1) s->upStart = true;
-    //        this->game->enemies.push_back(s);
-    //    }
-    //    break;
-
-    ////---------------------------------------------------------------------------------------------------//
-    //// LEVEL DIVIDER //----------------------------------------------------------------------------------//
-    ////---------------------------------------------------------------------------------------------------//  
-
-    //default:
-    //    std::cout << "WARNING: Level " << this->game->currentLevel << " does not exist.";
-    //    break;
-    //}
-}
-
 
 
 void LevelHandler::DrawVisualEffects()
@@ -403,3 +394,5 @@ void LevelHandler::DrawVisualEffects()
         }
     }
 }
+
+

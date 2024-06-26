@@ -13,7 +13,6 @@ public:
 	void SetCooldownProgress(float barProgress);
 	
 	TurretAbility GetAbility();
-	int GetCurrentCharges() const;
 
 	static const int width;
 	static const int height;

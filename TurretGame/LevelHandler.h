@@ -3,7 +3,7 @@
 
 class Game;
 class Enemy;
-class LevelBuilder;
+class LevelSpawner;
 struct CurrentLevelStats;
 
 class LevelHandler
@@ -18,22 +18,24 @@ public:
 	void HandleInput();
 
 	void InitializeCurrentLevel();
-	void HandleCurrentLevelSpawning();
-	void ExitCurrentLevel();
+	void DeInitializeCurrentLevel();
 
 	CurrentLevelStats* currentLevelStats;
 
-	friend class LevelBuilder;
+	friend class LevelSpawner;
 
 private:
 	Game* game;
-	LevelBuilder* levelBuilder;
+	LevelSpawner* levelSpawner;
 	std::vector<Enemy*>* enemiesRef;
 
 	unsigned int currentLevelFrameCount;
 	
 	void ActivateUsedAbilities();
-
+	void HandleCurrentLevelSpawning();
 	void DrawVisualEffects();
+	bool NoActiveEnemies();
 
+	bool currentLevelComplete;
+	bool currentLevelLose;
 };

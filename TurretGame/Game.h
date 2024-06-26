@@ -9,11 +9,15 @@ class Bullet;
 class AreaEffect;
 class Enemy;
 class Hotbar;
+
 class VisualEffectsManager;
 class LevelHandler;
 class CollisionHandler;
 class LevelSelectHandler;
+class UpgradeMenuHandler;
+
 class LevelButton;
+class UpgradeButton;
 
 class Game
 {
@@ -26,6 +30,7 @@ public:
 	friend class LevelHandler;
 	friend class CollisionHandler;
 	friend class LevelSelectHandler;
+	friend class UpgradeMenuHandler;
 
 private:
 	void Initialize();
@@ -39,21 +44,25 @@ private:
 	void DrawInLevel();
 
 	void DrawLevelSelectMenu();
+
+	void DrawUpgradeMenu();
 	//----------------------------------------
 	void Update();
 
 	void UpdateInLevel();
 
 	void UpdateLevelSelectMenu();
+
+	void UpdateUpgradeMenu();
 	//----------------------------------------
 	void HandleInput();
 
 	void HandleInputInLevel();
 
 	void HandleInputLevelSelectMenu();
-	//-----------------------------------------
 
-	void PlayLevel(int level);
+	void HandleInputUpgradeMenu();
+	//-----------------------------------------
 
 	void StartCurrentLevel();
 	void ExitCurrentLevel();
@@ -70,11 +79,13 @@ private:
 	std::vector<AreaEffect*> areaEffects;
 
 	std::vector<LevelButton*> levelButtons;
+	std::vector<UpgradeButton*> upgradeButtons;
 	
 	VisualEffectsManager* effectManager;
 	LevelHandler* levelHandler;
 	CollisionHandler* collisionHandler;
 	LevelSelectHandler* levelSelectHandler;
+	UpgradeMenuHandler* upgradeMenuHandler;
 
 	int currentLevel;
 	const int bulletLimit = 1000; //how many bullets can be on the screen

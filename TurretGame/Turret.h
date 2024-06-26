@@ -18,15 +18,17 @@ public:
 
 	void SetBulletSpeedMultiplier(float multiplier);
 	void SetBaseFirerate(float firerate);
-	void SetBaseSpecialFirerate(float firerate);
 	void SetRapidFire(unsigned int frames);
-	void SetSpecialRapidfire(unsigned int frames);
-	
+	void SetFirerate(int id, float firerate);
 
-	float GetCurrentFirerate();
+	float GetCurrentBaseFirerate();
+	float GetFirerate(int id);
 	const std::unordered_map<int, BulletCooldownInfo*>& GetBulletCooldownMap();
 
-	
+	bool IsBulletUnlocked(int id);
+	void UnlockBullet(int id);
+
+	friend class UpgradeMenuHandler;
 
 private:
 	void UpdateAngle(int mouseX, int mouseY);
@@ -47,16 +49,9 @@ private:
 	std::unordered_map<int, BulletCooldownInfo*> bulletCooldownMap; // bullet id : info
 	float bulletSpeedMultiplier;
 
+
 	float baseFirerate;
 	float currentFirerate;
 	float rapidFirerate;
-	int rapidFireFrames;
-
-	float baseSpecialFirerate;
-	float currentSpecialFirerate; //firerate of speical bullets
-	float rapidSpecialFirerate;
-	int specialRapidfireFrames;
-	
-
-	
+	int rapidFireFrames;	
 };

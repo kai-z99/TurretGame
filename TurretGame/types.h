@@ -3,7 +3,7 @@
 
 enum TurretAbility
 {
-	Rapidfire,
+	Rapidfire = 0,
 	SpecialRapidfire,
 	Ice,
 	Explosive,
@@ -14,7 +14,7 @@ enum TurretAbility
 
 enum GameState
 {
-	InLevel,
+	InLevel = 0,
 	UpgradeMenu,
 	LevelSelectMenu,
 	MainMenu,
@@ -22,18 +22,33 @@ enum GameState
 
 enum StatusEffect
 {
-	Burning,
+	Burning = 0,
 	Frozen,
 	Chilled,
 	Stunned,
 	Poisoned,
 };
 
+enum Upgrade
+{
+	TurretBulletU = 0,
+	ShockwaveBulletU,
+	FireBulletU,
+	SniperBulletU,
+	RapidfireU,
+	SpecialRapidfireU,
+	IceU,
+	ExplosiveU,
+
+};
+
 struct BulletCooldownInfo
 {
+	bool unlocked;
 	bool shotThisFrame;
 	bool canShoot;
 	unsigned int lastShotFrame;
+	float firerate;
 };
 
 
@@ -46,15 +61,21 @@ struct AbilityInfo
 	short charges;
 };
 
+struct UpgradeInfo
+{
+	int level;
+	int price;
+};
 
 struct GameStats
 {
 	int totalCoins;
-	
+	int initialHealth;
 	//UPGRADES
 
 	//abilities
 	std::unordered_map<TurretAbility, AbilityInfo> initialAbilityValues;
+	std::unordered_map<Upgrade, UpgradeInfo> upgradeStates;
 
 };
 
