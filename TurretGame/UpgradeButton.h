@@ -14,6 +14,9 @@ public:
 	int GetPrice() const;
 
 	void SetPrice(int price);
+	
+	static const int width;
+	static const int height;
 
 private:
 	virtual bool MouseCollide(int mouseX, int mouseY);

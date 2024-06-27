@@ -150,7 +150,7 @@ void LevelHandler::ActivateUsedAbilities()
                     break;
 
                 case SpecialRapidfire:
-                    ;//temp
+                    g->turret->SetLaserFrames(250);
                     break;
 
                 case Explosive:
@@ -190,9 +190,6 @@ void LevelHandler::Draw()
     DrawLine(deathBoundaryX, 0, deathBoundaryX, screenHeight, RED);
     DrawLine(0, menuBoundaryY, screenWidth, menuBoundaryY, RED);
 
-    //draw turret
-    this->game->turret->Draw();
-
     //DRAW ICE UNDER
     for (AreaEffect* a : this->game->areaEffects)
     {
@@ -211,6 +208,9 @@ void LevelHandler::Draw()
     {
         if (b->isActive) b->Draw();
     }
+
+    //draw turret
+    this->game->turret->Draw();
 
     //DRAW EXPLOSION ON TOP
     for (AreaEffect* a : this->game->areaEffects)

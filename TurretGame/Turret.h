@@ -5,6 +5,7 @@
 #include "constants.h"
 
 class Bullet;
+class TurretLaser;
 struct BulletCooldownInfo;
 
 class Turret
@@ -18,8 +19,10 @@ public:
 
 	void SetBulletSpeedMultiplier(float multiplier);
 	void SetBaseFirerate(float firerate);
-	void SetRapidFire(unsigned int frames);
 	void SetFirerate(int id, float firerate);
+
+	void SetRapidFire(unsigned int frames);
+	void SetLaserFrames(unsigned int frames);
 
 	float GetCurrentBaseFirerate();
 	float GetFirerate(int id);
@@ -29,12 +32,17 @@ public:
 	void UnlockBullet(int id);
 
 	friend class UpgradeMenuHandler;
+	friend class TurretLaser;
+
+	TurretLaser* GetLaser();
 
 private:
 	void UpdateAngle(int mouseX, int mouseY);
 
 	Vector2 position = { 100.0f, (screenHeight / 2.0f) + (menuBoundaryY / 2.0f)};
 	float angle;
+
+	TurretLaser* laser;
 
 	//TEXTURE PROPERTIES---------------
 	Texture2D* texture;
@@ -54,4 +62,5 @@ private:
 	float currentFirerate;
 	float rapidFirerate;
 	int rapidFireFrames;	
+	int laserFrames;
 };

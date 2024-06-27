@@ -138,7 +138,7 @@ void Game::Initialize()
         {FireBulletU,{0, 150}},
         {SniperBulletU,{0, 150}},
         {RapidfireU,{0, 150}},
-        {SpecialRapidfireU,{1, 150}},
+        {SpecialRapidfireU,{0, 150}},
         {IceU,{0, 150}},
         {ExplosiveU, {0, 150}},
     };

@@ -160,6 +160,7 @@
     <ClCompile Include="Turret.cpp" />
     <ClCompile Include="TurretBullet.cpp" />
     <ClCompile Include="AbilityButton.cpp" />
+    <ClCompile Include="TurretLaser.cpp" />
     <ClCompile Include="UpgradeButton.cpp" />
     <ClCompile Include="UpgradeMenuHandler.cpp" />
     <ClCompile Include="VisualEffect.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="textures.h" />
     <ClInclude Include="Turret.h" />
     <ClInclude Include="TurretBullet.h" />
+    <ClInclude Include="TurretLaser.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="AbilityButton.h" />
     <ClInclude Include="UpgradeButton.h" />

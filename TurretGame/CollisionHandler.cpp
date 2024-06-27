@@ -4,6 +4,8 @@
 #include "VisualEffectsManager.h"
 
 #include "Bullet.h"
+#include "TurretLaser.h"
+#include "Turret.h"
 
 #include "AreaEffect.h"
 #include "BombExplosion.h"
@@ -20,12 +22,13 @@ CollisionHandler::CollisionHandler(Game* game)
 
 void CollisionHandler::HandleEnemyCollisions()
 {
+	Game* g = this->game;
 	//bullet collisions
-	for (Bullet* b : this->game->bullets)
+	for (Bullet* b : g->bullets)
 	{
 		if (b->isActive)
 		{
-			for (Enemy* e : this->game->enemies)
+			for (Enemy* e : g->enemies)
 			{
 				if (e->isActive && b->EnemyCollided(e)) //if collide, remove buullet and deal damage
 				{
@@ -37,7 +40,7 @@ void CollisionHandler::HandleEnemyCollisions()
 	}
 
 	//AOE collisions
-	for (AreaEffect* a : this->game->areaEffects)
+	for (AreaEffect* a : g->areaEffects)
 	{
 		if (a->isActive)
 		{
@@ -45,6 +48,9 @@ void CollisionHandler::HandleEnemyCollisions()
 		}
 	}
 
+	//laser
+	if (g->turret->GetLaser()->isActive) this->HandleLaserToEnemies(g->turret->GetLaser());
+	
 }
 
 void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
@@ -135,6 +141,18 @@ void CollisionHandler::HandleAOEToEnemies(AreaEffect* a)
 	default:
 		break;
 	}
+}
+
+void CollisionHandler::HandleLaserToEnemies(TurretLaser* laser)
+{
+	for (Enemy* e : this->game->enemies)
+	{
+		if (laser->isCollide(e) && laser->isDamageFrame)
+		{
+			e->SetHealth(e->GetHealth() - laser->GetDamage());
+		}
+	}
+
 }
 
 

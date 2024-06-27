@@ -17,7 +17,7 @@ UpgradeMenuHandler::UpgradeMenuHandler(Game* g)
 
 	for (int i = 0; i <= 7; i++)
 	{
-		this->game->upgradeButtons.push_back(new UpgradeButton(100 * i, 500, (Upgrade)i));
+		this->game->upgradeButtons.push_back(new UpgradeButton(200 * i + 200, 500, (Upgrade)i));
 		this->game->upgradeButtons[i]->SetPrice(this->game->gameStats->upgradeStates[Upgrade(i)].price);
 	}
 }
@@ -112,7 +112,10 @@ void UpgradeMenuHandler::Draw()
 	for (UpgradeButton* u : g->upgradeButtons)
 	{
 		u->Draw();
-		DrawText(std::to_string(g->gameStats->upgradeStates[u->GetUpgrade()].level).c_str(), (int)u->GetPosition().x, (int)u->GetPosition().y + 30, 30, RED);
+
+		std::string text = "LVL: " + std::to_string(g->gameStats->upgradeStates[u->GetUpgrade()].level);
+		int width = MeasureText(text.c_str(), 30);
+		DrawText(text.c_str(), (int)u->GetPosition().x - (width / 2), (int)u->GetPosition().y + 70, 30, RED);
 	}
 }
 

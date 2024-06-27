@@ -1,17 +1,24 @@
 #include "Turret.h"
 #include <iostream>
 #include "raymath.h"
+
 #include "types.h"
 #include "helpers.h"
+
 #include "TurretBullet.h"
 #include "ShockwaveBullet.h"
 #include "FireBullet.h"
 #include "SniperBullet.h"
+#include "TurretLaser.h"
+
 #include "textures.h" 
+
 
 Turret::Turret()
 {
     this->angle = 0;
+
+    this->laser = new TurretLaser(this);
 
     //Texture init
     this->texture = &textures[1];
@@ -49,12 +56,27 @@ Turret::Turret()
 void Turret::Draw()
 {
     DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, this->angle * RAD2DEG + 90.0f, WHITE);
+
+    //draw laser
+    if (this->laser->isActive) this->laser->Draw();
 }
 
 void Turret::Update(unsigned int frame, int mouseX, int mouseY)
 {
     //update its angle
     this->UpdateAngle(mouseX, mouseY);
+
+    //update the laser
+    if (this->laserFrames > 0)
+    {
+        this->laser->isActive = true;
+        this->laser->Update(frame);
+        this->laserFrames--;
+    }
+        
+    else this->laser->isActive = false;
+
+    
 
     if (this->rapidFireFrames > 0)
     {
@@ -94,19 +116,19 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
         }
 
         //shockwave bullet
-        else if (pair.first == 2) //not affected by firerate rn, figure a cool implelention maybe
+        else if (pair.first == 2) 
         {
             if (frame - pair.second->lastShotFrame > (150 / this->bulletCooldownMap[2]->firerate / this->currentFirerate)) pair.second->canShoot = true;
         }
 
         //Firebullet
-        else if (pair.first == 3) //not affected by firerate rn, figure a cool implelention maybe
+        else if (pair.first == 3) 
         {
             if (frame - pair.second->lastShotFrame > (180 / this->bulletCooldownMap[3]->firerate / this->currentFirerate)) pair.second->canShoot = true;
         }
 
         //Sniper
-        else if (pair.first == 4) //not affected by firerate rn, figure a cool implelention maybe
+        else if (pair.first == 4)
         {
             if (frame - pair.second->lastShotFrame > (190 / this->bulletCooldownMap[4]->firerate / this->currentFirerate)) pair.second->canShoot = true;
         }
@@ -121,6 +143,11 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
 
     //NEW map is id : BulletCooldownInfo struct, go thorugh each and set the canShoots for each based on lastShot frame and firerate.
 
+}
+
+TurretLaser* Turret::GetLaser()
+{
+    return this->laser;
 }
 
 void Turret::UpdateAngle(int mouseX, int mouseY)
@@ -186,6 +213,11 @@ void Turret::SetRapidFire(unsigned int frames)
 void Turret::SetFirerate(int id, float firerate)
 {
     this->bulletCooldownMap[id]->firerate = firerate;
+}
+
+void Turret::SetLaserFrames(unsigned int frames)
+{
+    this->laserFrames = frames;
 }
 
 float Turret::GetCurrentBaseFirerate()

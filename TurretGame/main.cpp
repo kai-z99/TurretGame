@@ -11,8 +11,7 @@ int main(void)
 
 }
 
-
-//make upgrade buttons constant size
+//make upgrades to abilities do more than add charges
 //give seperate textures to each bullet
 //decoration vector in levelhandler
 //optimize Hotbar::GetActiveAbilityButtons()
@@ -23,7 +22,6 @@ int main(void)
 
 //enemies can drop abilities that can be clicked
 //splash damage bullety
-//make ability charges vbar on AbilityButton be handled in game instead of the button
 //draw effec ton turret when ability is activated
 //firebomb childf of bomb
 //SENTRIES

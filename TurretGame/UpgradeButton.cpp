@@ -4,6 +4,9 @@
 
 #include "textures.h"
 
+const int UpgradeButton::width = 80;
+const int UpgradeButton::height = 80;
+
 UpgradeButton::UpgradeButton(int posX, int posY, Upgrade upgrade)
 {
 	this->position = { (float)posX, (float)posY };
@@ -61,9 +64,15 @@ void UpgradeButton::Draw()
 	if (this->upgrade == SniperBulletU) tint = BLUE;
 
 	//temp
-	DrawTextureEx(*this->texture, this->position, 0.0f, 1.0f, tint);
-	DrawRectangleLines(this->position.x, this->position.y, this->texture->width, this->texture->height, RED);
-	DrawText(std::to_string(this->price).c_str(), (int)this->position.x, (int)this->position.y - 20, 30, BLUE);
+	Rectangle source = { 0.0f, 0.0f, this->texture->width, this->texture->height };
+	Rectangle dest = { this->position.x, this->position.y, UpgradeButton::width, UpgradeButton::height };
+	Vector2 origin = { (float)UpgradeButton::width / 2.0f, (float)UpgradeButton::height / 2.0f };
+
+	DrawTexturePro(*this->texture, source, dest, origin, 0.0f, tint);
+
+	std::string text = std::to_string(this->price) + " Coins";
+	int width = MeasureText(text.c_str(), 30);
+	DrawText(text.c_str(), (int)this->position.x - width / 2, (int)this->position.y - 90, 30, BLUE);
 }
 
 void UpgradeButton::Update(int mouseX, int mouseY)
@@ -88,6 +97,6 @@ void UpgradeButton::SetPrice(int price)
 
 bool UpgradeButton::MouseCollide(int mouseX, int mouseY)
 {
-	Rectangle rec = { this->position.x, this->position.y, this->texture->width, this->texture->height };
+	Rectangle rec = { this->position.x - (UpgradeButton::width / 2), this->position.y - (UpgradeButton::height / 2), UpgradeButton::width, UpgradeButton::height};
 	return CheckCollisionPointRec({(float)mouseX, (float)mouseY}, rec);
 }
