@@ -5,7 +5,9 @@
 #include "Turret.h"
 #include "Enemy.h"
 
-
+int TurretLaser::damage = 1;
+int TurretLaser::duration = 100;
+Color TurretLaser::color = RED;
 
 TurretLaser::TurretLaser(Turret* t)
 {
@@ -16,8 +18,6 @@ TurretLaser::TurretLaser(Turret* t)
 	this->p2 = { t->position.x + this->length, t->position.y };
 	this->angle = t->angle;
 	this->thickness = 10.0f;
-
-	this->damage = 1;
 }
 
 void TurretLaser::Update(unsigned int frame)
@@ -33,7 +33,6 @@ void TurretLaser::Update(unsigned int frame)
 
 	if (frame % 20 == 0) this->isDamageFrame = true;
 	else this->isDamageFrame = false;
-
 }
 
 
@@ -45,11 +44,6 @@ void TurretLaser::Draw()
 bool TurretLaser::isCollide(Enemy* e)
 {
 	return CheckCollisionRecLine(this->p1, this->p2, e->GetHitbox());
-}
-
-int TurretLaser::GetDamage() const
-{
-	return this->damage;
 }
 
 

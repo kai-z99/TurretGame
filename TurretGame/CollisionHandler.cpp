@@ -58,7 +58,7 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 	//display the explosion
 	this->game->effectManager->DisplayExplosion(b->GetPosition());
 
-	//DAMAGE AND KNOCKBACK
+	//DAMAGE AND KNOCKBACK 
 	switch (e->GetID())
 	{
 		//RED KOOPA
@@ -76,7 +76,7 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 	//STATUS EFFECT
 	switch (b->GetID())
 	{
-		// fire bullet
+	// fire bullet
 	case 3:
 		//apply burning for 4 seconds if not a red koopa
 		if (e->GetID() != 3)
@@ -92,6 +92,22 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 		}
 		break;
 
+	//sniper
+	case 4:
+		//chill breifly, append to not cut ice sheet short
+		if (e->GetID() != 3)
+		{
+			e->AppendStatusEffect(Chilled, 20);
+			break;
+		}
+
+		//dont apply burn if red koopa in shell
+		else if (!dynamic_cast<RedKoopaEnemy*>(e)->shellForm)
+		{
+			e->AppendStatusEffect(Chilled, 20);
+		}
+		break;
+	
 	default:
 		break;
 	}
@@ -113,8 +129,8 @@ void CollisionHandler::HandleAOEToEnemies(AreaEffect* a)
 				BombExplosion* exp = dynamic_cast<BombExplosion*>(a);
 				if (exp->isDetonateFrame && exp->EnemyCollided(e))
 				{
-					e->SetHealth(e->GetHealth() - exp->GetDamage());
-					e->ApplyKnockback(exp->GetKnockbackFrames());
+					e->SetHealth(e->GetHealth() - BombExplosion::damage);
+					e->ApplyKnockback(BombExplosion::knockbackFrames);
 				}
 			}	
 		}
@@ -130,9 +146,9 @@ void CollisionHandler::HandleAOEToEnemies(AreaEffect* a)
 				if (i->EnemyCollided(e))
 				{
 					//id 3 is red koopa
-					if (e->GetID() != 3) e->ApplyStatusEffect(Chilled, 150);
+					if (e->GetID() != 3) e->ApplyStatusEffect(Chilled, IceSheet::intensity);
 					//only chill when its not in shell
-					else if (!dynamic_cast<RedKoopaEnemy*>(e)->shellForm) e->ApplyStatusEffect(Chilled, 150);
+					else if (!dynamic_cast<RedKoopaEnemy*>(e)->shellForm) e->ApplyStatusEffect(Chilled, IceSheet::intensity);
 				}
 			}
 		}
@@ -149,7 +165,7 @@ void CollisionHandler::HandleLaserToEnemies(TurretLaser* laser)
 	{
 		if (laser->isCollide(e) && laser->isDamageFrame)
 		{
-			e->SetHealth(e->GetHealth() - laser->GetDamage());
+			e->SetHealth(e->GetHealth() - TurretLaser::damage);
 		}
 	}
 

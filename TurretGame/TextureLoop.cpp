@@ -34,6 +34,11 @@ void TextureLoop::SetTint(Color tint)
 	this->tint = tint;
 }
 
+void TextureLoop::SetScale(float scale)
+{
+	this->scale = scale;
+}
+
 void TextureLoop::Update()
 {
 	//update part of picture we want to show based off anim state
@@ -46,8 +51,7 @@ void TextureLoop::Update()
 	if (this->mirrored) this->textureSourceRec.width = -this->textureSourceRec.width;
 	
 	//update the destination rectangle
-	this->textureDestRec.x = this->position.x;
-	this->textureDestRec.y = this->position.y;
+	this->textureDestRec = { this->position.x, this->position.y, ((float)this->textureWidth / segments) * this->scale, (float)this->textureHeight * this->scale };
 }
 
 void TextureLoop::Draw()

@@ -44,11 +44,21 @@ Game::~Game()
         delete a;
     }
 
+    for (UpgradeButton* u : this->upgradeButtons)
+    {
+        delete u;
+    }
+
     delete this->gameStats;
 
-    delete this->hotbar;
+    if (this->hotbar != nullptr) delete this->hotbar;
 
     delete this->effectManager;
+
+    delete this->collisionHandler;
+    delete this->upgradeMenuHandler;
+    delete this->levelSelectHandler;
+    delete this->levelHandler;
 }
 
 void Game::Run()
@@ -69,22 +79,20 @@ void Game::ClearVectors()
     {
         delete e;
     }
-
     this->enemies.clear();
 
     for (Bullet* b : this->bullets)
     {
         delete b;
     }
-
     this->bullets.clear();
 
     for (AreaEffect* a : this->areaEffects)
     {
         delete a;
     }
-
     this->areaEffects.clear();
+
 
     //cleans task vector
     this->effectManager->Clear();
@@ -122,7 +130,7 @@ void Game::Initialize()
     {
         // type, {cooldown, lastshotframe, maxcharges, charges}
         {Rapidfire, {550, INT_MIN, 1, 1}},
-        {SpecialRapidfire, {700, INT_MIN, 0, 0}},
+        {Laser, {700, INT_MIN, 0, 0}},
         {Explosive, {800, INT_MIN, 0, 0}},
         {Ice, {750, INT_MIN, 0, 0}},
         {Shock, {550, INT_MIN, 0, 0}},
@@ -132,18 +140,15 @@ void Game::Initialize()
     //upgrade , {level,price,}
     this->gameStats->upgradeStates =
     {
-        
         {TurretBulletU,{1, 50}},
         {ShockwaveBulletU,{0, 150}},
         {FireBulletU,{0, 150}},
         {SniperBulletU,{0, 150}},
-        {RapidfireU,{0, 150}},
-        {SpecialRapidfireU,{0, 150}},
+        {RapidfireU,{1, 150}},
+        {LaserU,{0, 150}},
         {IceU,{0, 150}},
         {ExplosiveU, {0, 150}},
     };
-
-
 
     this->levelHandler = new LevelHandler(this);
     this->collisionHandler = new CollisionHandler(this);

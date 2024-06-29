@@ -3,16 +3,19 @@
 #include "TextureLoop.h"
 #include "textures.h"
 
-IceSheet::IceSheet(int posX, int posY, int frames)
+int IceSheet::width = 500;
+int IceSheet::height = 300;
+int IceSheet::duration = 240;
+int IceSheet::intensity = 5;
+
+IceSheet::IceSheet(int posX, int posY)
 {
 	this->id = 2;
-	this->totalFrames = frames;
-	this->framesLeft = this->totalFrames;
-	this->position = { (float)posX, (float)posY };
-	this->width = 700;
-	this->height = 300;
 
-	this->hitbox = { this->position.x - this->width / 2, this->position.y - height / 2, (float)this->width, (float)this->height };
+	this->framesLeft = IceSheet::duration;
+	this->position = { (float)posX, (float)posY };
+
+	this->hitbox = { this->position.x - IceSheet::width / 2, this->position.y - IceSheet::height / 2, (float)IceSheet::width, (float)IceSheet::height };
 	this->isActive = true;
 
 	this->textureLoop = new TextureLoop(&textures[14], 5, 1.0f, this->position);
@@ -25,7 +28,7 @@ void IceSheet::Update(unsigned int frame)
 	if (this->framesLeft > 0)
 	{
 		//if its on its first 30 frames, fade in
-		if (this->totalFrames - this->framesLeft < 30)
+		if (IceSheet::duration - this->framesLeft < 30)
 		{
 			alphaModifier += 0.03f;
 		}
@@ -40,11 +43,6 @@ void IceSheet::Update(unsigned int frame)
 	}
 
 	else this->isActive = false;
-
-	
-	
-
-	
 }
 
 void IceSheet::Draw()

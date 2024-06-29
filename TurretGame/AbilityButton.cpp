@@ -17,7 +17,7 @@ AbilityButton::AbilityButton(int posX, int posY, TurretAbility ability)
 		this->texture = &textures[10];
 		break;
 		
-	case (SpecialRapidfire):
+	case (Laser):
 		this->texture = &textures[12];
 		break;
 	

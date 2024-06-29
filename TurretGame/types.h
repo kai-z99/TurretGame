@@ -4,7 +4,7 @@
 enum TurretAbility
 {
 	Rapidfire = 0,
-	SpecialRapidfire,
+	Laser,
 	Ice,
 	Explosive,
 	Shock,
@@ -36,7 +36,7 @@ enum Upgrade
 	FireBulletU,
 	SniperBulletU,
 	RapidfireU,
-	SpecialRapidfireU,
+	LaserU,
 	IceU,
 	ExplosiveU,
 
@@ -60,6 +60,7 @@ struct AbilityInfo
 	short maxCharges;
 	short charges;
 };
+
 
 struct UpgradeInfo
 {

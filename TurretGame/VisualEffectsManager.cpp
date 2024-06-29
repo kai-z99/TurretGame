@@ -46,7 +46,7 @@ void VisualEffectsManager::DisplayIceSparkle(Vector2 pos, float scale)
 
 void VisualEffectsManager::UpdateAndDraw()
 {
-    if (this->tasks.size() > 700) this->CleanTasks();
+    if (this->tasks.size() > this->taskLimit) this->CleanTasks();
 
 	for (VisualEffect* element : this->tasks) 
 	{

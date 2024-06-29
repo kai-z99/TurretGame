@@ -107,6 +107,11 @@ void Enemy::ApplyStatusEffect(StatusEffect effect, int frames)
 	this->statusEffects[effect] = frames;
 }
 
+void Enemy::AppendStatusEffect(StatusEffect effect, int frames)
+{
+	this->statusEffects[effect] += frames;
+}
+
 std::unordered_map<StatusEffect, int>& Enemy::GetStatusEffects()
 {
 	return this->statusEffects;

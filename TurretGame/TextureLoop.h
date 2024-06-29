@@ -11,6 +11,7 @@ public:
 	void SetPosition(int x, int y);
 	void ToggleMirrorImage();
 	void SetTint(Color tint);
+	void SetScale(float scale);
 
 private:
 	int segments;

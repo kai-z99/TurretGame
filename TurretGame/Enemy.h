@@ -20,6 +20,7 @@ public:
 	void ApplyKnockback(Bullet* b);
 	void ApplyKnockback(int frames);
 	void ApplyStatusEffect(StatusEffect effect, int frames);
+	void AppendStatusEffect(StatusEffect effect, int frames);
 
 	//constant?
 	std::unordered_map<StatusEffect, int>& GetStatusEffects();

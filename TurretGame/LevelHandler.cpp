@@ -9,6 +9,7 @@
 
 #include "Bullet.h"
 #include "Turret.h"
+#include "TurretLaser.h"
 
 #include "AreaEffect.h"
 #include "IceSheet.h"
@@ -149,8 +150,8 @@ void LevelHandler::ActivateUsedAbilities()
                     g->turret->SetRapidFire(240);
                     break;
 
-                case SpecialRapidfire:
-                    g->turret->SetLaserFrames(250);
+                case Laser:
+                    g->turret->SetLaserFrames(TurretLaser::duration);
                     break;
 
                 case Explosive:
@@ -283,7 +284,7 @@ void LevelHandler::HandleInput()
                     break;
                     //ice
                 case 2:
-                    g->areaEffects.push_back(new IceSheet((int)g->mousePos.x, (int)g->mousePos.y, 350));
+                    g->areaEffects.push_back(new IceSheet((int)g->mousePos.x, (int)g->mousePos.y));
                     break;
                 }
 
@@ -337,6 +338,9 @@ void LevelHandler::DeInitializeCurrentLevel()
 {
     //display end screen here
     this->game->ClearVectors();
+    this->game->turret->SetLaserFrames(0);
+    this->game->turret->SetRapidFire(0);
+
     this->game->gameStats->totalCoins += this->currentLevelStats->coinsCollected;
 
     this->currentLevelStats->coinsCollected = 0;
@@ -357,9 +361,10 @@ void LevelHandler::DrawVisualEffects()
         if (e->isActive && e->GetStatusEffects()[Burning] % 8 == 7) g->effectManager->DisplayFire(e->GetPosition(), 1.0f);
     }
 
-    //draw firebullet on fire
+    
     for (Bullet* b : g->bullets)
     {
+        //draw firebullet on fire
         if (b->isActive && b->GetID() == 3 && this->currentLevelFrameCount % 2 == 0)
         {
             Vector2 firePos = b->GetPosition();
@@ -373,6 +378,20 @@ void LevelHandler::DrawVisualEffects()
 
             g->effectManager->DisplayFire(firePos, 0.5f + scaleMod);
         }
+
+        //sniperbullet trail
+        else if (b->isActive && b->GetID() == 4 && this->currentLevelFrameCount % 2 == 0)
+        {
+            Vector2 firePos = b->GetPosition();
+
+            //make it look a bit more sparratic
+            firePos.y += GetRandomValue(-5, 5);
+
+            float scaleMod = GetRandomValue(-100, 100) * 0.015f;
+
+            g->effectManager->DisplayIceSparkle(firePos, 0.5f + scaleMod);
+        }
+
     }
 
     //draw sparkles on ice sheet

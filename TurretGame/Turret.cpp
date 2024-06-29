@@ -13,12 +13,15 @@
 
 #include "textures.h" 
 
+float Turret::rapidFirerateMultiplier = 2.0f;
+int Turret::rapidFireDuration = 240;
 
 Turret::Turret()
 {
     this->angle = 0;
 
     this->laser = new TurretLaser(this);
+    this->laserFrames = 0;
 
     //Texture init
     this->texture = &textures[1];
@@ -33,7 +36,8 @@ Turret::Turret()
 
     this->baseFirerate = 1.0f; // in shots per second for turretBullet
     this->currentFirerate = this->baseFirerate;
-    this->rapidFirerate = this->baseFirerate * 2.0f;
+    
+    this->rapidFirerate = this->baseFirerate * Turret::rapidFirerateMultiplier;
     this->rapidFireFrames = 0;
 
     //initate bullet cooldown map
@@ -51,6 +55,11 @@ Turret::Turret()
         bcm[i]->shotThisFrame = false;
         bcm[i]->firerate = 1.0f;
     }
+}
+
+Turret::~Turret()
+{
+    delete this->laser;
 }
 
 void Turret::Draw()
@@ -73,17 +82,16 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
         this->laser->Update(frame);
         this->laserFrames--;
     }
-        
     else this->laser->isActive = false;
 
-    
+
+    this->rapidFirerate = this->baseFirerate * Turret::rapidFirerateMultiplier;
 
     if (this->rapidFireFrames > 0)
     {
         this->currentFirerate = this->rapidFirerate;
         this->rapidFireFrames -= 1;
     }
-         
     else this->currentFirerate = this->baseFirerate;
 
 

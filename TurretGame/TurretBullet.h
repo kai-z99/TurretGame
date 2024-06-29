@@ -9,7 +9,6 @@ public:
 	virtual void Draw() override; 
 	virtual void Update(unsigned int frame) override;
 
-
 private:
 	
 };

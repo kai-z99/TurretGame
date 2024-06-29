@@ -64,3 +64,18 @@ Vector2 RotatePoint(Vector2& v, Vector2 c, float angle)
 
     return { x_rotated , -y_rotated };
 }
+
+Color RotateColorChannels(Color color)
+{
+    Color newColor = color;
+
+    unsigned char rTg = color.r;
+    unsigned char gTb = color.g;
+    unsigned char bTr = color.b;
+
+    newColor.r = bTr;
+    newColor.g = rTg;
+    newColor.b = gTb;
+
+    return newColor;
+}

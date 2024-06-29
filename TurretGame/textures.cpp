@@ -21,6 +21,8 @@ std::vector<const char*> textureFilePaths = {
     "Sprites/iceIcon.png",              //15
     "Sprites/wolfWalk.png",             //16
     "Sprites/wolfRun.png",              //17
+    "Sprites/firebullet.png",           //18
+    "Sprites/sniperBullet.png",         //19
 };
 
 void LoadAllTextures() 

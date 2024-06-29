@@ -3,18 +3,18 @@
 #include "textures.h"
 #include "Enemy.h"
 
+int BombExplosion::damage = 10;
+int BombExplosion::knockbackFrames = 30;
+float BombExplosion::radius = 300.0f;
+
 BombExplosion::BombExplosion(int posX, int posY)
 {
 	this->id = 1;
 	this->position = { (float)posX, (float)posY };
-	this->hitboxRadius = 300.0f;
 	this->isActive = true;
 	this->isDetonateFrame = true;
 	this->framesLeft = 90;
-	this->textureLoop = new TextureLoop(&textures[9], 9, 6.0f, this->position);
-
-	this->damage = 10;
-	this->knockbackFrames = 30;
+	this->textureLoop = new TextureLoop(&textures[9], 9, 8.0f * (BombExplosion::radius / 300.0f), this->position); //scale it based on explosion size
 }
 
 void BombExplosion::Update(unsigned int frame)
@@ -33,25 +33,16 @@ void BombExplosion::Update(unsigned int frame)
 	this->textureLoop->Update();
 
 	this->framesLeft--;
+
 }
 
 void BombExplosion::Draw()
 {
-	//DrawCircleLines(this->position.x, this->position.y, this->hitboxRadius, RED); // temp
+	//DrawCircleLines(this->position.x, this->position.y, BombExplosion::radius, RED); // temp
 	this->textureLoop->Draw();
 }
 
 bool BombExplosion::EnemyCollided(Enemy* e)
 {
-	return CheckCollisionCircleRec(this->position, this->hitboxRadius, e->GetHitbox());
-}
-
-int BombExplosion::GetDamage() const
-{
-	return this->damage;
-}
-
-int BombExplosion::GetKnockbackFrames() const
-{
-	return this->knockbackFrames;
+	return CheckCollisionCircleRec(this->position, BombExplosion::radius, e->GetHitbox());
 }

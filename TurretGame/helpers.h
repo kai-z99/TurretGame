@@ -6,3 +6,4 @@ float CalculateAngle(int x, int y); //based on just x and y;
 float GetRandomFloat(float min, float max);
 bool CheckCollisionRecLine(Vector2 p1, Vector2 p2, Rectangle rec);
 Vector2 RotatePoint(Vector2& v, Vector2 c, float angle);
+Color RotateColorChannels(Color color);

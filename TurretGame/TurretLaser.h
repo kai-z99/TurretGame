@@ -13,21 +13,19 @@ public:
 	void Draw();
 
 	bool isCollide(Enemy* e);
-	
-	int GetDamage() const;
-
 
 	bool isDamageFrame;
 	bool isActive;
 	
-	//temp
-	Color color = { 255,0,0,180 };
+	static int duration;
+	static int damage;
+
+	static Color color;
+
 private:
 
 	float thickness;
 	float angle;
-
-	int damage;
 
 	Vector2 p1;
 	Vector2 p2;

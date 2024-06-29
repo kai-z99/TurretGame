@@ -25,18 +25,18 @@ UpgradeButton::UpgradeButton(int posX, int posY, Upgrade upgrade)
 		break;
 
 	case FireBulletU:
-		this->texture = &textures[2];
+		this->texture = &textures[18];
 		break;
 
 	case SniperBulletU:
-		this->texture = &textures[2];
+		this->texture = &textures[19];
 		break;
 
 	case RapidfireU:
 		this->texture = &textures[10];
 		break;
 		
-	case SpecialRapidfireU:
+	case LaserU:
 		this->texture = &textures[12];
 		break;
 
@@ -58,10 +58,6 @@ void UpgradeButton::Draw()
 	if (this->isHovering) tint = BLUE;
 	else if (this->isHeld) tint = RED;
 	else tint = WHITE;
-
-	//temp
-	if (this->upgrade == FireBulletU) tint = RED;
-	if (this->upgrade == SniperBulletU) tint = BLUE;
 
 	//temp
 	Rectangle source = { 0.0f, 0.0f, this->texture->width, this->texture->height };

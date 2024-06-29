@@ -21,4 +21,6 @@ private:
 	std::vector<VisualEffect*> tasks; // animationtype, frames remaining
 	void CleanTasks();
 
+	const int taskLimit = 700;
+
 };

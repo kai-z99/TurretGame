@@ -12,6 +12,8 @@ class Turret
 {
 public:
 	Turret();
+	~Turret();
+
 	void Draw();
 	void Update(unsigned int frame, int mouseX, int mouseY);
 
@@ -36,6 +38,9 @@ public:
 
 	TurretLaser* GetLaser();
 
+	static int rapidFireDuration;
+	static float rapidFirerateMultiplier;
+
 private:
 	void UpdateAngle(int mouseX, int mouseY);
 
@@ -56,7 +61,6 @@ private:
 	//GAME PROPERTIES------------------
 	std::unordered_map<int, BulletCooldownInfo*> bulletCooldownMap; // bullet id : info
 	float bulletSpeedMultiplier;
-
 
 	float baseFirerate;
 	float currentFirerate;

@@ -13,17 +13,11 @@ public:
 	virtual void Draw() override;
 
 	bool EnemyCollided(Enemy* e);
-	int GetDamage() const;
-	int GetKnockbackFrames() const;
 
 
 	bool isDetonateFrame;
 
-
-
-private:
-	float hitboxRadius;
-	int damage;
-	int knockbackFrames;
-	
+	static int damage;
+	static int knockbackFrames;
+	static float radius;
 };

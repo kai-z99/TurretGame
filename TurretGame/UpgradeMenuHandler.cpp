@@ -4,10 +4,14 @@
 
 #include "constants.h"
 #include "types.h"
+#include "helpers.h"
 
 #include "Game.h"
 #include "UpgradeButton.h"
 #include "Turret.h"
+#include "TurretLaser.h"
+#include "IceSheet.h"
+#include "BombExplosion.h"
 
 #include "textures.h"
 
@@ -74,28 +78,66 @@ void UpgradeMenuHandler::HandleUpgrade(Upgrade u)
 		break;
 
 
-	//TEMP, do more than just increase charges
 	case RapidfireU:
-		g->gameStats->initialAbilityValues[Rapidfire].charges += 1;
-		g->gameStats->initialAbilityValues[Rapidfire].maxCharges += 1;
+		//increase a chrage every 4 levels
+		if (g->gameStats->upgradeStates[u].level % 4 == 0)
+		{
+			g->gameStats->initialAbilityValues[Rapidfire].charges += 1;
+			g->gameStats->initialAbilityValues[Rapidfire].maxCharges += 1;
+		}
+
+		Turret::rapidFirerateMultiplier += 0.15f;
+		//other handling here
 		break;
 
-	case SpecialRapidfireU:
-		g->gameStats->initialAbilityValues[SpecialRapidfire].charges += 1;
-		g->gameStats->initialAbilityValues[SpecialRapidfire].maxCharges += 1;
+	case LaserU:
+		if (g->gameStats->upgradeStates[u].level % 4 == 0)
+		{
+			g->gameStats->initialAbilityValues[Laser].charges += 1;
+			g->gameStats->initialAbilityValues[Laser].maxCharges += 1;
+		}
+
+		if (TurretLaser::duration >= 400)
+		{
+			TurretLaser::duration = 100;
+			TurretLaser::damage++;
+			TurretLaser::color = RotateColorChannels(TurretLaser::color);
+		}
+
+		TurretLaser::duration += 50;
+
 		break;
 
 	//TEMP
 	case IceU:
-		g->gameStats->initialAbilityValues[Ice].charges += 1;
-		g->gameStats->initialAbilityValues[Ice].maxCharges += 1;
+		//increase a chrage every 4 levels
+		if (g->gameStats->upgradeStates[u].level % 4 == 0) 
+		{
+			g->gameStats->initialAbilityValues[Ice].charges += 1;
+			g->gameStats->initialAbilityValues[Ice].maxCharges += 1;
+		}
+
+		IceSheet::width += 15;
+		IceSheet::height += 10;
+		IceSheet::duration += 15;
+		IceSheet::intensity += 10;
 		break;
 
 	//TEMP
 	case ExplosiveU:
-		g->gameStats->initialAbilityValues[Explosive].charges += 1;
-		g->gameStats->initialAbilityValues[Explosive].maxCharges += 1;
+		if (g->gameStats->upgradeStates[u].level % 4 == 0)
+		{
+			g->gameStats->initialAbilityValues[Explosive].charges += 1;
+			g->gameStats->initialAbilityValues[Explosive].maxCharges += 1;
+			
+		}
+
+		BombExplosion::radius += 10.0f;
+		BombExplosion::damage += 1;
+		BombExplosion::knockbackFrames += 3;
+
 		break;
+		
 
 	default:
 		std::cout << "Upgrade does not exist.";
