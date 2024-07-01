@@ -9,6 +9,7 @@ class Bullet;
 class AreaEffect;
 class Enemy;
 class Hotbar;
+class Decoration;
 
 class VisualEffectsManager;
 class LevelHandler;
@@ -70,6 +71,8 @@ private:
 	void CleanBulletVector();
 	void ClearVectors();
 
+	void DrawMousePos(); //debug
+
 	Turret* turret;
 	Hotbar* hotbar;
 	GameStats* gameStats;
@@ -77,9 +80,12 @@ private:
 	std::vector<Enemy*> enemies;
 	std::vector<Bullet*> bullets;
 	std::vector<AreaEffect*> areaEffects;
+	std::vector<Decoration*> decorations;
 
 	std::vector<LevelButton*> levelButtons;
 	std::vector<UpgradeButton*> upgradeButtons;
+
+	
 	
 	VisualEffectsManager* effectManager;
 	LevelHandler* levelHandler;

@@ -13,6 +13,7 @@
 
 #include "Enemy.h"
 #include "Bullet.h"
+#include "Decoration.h"
 
 #include "BombExplosion.h"
 #include "IceSheet.h"
@@ -96,6 +97,12 @@ void Game::ClearVectors()
 
     //cleans task vector
     this->effectManager->Clear();
+}
+
+void Game::DrawMousePos()
+{
+    std::string text = std::to_string(GetMouseX()) + "," + std::to_string(GetMouseY());
+    DrawText(text.c_str(), this->mousePos.x, this->mousePos.y, 20.0f, BLACK);
 }
 
 void Game::Initialize()
@@ -212,7 +219,7 @@ void Game::Draw()
         DrawLineEx({ this->mousePos.x - 30, this->mousePos.y - 30 }, { this->mousePos.x + 30, this->mousePos.y + 30 }, 1.0f, RED);
         DrawLineEx({ this->mousePos.x + 30, this->mousePos.y - 30 }, { this->mousePos.x - 30, this->mousePos.y + 30 }, 1.0f, RED);
     }
-
+    this->DrawMousePos();
     EndDrawing();
 }
 

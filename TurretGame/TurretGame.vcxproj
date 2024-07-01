@@ -135,6 +135,7 @@
     <ClCompile Include="CoinSplashEffect.cpp" />
     <ClCompile Include="CollisionHandler.cpp" />
     <ClCompile Include="Database.cpp" />
+    <ClCompile Include="Decoration.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="ExplosionEffect.cpp" />
     <ClCompile Include="FireBullet.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="CollisionHandler.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="Database.h" />
+    <ClInclude Include="Decoration.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="ExplosionEffect.h" />
     <ClInclude Include="FireBullet.h" />

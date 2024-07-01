@@ -15,7 +15,12 @@ void LevelButton::Draw()
 	if (this->isHovering) col = BLUE;
 	else col = RED;
 
-	DrawCircleV(this->position, this->radius, col);
+	//DrawCircleV(this->position, this->radius, col);
+
+	DrawEllipse(this->position.x, this->position.y, this->radius + 10.0f, this->radius, BLACK);
+	DrawEllipse(this->position.x, this->position.y, this->radius + 3.0f , this->radius - 7.0f, col);
+
+
 	DrawText(std::to_string(this->level).c_str(), this->position.x, this->position.y, 30, GREEN);
 }
 

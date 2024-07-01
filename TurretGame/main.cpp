@@ -11,14 +11,13 @@ int main(void)
 
 }
 
-//make upgrades to abilities do more than add charges
-//give seperate textures to each bullet
+//prevent scrolling past first level
+//new bullet
 //decoration vector in levelhandler
 //optimize Hotbar::GetActiveAbilityButtons()
 //resolve warnings
 //ability not ready / no charges splashes
-//make upgrade to ice increase size
-//make upgrade to bomb increase size/dmg
+//lock menu scolling to x axis, set world transitions. World borders are defined in constants
 
 //enemies can drop abilities that can be clicked
 //splash damage bullety

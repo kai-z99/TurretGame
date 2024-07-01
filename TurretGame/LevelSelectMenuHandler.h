@@ -4,6 +4,7 @@
 
 class Game;
 class LevelButton;
+class Decoration;
 
 class LevelSelectHandler
 {
@@ -24,4 +25,14 @@ private:
 	int deltaMouseY;
 
 	std::unordered_map<LevelButton*, Vector2> initialLevelButtonPositions;
+	std::unordered_map<Decoration*, Vector2> initialDecorationPositions;
+	std::unordered_map<int, int> initialMarkerPositions;
+
+	std::unordered_map<int, std::vector<Vector2>> decorationPositionMap; //id, positions
+
+	std::unordered_map<int, int> worldMarkers; //world, xPos
+
+	int currentWorld;
+
+	
 };
