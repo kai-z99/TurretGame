@@ -18,7 +18,7 @@ public:
 	static const int height;
 
 private:
-	virtual bool MouseCollide(int mouseX, int mouseY);
+	virtual bool MouseCollide(int mouseX, int mouseY) override;
 
 	TurretAbility ability;
 	float barProgress = 0.0f; //how much bar is filled

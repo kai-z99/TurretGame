@@ -11,16 +11,16 @@ int main(void)
 
 }
 
-//prevent scrolling past first level
+//hook try again button up
 //new bullet
 //decoration vector in levelhandler
 //optimize Hotbar::GetActiveAbilityButtons()
 //resolve warnings
-//ability not ready / no charges splashes
-//lock menu scolling to x axis, set world transitions. World borders are defined in constants
 
 //enemies can drop abilities that can be clicked
 //splash damage bullety
 //draw effec ton turret when ability is activated
 //firebomb childf of bomb
 //SENTRIES
+// add a trail to turretbullet
+//make worldObject class and store them in worldojects in game. The chidren are decoration, levelButton, and worldMarker. The thing they ahve in common is they scroll

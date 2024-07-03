@@ -22,41 +22,22 @@ LevelSelectHandler::LevelSelectHandler(Game* g)
 	this->worldMarkers[3] = worldBoundaries[2];
 
 	g->levelButtons.push_back(new LevelButton(200, 500, 1));
-	g->levelButtons.push_back(new LevelButton(700, 700, 2));
-	g->levelButtons.push_back(new LevelButton(500, 500, 3));
+	g->levelButtons.push_back(new LevelButton(500, 500, 2));
+	g->levelButtons.push_back(new LevelButton(700, 700, 3));
 	g->levelButtons.push_back(new LevelButton(1000, 550, 4));
 	g->levelButtons.push_back(new LevelButton(1200, 400, 5));
 	g->levelButtons.push_back(new LevelButton(1400, 600, 6));
+	g->levelButtons.push_back(new LevelButton(1900, 700, 7));
 
-	//0: grass1
-	std::vector<Vector2> grass1Positions = { {100,500},{2000,200},{700,300}, {1159,781}, {1590, 245} };
-	//1: grass2
-	std::vector<Vector2> grass2Positions = { {800,500},{750,200},{500,100}, {260, 830} };
-	//2: bush
-	std::vector<Vector2> bushPositions = { {260,500},{700,1000}, {1500, 800} };
-
-	for (const Vector2& pos : grass1Positions)
+	for (const auto& decoration : decorationPositions)
 	{
-		this->decorationPositionMap[0].push_back(pos);
-	}
-
-	for (const Vector2& pos : grass2Positions)
-	{
-		this->decorationPositionMap[1].push_back(pos);
-	}
-
-	for (const Vector2& pos : bushPositions)
-	{
-		this->decorationPositionMap[2].push_back(pos);
-	}
-
-	for (const auto& pair : this->decorationPositionMap)
-	{
-		for (const Vector2& pos : pair.second)
+		for (const Vector2& pos : decoration.second)
 		{
-			this->game->decorations.push_back(new Decoration(pair.first, pos.x, pos.y));
+			this->game->decorations.push_back(new Decoration(decoration.first, pos.x, pos.y));
 		}
 	}
+
+	this->backgroundColor = { 115, 161, 0 , 255 };
 }
 
 void LevelSelectHandler::Update(unsigned int frame)
@@ -81,11 +62,32 @@ void LevelSelectHandler::Update(unsigned int frame)
 	else if (this->worldMarkers[1] <= boundaryX && this->worldMarkers[2] > boundaryX) this->currentWorld = 2;
 	else if (this->worldMarkers[2] <= boundaryX && this->worldMarkers[3] > boundaryX) this->currentWorld = 3;
 
+	switch (this->currentWorld)
+	{
+	case 1:
+		this->backgroundColor = { 115, 161, 0 , 255 };
+		break;
+
+	case 2:
+		this->backgroundColor = { 194, 165, 0 , 255 };
+		break;
+
+	case 3:
+		this->backgroundColor = { 4, 120, 106 , 255 };
+		break;
+
+	default:
+		this->backgroundColor = RAYWHITE;
+		break;
+	}
+
 }
 
 void LevelSelectHandler::Draw()
 {
 	Game* g = this->game;
+
+	ClearBackground(this->backgroundColor);
 
 	for (LevelButton* b : g->levelButtons)
 	{
@@ -142,7 +144,7 @@ void LevelSelectHandler::HandleInput()
 		deltaMouseX = initialMouseX - (int)g->mousePos.x;
 		//deltaMouseY = initialMouseY - (int)g->mousePos.y; only change x
 
-		if (g->levelButtons[0]->GetPosition().x <= 200 || deltaMouseX > 0 || 1) //temp , should prevent scrolling
+		if (deltaMouseX > 0)
 		{
 			for (LevelButton* b : g->levelButtons)
 			{
@@ -158,7 +160,55 @@ void LevelSelectHandler::HandleInput()
 			{
 				x.second = this->initialMarkerPositions[x.first] - deltaMouseX;
 			}
-		}		
+		}
+		else if (deltaMouseX < 0) // mouse right
+		{
+
+			if (g->levelButtons[0]->GetPosition().x <= 200) //left is ok right is disabled
+			{
+				for (LevelButton* b : g->levelButtons)
+				{
+					b->SetPosition((int)this->initialLevelButtonPositions[b].x - deltaMouseX, (int)this->initialLevelButtonPositions[b].y - deltaMouseY);
+				}
+
+				for (Decoration* d : g->decorations)
+				{
+					d->SetPosition((int)this->initialDecorationPositions[d].x - deltaMouseX, (int)this->initialDecorationPositions[d].y - deltaMouseY);
+				}
+
+				for (auto& x : this->worldMarkers)
+				{
+					x.second = this->initialMarkerPositions[x.first] - deltaMouseX;
+				}
+			}
+
+			else
+			{
+				initialMouseX = (int)g->mousePos.x;
+				initialMouseY = (int)g->mousePos.y;
+
+
+				for (LevelButton* l : g->levelButtons)
+				{
+					this->initialLevelButtonPositions[l] = l->GetPosition();
+				}
+
+				for (Decoration* d : g->decorations)
+				{
+					this->initialDecorationPositions[d] = d->GetPosition();
+				}
+
+				for (auto& x : this->worldMarkers)
+				{
+					this->initialMarkerPositions[x.first] = x.second;
+				}
+			}
+
+		}
+
+
+
+
 	}
 
 

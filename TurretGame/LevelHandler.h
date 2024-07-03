@@ -38,4 +38,7 @@ private:
 
 	bool currentLevelComplete;
 	bool currentLevelLose;
+
+	int cooldownWarningFrames;
+	int chargeWarningFrames;
 };

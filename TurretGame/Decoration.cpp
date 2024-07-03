@@ -26,6 +26,12 @@ Decoration::Decoration(int id, int x, int y)
 		this->scale = 3.0f;
 		break;
 
+	//tree
+	case 3:
+		this->texture = &textures[23];
+		this->scale = 3.0f;
+		break;
+
 	default:
 		std::cout << "texture not found, drawing Grass1" << '\n';
 		this->texture = &textures[20];

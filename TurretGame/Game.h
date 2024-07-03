@@ -16,6 +16,7 @@ class LevelHandler;
 class CollisionHandler;
 class LevelSelectHandler;
 class UpgradeMenuHandler;
+class TryAgainButton;
 
 class LevelButton;
 class UpgradeButton;
@@ -84,9 +85,8 @@ private:
 
 	std::vector<LevelButton*> levelButtons;
 	std::vector<UpgradeButton*> upgradeButtons;
+	TryAgainButton* tryAgainButton;
 
-	
-	
 	VisualEffectsManager* effectManager;
 	LevelHandler* levelHandler;
 	CollisionHandler* collisionHandler;

@@ -23,6 +23,7 @@
 
 #include "VisualEffectsManager.h"
 #include "Hotbar.h"
+#include "TryAgainButton.h"
 
 #include "textures.h"
 
@@ -37,6 +38,9 @@ LevelHandler::LevelHandler(Game* game)
 
     this->currentLevelComplete = false;
     this->currentLevelLose = false;
+
+    this->cooldownWarningFrames = 0;
+    this->chargeWarningFrames = 0;
 }
 
 void LevelHandler::Update(unsigned int frame)
@@ -46,7 +50,7 @@ void LevelHandler::Update(unsigned int frame)
     this->currentLevelFrameCount++;
 
     //update hotbar buttons
-    if (g->hotbar != nullptr) g->hotbar->Update(g->frameCount, this->currentLevelStats->abilityStates);
+    if (g->hotbar != nullptr) g->hotbar->Update(this->currentLevelFrameCount, this->currentLevelStats->abilityStates);
 
     //if an ability button is pressed, activate its ability if it has a charge.
     this->ActivateUsedAbilities();
@@ -90,8 +94,19 @@ void LevelHandler::Update(unsigned int frame)
         }
     }   
 
+    if (this->chargeWarningFrames > 0) this->chargeWarningFrames--;
+    if (this->cooldownWarningFrames > 0) this->cooldownWarningFrames--;
+
+
     if (!this->currentLevelLose) this->HandleCurrentLevelSpawning();
 
+    //handle try again
+    else
+    {
+        g->tryAgainButton->Update(g->mousePos.x, g->mousePos.y);
+    }
+
+    
 
     //check win/loss
     if (this->currentLevelStats->health <= 0)
@@ -122,12 +137,10 @@ bool LevelHandler::NoActiveEnemies()
     return true;
 }
 
-
+//if an ability button is pressed, activate its ability if it has a charge and it is not on cooldown
 void LevelHandler::ActivateUsedAbilities()
 {
     Game* g = this->game;
-
-    //if an ability button is pressed, activate its ability if it has a charge and it is not on cooldown
 
     //go through every ablity that was clicked this frame
     for (const TurretAbility& a : g->hotbar->GetActiveAbilityButtons())
@@ -135,14 +148,14 @@ void LevelHandler::ActivateUsedAbilities()
         //info of the current ability
         AbilityInfo& info = this->currentLevelStats->abilityStates[a];
 
-        // if the ability is ready,
-        if (g->frameCount - info.lastUsedFrame >= (unsigned int)info.cooldown)
+        //if the ablity has a chrage
+        if (info.charges > 0)
         {
-            //if there is an availible chrage, use one.
-            if (info.charges > 0)
+            // if the ability is ready,
+            if (this->currentLevelFrameCount - info.lastUsedFrame >= (unsigned int)info.cooldown)
             {
                 info.charges -= 1;
-                info.lastUsedFrame = g->frameCount;
+                info.lastUsedFrame = this->currentLevelFrameCount;
 
                 switch (a)
                 {
@@ -170,16 +183,16 @@ void LevelHandler::ActivateUsedAbilities()
 
             else
             {
-                // no charges splash
+                this->cooldownWarningFrames = 40;
             }
-
         }
 
         else
         {
-            //ability is not ready splash
+            this->chargeWarningFrames = 40;
         }
     }
+
 }
 
 void LevelHandler::Draw()
@@ -229,14 +242,34 @@ void LevelHandler::Draw()
     //draw hotbar
     this->game->hotbar->Draw(*this->currentLevelStats);
 
+    if (this->chargeWarningFrames > 0)
+    {
+        const char* text = "NO CHARGES AVAILIBLE";
+        int width = MeasureText(text, 30);
+        DrawText("NO CHARGES AVAILIBLE", (screenWidth / 2) - (width / 2), 300, 30, RED);
+    }
+
+    else if (this->cooldownWarningFrames > 0)
+    {
+        const char* text = "ABILITY ON COOLDOWN";
+        int width = MeasureText(text, 30);
+        DrawText("ABILITY ON COOLDOWN", (screenWidth / 2) - (width / 2), 300, 30, RED);
+    }
+
+
     if (this->currentLevelComplete)
     {
         DrawText("LEVEL COMPLETE\n\n\nPress Enter to exit", 700, 700, 50, RED);
+        this->cooldownWarningFrames = 0;
+        this->chargeWarningFrames = 0;
     }
 
     else if (this->currentLevelLose)
     {
-        DrawText("YOU DIED :(\n\n\nPress Enter to try again", 700, 700, 50, RED);
+        DrawText("YOU DIED :(", screenWidth / 2, 400, 50, RED);
+        this->game->tryAgainButton->Draw();
+        this->cooldownWarningFrames = 0;
+        this->chargeWarningFrames = 0;
     }
 }
 
@@ -321,6 +354,8 @@ void LevelHandler::HandleInput()
 void LevelHandler::InitializeCurrentLevel()
 {
     this->currentLevelFrameCount = 0;
+    this->cooldownWarningFrames = 0;
+    this->chargeWarningFrames = 0;
 
     //set initial ability charges in this->currentLevelStats
     for (int i = 0; i <= 5; i++)
@@ -346,6 +381,8 @@ void LevelHandler::DeInitializeCurrentLevel()
     this->currentLevelStats->coinsCollected = 0;
     this->currentLevelStats->health = 100;
     this->currentLevelFrameCount = 0;
+    this->cooldownWarningFrames = 0;
+    this->chargeWarningFrames = 0;
 }
 
 

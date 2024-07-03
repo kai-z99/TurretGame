@@ -14,6 +14,7 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Decoration.h"
+#include "TryAgainButton.h";
 
 #include "BombExplosion.h"
 #include "IceSheet.h"
@@ -123,7 +124,8 @@ void Game::Initialize()
     
     this->gameStats = new GameStats();
     this->effectManager = new VisualEffectsManager();
-   
+    this->tryAgainButton = new TryAgainButton((screenWidth / 2) - (TryAgainButton::width / 2), (screenHeight / 2) - (TryAgainButton::height / 2));
+
     this->gameStats->totalCoins = 10000;
     this->gameStats->initialHealth = 100;
 
@@ -161,7 +163,7 @@ void Game::Initialize()
     this->collisionHandler = new CollisionHandler(this);
     this->levelSelectHandler = new LevelSelectHandler(this);
     this->upgradeMenuHandler = new UpgradeMenuHandler(this);
-
+    
     //this->hotbar = new Hotbar(this->levelHandler->currentLevelStats->abilityStates); 
     
 }
