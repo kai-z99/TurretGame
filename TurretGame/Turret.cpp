@@ -9,6 +9,7 @@
 #include "ShockwaveBullet.h"
 #include "FireBullet.h"
 #include "SniperBullet.h"
+#include "LightningBullet.h"
 #include "TurretLaser.h"
 
 #include "textures.h" 
@@ -43,7 +44,7 @@ Turret::Turret()
     //initate bullet cooldown map
     std::unordered_map<int, BulletCooldownInfo*>& bcm = this->bulletCooldownMap;
 
-    for (int i = 1; i <= 4; i++)
+    for (int i = 1; i <= 5; i++)
     {
         bcm[i] = new BulletCooldownInfo();
 
@@ -140,6 +141,12 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
         {
             if (frame - pair.second->lastShotFrame > (190 / this->bulletCooldownMap[4]->firerate / this->currentFirerate)) pair.second->canShoot = true;
         }
+
+        //Lightning
+        else if (pair.first == 5)
+        {
+            if (frame - pair.second->lastShotFrame > (210 / this->bulletCooldownMap[5]->firerate / this->currentFirerate)) pair.second->canShoot = true;
+        }
         
     }
 
@@ -184,6 +191,10 @@ void Turret::ShootBullet(std::vector<Bullet*>& bullets, int id)
     
     case 4:
         b = new SniperBullet();
+        break;
+
+    case 5:
+        b = new LightningBullet();
         break;
 
     default: //fallback to turretbbullet on failure

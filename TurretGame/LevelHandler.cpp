@@ -49,6 +49,12 @@ void LevelHandler::Update(unsigned int frame)
 
     this->currentLevelFrameCount++;
 
+    if (this->chargeWarningFrames > 0) this->chargeWarningFrames--;
+    if (this->cooldownWarningFrames > 0) this->cooldownWarningFrames--;
+
+    if (g->lightningAlpha > 0) g->lightningAlpha -= 10;
+    if (g->lightningAlpha <= 0) g->lightningPoints.clear();
+
     //update hotbar buttons
     if (g->hotbar != nullptr) g->hotbar->Update(this->currentLevelFrameCount, this->currentLevelStats->abilityStates);
 
@@ -76,6 +82,13 @@ void LevelHandler::Update(unsigned int frame)
         {
             e->Update(g->frameCount); //move enemy, apply effects, apply knockback. apply tint
 
+            //apply shock
+            if (e->shocked)
+            {
+                e->SetHealth(e->GetHealth() - 5.0f);
+                e->shocked = false;
+            }
+                
             // if enemy died, add coin amount. and display coin effect
             if (e->GetHealth() <= 0)
             {
@@ -94,9 +107,12 @@ void LevelHandler::Update(unsigned int frame)
         }
     }   
 
-    if (this->chargeWarningFrames > 0) this->chargeWarningFrames--;
-    if (this->cooldownWarningFrames > 0) this->cooldownWarningFrames--;
-
+    //because bomb/ice mode freezes button update so these will keep appearing.
+    if (g->inputMode != 0)
+    {
+        this->chargeWarningFrames = 0;
+        this->cooldownWarningFrames = 0;
+    }
 
     if (!this->currentLevelLose) this->HandleCurrentLevelSpawning();
 
@@ -105,8 +121,6 @@ void LevelHandler::Update(unsigned int frame)
     {
         g->tryAgainButton->Update(g->mousePos.x, g->mousePos.y);
     }
-
-    
 
     //check win/loss
     if (this->currentLevelStats->health <= 0)
@@ -449,6 +463,16 @@ void LevelHandler::DrawVisualEffects()
             g->effectManager->DisplayIceSparkle(pos, GetRandomValue(-100, 100) * 0.02f);
         }
     }
+
+    //LIGHTNING EFFECT
+    if (g->lightningPoints.size() > 1)
+    {
+        for (int i = 0; i < g->lightningPoints.size() - 1; i++)
+        {
+            DrawLineEx(g->lightningPoints[i], g->lightningPoints[i + 1], 5.0f, {255,255,0,(unsigned char)g->lightningAlpha});
+        }
+    }
+    
 }
 
 

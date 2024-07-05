@@ -19,7 +19,7 @@ UpgradeMenuHandler::UpgradeMenuHandler(Game* g)
 {
 	this->game = g;
 
-	for (int i = 0; i <= 7; i++)
+	for (int i = 0; i <= 8; i++)
 	{
 		this->game->upgradeButtons.push_back(new UpgradeButton(200 * i + 200, 500, (Upgrade)i));
 		this->game->upgradeButtons[i]->SetPrice(this->game->gameStats->upgradeStates[Upgrade(i)].price);
@@ -77,6 +77,10 @@ void UpgradeMenuHandler::HandleUpgrade(Upgrade u)
 		else (t->UnlockBullet(4));
 		break;
 
+	case LightningBulletU:
+		if (t->IsBulletUnlocked(5)) t->SetFirerate(5, t->GetFirerate(5) + 0.2f);
+		else (t->UnlockBullet(5));
+		break;
 
 	case RapidfireU:
 		//increase a chrage every 4 levels

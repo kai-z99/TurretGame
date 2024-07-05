@@ -112,7 +112,34 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 		break;
 	}
 
+	//LIGHTNING
+	if (b->GetID() == 5)
+	{
+		ApplyLightning(e);
+		this->game->lightningAlpha = 255;
+	}
+
 	b->isActive = false;
+}
+
+void CollisionHandler::ApplyLightning(Enemy* e)
+{
+	e->shocked = true;
+	this->game->lightningPoints.push_back(e->GetPosition());
+
+	//for every enemy
+	for (Enemy* e2 : this->game->enemies)
+	{
+		//if its not shocked
+		if (e2->isActive && !e2->shocked)
+		{
+			// and if its close enough
+			if (abs(e2->GetPosition().x - e->GetPosition().x) < 150 && abs(e2->GetPosition().y - e->GetPosition().y) < 150)
+			{
+				ApplyLightning(e2);
+			}
+		}	
+	}
 }
 
 //prereq: a isActive
@@ -170,5 +197,7 @@ void CollisionHandler::HandleLaserToEnemies(TurretLaser* laser)
 	}
 
 }
+
+
 
 

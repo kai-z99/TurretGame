@@ -31,6 +31,10 @@ UpgradeButton::UpgradeButton(int posX, int posY, Upgrade upgrade)
 	case SniperBulletU:
 		this->texture = &textures[19];
 		break;
+	
+	case LightningBulletU:
+		this->texture = &textures[19];
+		break;
 
 	case RapidfireU:
 		this->texture = &textures[10];

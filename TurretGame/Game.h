@@ -77,16 +77,17 @@ private:
 	Turret* turret;
 	Hotbar* hotbar;
 	GameStats* gameStats;
+	TryAgainButton* tryAgainButton;
 
 	std::vector<Enemy*> enemies;
 	std::vector<Bullet*> bullets;
 	std::vector<AreaEffect*> areaEffects;
+	std::vector<Vector2> lightningPoints;
+	
 	std::vector<Decoration*> decorations;
-
 	std::vector<LevelButton*> levelButtons;
 	std::vector<UpgradeButton*> upgradeButtons;
-	TryAgainButton* tryAgainButton;
-
+	
 	VisualEffectsManager* effectManager;
 	LevelHandler* levelHandler;
 	CollisionHandler* collisionHandler;
@@ -97,6 +98,7 @@ private:
 	const int bulletLimit = 1000; //how many bullets can be on the screen
 	const int enemyLimit = 800;
 	const int AOELimit = 800;
+	int lightningAlpha;
 	
 	int inputMode; //0: standard, 1: bomb, 2 : ice
 	Vector2 mousePos;

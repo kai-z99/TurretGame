@@ -127,11 +127,13 @@ void Game::Initialize()
     this->tryAgainButton = new TryAgainButton((screenWidth / 2) - (TryAgainButton::width / 2), (screenHeight / 2) - (TryAgainButton::height / 2));
 
     this->gameStats->totalCoins = 10000;
-    this->gameStats->initialHealth = 100;
+    this->gameStats->initialHealth = 30;
 
     this->currentLevel = 1;
 
     this->inputMode = false;
+
+    this->lightningAlpha = 0;
 
     
     //temp
@@ -153,6 +155,7 @@ void Game::Initialize()
         {ShockwaveBulletU,{0, 150}},
         {FireBulletU,{0, 150}},
         {SniperBulletU,{0, 150}},
+        {LightningBulletU,{0, 150}},
         {RapidfireU,{1, 150}},
         {LaserU,{0, 150}},
         {IceU,{0, 150}},
@@ -165,7 +168,7 @@ void Game::Initialize()
     this->upgradeMenuHandler = new UpgradeMenuHandler(this);
     
     //this->hotbar = new Hotbar(this->levelHandler->currentLevelStats->abilityStates); 
-    
+    this->lightningPoints = {};
 }
 
 //-------------------------------------------------------------------------------------
@@ -310,8 +313,7 @@ void Game::HandleInput()
     default:
         break;
     }
-    
-    
+   
 }
 
 void Game::HandleInputInLevel()

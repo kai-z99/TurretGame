@@ -34,6 +34,7 @@ public:
 	int GetDamage() const;
 	int GetCoinDropAmount() const;
 	bool isActive = true;
+	bool shocked = false;
 	
 protected:
 	void DrawHealthbar(int yOffset, float barSize); //yOffset: how many px up from middle of image

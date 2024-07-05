@@ -35,6 +35,7 @@ enum Upgrade
 	ShockwaveBulletU,
 	FireBulletU,
 	SniperBulletU,
+	LightningBulletU,
 	RapidfireU,
 	LaserU,
 	IceU,
