@@ -21,5 +21,5 @@ private:
 	void HandleAOEToEnemies(AreaEffect* a);
 	void HandleLaserToEnemies(TurretLaser* laser);
 
-	void ApplyLightning(Enemy* e);
+	void ApplyLightning(Enemy* e, int length);
 };

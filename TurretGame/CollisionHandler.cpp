@@ -50,7 +50,7 @@ void CollisionHandler::HandleEnemyCollisions()
 
 	//laser
 	if (g->turret->GetLaser()->isActive) this->HandleLaserToEnemies(g->turret->GetLaser());
-	
+
 }
 
 void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
@@ -76,7 +76,7 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 	//STATUS EFFECT
 	switch (b->GetID())
 	{
-	// fire bullet
+		// fire bullet
 	case 3:
 		//apply burning for 4 seconds if not a red koopa
 		if (e->GetID() != 3)
@@ -92,7 +92,7 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 		}
 		break;
 
-	//sniper
+		//sniper
 	case 4:
 		//chill breifly, append to not cut ice sheet short
 		if (e->GetID() != 3)
@@ -107,7 +107,7 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 			e->AppendStatusEffect(Chilled, 20);
 		}
 		break;
-	
+
 	default:
 		break;
 	}
@@ -115,15 +115,18 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 	//LIGHTNING
 	if (b->GetID() == 5)
 	{
-		ApplyLightning(e);
-		this->game->lightningAlpha = 255;
+		ApplyLightning(e,0);
+		this->game->effectManager->lightningAlpha = 255;
 	}
 
 	b->isActive = false;
 }
 
-void CollisionHandler::ApplyLightning(Enemy* e)
+void CollisionHandler::ApplyLightning(Enemy* e, int length)
 {
+	if (e->GetID() == 3 && dynamic_cast<RedKoopaEnemy*>(e)->shellForm) return;
+	if (length > 1000) return;
+
 	e->shocked = true;
 	this->game->lightningPoints.push_back(e->GetPosition());
 
@@ -134,9 +137,9 @@ void CollisionHandler::ApplyLightning(Enemy* e)
 		if (e2->isActive && !e2->shocked)
 		{
 			// and if its close enough
-			if (abs(e2->GetPosition().x - e->GetPosition().x) < 150 && abs(e2->GetPosition().y - e->GetPosition().y) < 150)
+			if (abs(e2->GetPosition().x - e->GetPosition().x) < 370 && abs(e2->GetPosition().y - e->GetPosition().y) < 370)
 			{
-				ApplyLightning(e2);
+				ApplyLightning(e2, length + 1);
 			}
 		}	
 	}

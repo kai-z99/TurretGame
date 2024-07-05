@@ -33,8 +33,6 @@ void KoopaEnemy::Update(unsigned int frame)
 	this->hitbox.x = this->position.x - (50 / 2);
 	this->hitbox.y = this->position.y - (100 / 2);
 
-	
-
 	//update texture proteries based on new position
 	this->textureLoop->Update();
 	

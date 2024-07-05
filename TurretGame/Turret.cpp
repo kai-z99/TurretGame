@@ -101,53 +101,63 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
     //go through each bullet type
     for (auto& pair : this->bulletCooldownMap)
     {
+        //for clarity
+        int id = pair.first;
+        BulletCooldownInfo*& cooldownInfo = pair.second;
+
         //if the bullet isnt unlocked, it cannot shoot no matter what.
-        if (!pair.second->unlocked)
+        if (!cooldownInfo->unlocked)
         {
-            pair.second->canShoot = false;
+            cooldownInfo->canShoot = false;
             continue;
         }
 
         //if this was the frame it shot, update its last shot frame.
-        if (pair.second->shotThisFrame)
+        if (cooldownInfo->shotThisFrame)
         {
-            pair.second->lastShotFrame = frame;
-            pair.second->shotThisFrame = false;
+            cooldownInfo->lastShotFrame = frame;
+            cooldownInfo->shotThisFrame = false;
         }
 
         //check if bullet can be put off cooldown based on its last shot frame
 
-        //check bullet id 1 (TurretBullet)
-        if (pair.first == 1) 
+        int baseCooldownFrames;
+
+        // basecooldown of how long each bullet has between shots. firther modified by individual bullet firerate and turretfirerate.
+        switch (id)
         {
-            //if its been long enough. set canShoot to be true in its BulletCooldownInfo.
-            if (frame - pair.second->lastShotFrame > (60 / this->bulletCooldownMap[1]->firerate) / this->currentFirerate) pair.second->canShoot = true;
-        }
+        //TurretBullet
+        case 1:
+            baseCooldownFrames = 60;
+            break;
 
         //shockwave bullet
-        else if (pair.first == 2) 
-        {
-            if (frame - pair.second->lastShotFrame > (150 / this->bulletCooldownMap[2]->firerate / this->currentFirerate)) pair.second->canShoot = true;
+        case 2:
+            baseCooldownFrames = 150;
+            break;
+
+        case 3:
+            baseCooldownFrames = 180;
+            break;
+
+        case 4:
+            baseCooldownFrames = 190;
+            break;
+
+        case 5:
+            baseCooldownFrames = 210;
+            break;
+
+        default:
+            baseCooldownFrames = 60; //deafault, shouldnt happen
+            break;
         }
 
-        //Firebullet
-        else if (pair.first == 3) 
+        //set bullet to canShoot if the time is right.
+        if (frame - cooldownInfo->lastShotFrame > (baseCooldownFrames / this->bulletCooldownMap[id]->firerate) / this->currentFirerate)
         {
-            if (frame - pair.second->lastShotFrame > (180 / this->bulletCooldownMap[3]->firerate / this->currentFirerate)) pair.second->canShoot = true;
-        }
-
-        //Sniper
-        else if (pair.first == 4)
-        {
-            if (frame - pair.second->lastShotFrame > (190 / this->bulletCooldownMap[4]->firerate / this->currentFirerate)) pair.second->canShoot = true;
-        }
-
-        //Lightning
-        else if (pair.first == 5)
-        {
-            if (frame - pair.second->lastShotFrame > (210 / this->bulletCooldownMap[5]->firerate / this->currentFirerate)) pair.second->canShoot = true;
-        }
-        
+            pair.second->canShoot = true;
+        }  
     }
 
     //check if turret shot can be put off cooldown
@@ -226,7 +236,7 @@ void Turret::SetBaseFirerate(float firerate)
 
 void Turret::SetRapidFire(unsigned int frames)
 {
-    this->rapidFireFrames += frames;
+    this->rapidFireFrames = frames;
 }
 
 void Turret::SetFirerate(int id, float firerate)

@@ -52,8 +52,9 @@ void LevelHandler::Update(unsigned int frame)
     if (this->chargeWarningFrames > 0) this->chargeWarningFrames--;
     if (this->cooldownWarningFrames > 0) this->cooldownWarningFrames--;
 
-    if (g->lightningAlpha > 0) g->lightningAlpha -= 10;
-    if (g->lightningAlpha <= 0) g->lightningPoints.clear();
+    //fade lightning alpha. if fully faded, clear lightning points
+    if (g->effectManager->lightningAlpha > 0) g->effectManager->lightningAlpha -= 10;
+    if (g->effectManager->lightningAlpha <= 0) g->lightningPoints.clear();
 
     //update hotbar buttons
     if (g->hotbar != nullptr) g->hotbar->Update(this->currentLevelFrameCount, this->currentLevelStats->abilityStates);
@@ -85,7 +86,7 @@ void LevelHandler::Update(unsigned int frame)
             //apply shock
             if (e->shocked)
             {
-                e->SetHealth(e->GetHealth() - 5.0f);
+                e->SetHealth(e->GetHealth() - 3.0f);
                 e->shocked = false;
             }
                 
@@ -116,11 +117,9 @@ void LevelHandler::Update(unsigned int frame)
 
     if (!this->currentLevelLose) this->HandleCurrentLevelSpawning();
 
-    //handle try again
-    else
-    {
-        g->tryAgainButton->Update(g->mousePos.x, g->mousePos.y);
-    }
+    //handle try again button
+    g->tryAgainButton->Update(g->mousePos.x, g->mousePos.y);
+    
 
     //check win/loss
     if (this->currentLevelStats->health <= 0)
@@ -247,9 +246,6 @@ void LevelHandler::Draw()
         if (a->isActive && a->GetID() != 2) a->Draw();
     }
 
-    //draw rolling effects
-    this->DrawVisualEffects();
-
     //update and draw the effects that are on screen
     this->game->effectManager->UpdateAndDraw();
 
@@ -280,7 +276,10 @@ void LevelHandler::Draw()
 
     else if (this->currentLevelLose)
     {
-        DrawText("YOU DIED :(", screenWidth / 2, 400, 50, RED);
+        const char* text = "YOU DIED :(";
+        int width = MeasureText(text, 50);
+
+        DrawText(text, (screenWidth / 2) - (width / 2), 400, 50, RED);
         this->game->tryAgainButton->Draw();
         this->cooldownWarningFrames = 0;
         this->chargeWarningFrames = 0;
@@ -293,7 +292,7 @@ void LevelHandler::HandleInput()
 
     if (this->currentLevelLose)
     {
-        if (IsKeyPressed(KEY_ENTER))
+        if (IsKeyPressed(KEY_ENTER) || g->tryAgainButton->isClicked)
         {
             this->currentLevelLose = false;
             this->DeInitializeCurrentLevel();
@@ -309,9 +308,7 @@ void LevelHandler::HandleInput()
             this->currentLevelComplete = false;
             this->game->ExitCurrentLevel();
             this->game->gameState = LevelSelectMenu;
-        }
-        
-        
+        }  
     }
 
     else
@@ -397,82 +394,6 @@ void LevelHandler::DeInitializeCurrentLevel()
     this->currentLevelFrameCount = 0;
     this->cooldownWarningFrames = 0;
     this->chargeWarningFrames = 0;
-}
-
-
-void LevelHandler::DrawVisualEffects()
-{
-    Game* g = this->game;
-    //--------------
-    //FIRE EFFECTS
-
-    //draw burning enemies on fire
-    for (Enemy* e : g->enemies)
-    {
-        if (e->isActive && e->GetStatusEffects()[Burning] % 8 == 7) g->effectManager->DisplayFire(e->GetPosition(), 1.0f);
-    }
-
-    
-    for (Bullet* b : g->bullets)
-    {
-        //draw firebullet on fire
-        if (b->isActive && b->GetID() == 3 && this->currentLevelFrameCount % 2 == 0)
-        {
-            Vector2 firePos = b->GetPosition();
-            firePos.y -= 10;
-            firePos.x -= 10;
-
-            //make it look a bit more sparratic
-            firePos.y += GetRandomValue(-5, 5);
-
-            float scaleMod = GetRandomValue(-100, 100) * 0.0015f;
-
-            g->effectManager->DisplayFire(firePos, 0.5f + scaleMod);
-        }
-
-        //sniperbullet trail
-        else if (b->isActive && b->GetID() == 4 && this->currentLevelFrameCount % 2 == 0)
-        {
-            Vector2 firePos = b->GetPosition();
-
-            //make it look a bit more sparratic
-            firePos.y += GetRandomValue(-5, 5);
-
-            float scaleMod = GetRandomValue(-100, 100) * 0.015f;
-
-            g->effectManager->DisplayIceSparkle(firePos, 0.5f + scaleMod);
-        }
-
-    }
-
-    //draw sparkles on ice sheet
-    for (AreaEffect* a : g->areaEffects)
-    {
-        //id 2 is ice
-        if (a->isActive && a->GetID() == 2)
-        {
-            Rectangle icebox = dynamic_cast<IceSheet*>(a)->GetHitbox();
-
-            int offsetX = GetRandomValue((int)(-(icebox.width / 2)), (int)(icebox.width / 2));
-            int offsetY = GetRandomValue((int)(-(icebox.height / 2)), (int)(icebox.height / 2));
-
-            Vector2 pos = a->GetPosition();
-            pos.x += offsetX;
-            pos.y += offsetY;
-
-            g->effectManager->DisplayIceSparkle(pos, GetRandomValue(-100, 100) * 0.02f);
-        }
-    }
-
-    //LIGHTNING EFFECT
-    if (g->lightningPoints.size() > 1)
-    {
-        for (int i = 0; i < g->lightningPoints.size() - 1; i++)
-        {
-            DrawLineEx(g->lightningPoints[i], g->lightningPoints[i + 1], 5.0f, {255,255,0,(unsigned char)g->lightningAlpha});
-        }
-    }
-    
 }
 
 

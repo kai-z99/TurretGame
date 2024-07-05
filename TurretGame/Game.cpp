@@ -110,7 +110,7 @@ void Game::Initialize()
 {
     InitWindow(screenWidth, screenHeight, "TurretGame window");
     SetTargetFPS(60);
-    //ToggleFullscreen();
+    ToggleFullscreen();
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
 
@@ -123,7 +123,7 @@ void Game::Initialize()
     this->gameState = LevelSelectMenu;
     
     this->gameStats = new GameStats();
-    this->effectManager = new VisualEffectsManager();
+    this->effectManager = new VisualEffectsManager(this);
     this->tryAgainButton = new TryAgainButton((screenWidth / 2) - (TryAgainButton::width / 2), (screenHeight / 2) - (TryAgainButton::height / 2));
 
     this->gameStats->totalCoins = 10000;
@@ -132,8 +132,6 @@ void Game::Initialize()
     this->currentLevel = 1;
 
     this->inputMode = false;
-
-    this->lightningAlpha = 0;
 
     
     //temp
@@ -198,6 +196,8 @@ void Game::Draw()
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
+    
+
     switch (this->gameState)
     {
     case InLevel:
@@ -224,7 +224,11 @@ void Game::Draw()
         DrawLineEx({ this->mousePos.x - 30, this->mousePos.y - 30 }, { this->mousePos.x + 30, this->mousePos.y + 30 }, 1.0f, RED);
         DrawLineEx({ this->mousePos.x + 30, this->mousePos.y - 30 }, { this->mousePos.x - 30, this->mousePos.y + 30 }, 1.0f, RED);
     }
+
     this->DrawMousePos();
+
+    DrawFPS(0, 0);
+
     EndDrawing();
 }
 

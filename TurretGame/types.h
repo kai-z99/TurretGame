@@ -40,7 +40,6 @@ enum Upgrade
 	LaserU,
 	IceU,
 	ExplosiveU,
-
 };
 
 struct BulletCooldownInfo

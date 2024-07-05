@@ -151,6 +151,7 @@
     <ClCompile Include="LevelHandler.cpp" />
     <ClCompile Include="LevelSelectMenuHandler.cpp" />
     <ClCompile Include="LightningBullet.cpp" />
+    <ClCompile Include="SparkleEffect.cpp" />
     <ClCompile Include="TryAgainButton.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Projectile.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="LevelHandler.h" />
     <ClInclude Include="LevelSelectMenuHandler.h" />
     <ClInclude Include="LightningBullet.h" />
+    <ClInclude Include="SparkleEffect.h" />
     <ClInclude Include="TryAgainButton.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="RedKoopaEnemy.h" />

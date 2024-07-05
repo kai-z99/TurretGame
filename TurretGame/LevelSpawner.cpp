@@ -103,15 +103,38 @@ void LevelSpawner::SetSpawnMap(int level)
 		break;
 
 	case 3:
-		for (int i = 0; i < 8000; i+= 10)
+		for (int i = 0; i < 8000; i+= 1)
 		{
 			this->spawnMap[5].push_back(i);
 		}
+
+		for (int i = 0; i < 8000; i += 1)
+		{
+			this->spawnMap[4].push_back(i);
+		}
+
+		for (int i = 0; i < 8000; i += 1)
+		{
+			this->spawnMap[3].push_back(i);
+		}
+
+		for (int i = 0; i < 8000; i += 1)
+		{
+			this->spawnMap[2].push_back(i);
+		}
+
 		break;
 
 	case 4:
 		this->spawnMap[3] = { 300,600 };
 		this->spawnMap[4] = { 200,500,550 };
+		
+	case 5:
+		this->spawnMap[1] = { 50,150,400 };
+		this->spawnMap[4] = { 100,200 };
+		this->spawnMap[3] = { 0, 10, 333 };
+		break;
+
 	default:
 		std::cout << "Cannot set spawnmap for level " << level << '\n';
 		break;

@@ -139,10 +139,8 @@ void UpgradeMenuHandler::HandleUpgrade(Upgrade u)
 		BombExplosion::radius += 10.0f;
 		BombExplosion::damage += 1;
 		BombExplosion::knockbackFrames += 3;
-
 		break;
-		
-
+	
 	default:
 		std::cout << "Upgrade does not exist.";
 		break;

@@ -17,7 +17,7 @@ UpgradeButton::UpgradeButton(int posX, int posY, Upgrade upgrade)
 	switch (this->upgrade)
 	{
 	case TurretBulletU:
-		this->texture = &textures[2];
+		this->texture = &textures[28];
 		break;
 
 	case ShockwaveBulletU:
@@ -33,7 +33,7 @@ UpgradeButton::UpgradeButton(int posX, int posY, Upgrade upgrade)
 		break;
 	
 	case LightningBulletU:
-		this->texture = &textures[19];
+		this->texture = &textures[27];
 		break;
 
 	case RapidfireU:

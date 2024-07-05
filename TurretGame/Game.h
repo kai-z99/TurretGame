@@ -29,6 +29,7 @@ public:
 
 	void Run();
 
+	friend class VisualEffectsManager;
 	friend class LevelHandler;
 	friend class CollisionHandler;
 	friend class LevelSelectHandler;
@@ -98,7 +99,6 @@ private:
 	const int bulletLimit = 1000; //how many bullets can be on the screen
 	const int enemyLimit = 800;
 	const int AOELimit = 800;
-	int lightningAlpha;
 	
 	int inputMode; //0: standard, 1: bomb, 2 : ice
 	Vector2 mousePos;

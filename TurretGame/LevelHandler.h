@@ -33,7 +33,6 @@ private:
 	
 	void ActivateUsedAbilities();
 	void HandleCurrentLevelSpawning();
-	void DrawVisualEffects();
 	bool NoActiveEnemies();
 
 	bool currentLevelComplete;
