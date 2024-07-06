@@ -2,10 +2,10 @@
 
 #include "Button.h"
 
-class TryAgainButton : public Button
+class TextButton : public Button
 {
 public:
-	TryAgainButton(int x, int y);
+	TextButton(int x, int y, const char* text);
 	virtual void Draw() override;
 	virtual void Update(int mouseX, int mouseY) override;
 
@@ -16,4 +16,5 @@ public:
 
 private:
 	virtual bool MouseCollide(int mouseX, int mouseY) override;
+	const char* text;
 };

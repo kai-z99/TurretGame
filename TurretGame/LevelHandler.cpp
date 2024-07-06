@@ -20,10 +20,11 @@
 #include "KoopaEnemy.h"
 #include "RedKoopaEnemy.h"
 #include "WolfEnemy.h"
+#include "SlimeEnemy.h"
 
 #include "VisualEffectsManager.h"
 #include "Hotbar.h"
-#include "TryAgainButton.h"
+#include "TextButton.h"
 
 #include "textures.h"
 
@@ -76,6 +77,8 @@ void LevelHandler::Update(unsigned int frame)
         if (a->isActive) a->Update(g->frameCount);
     }
 
+    std::vector<Vector2> slimeBursts = {};
+
     //handle enemies
     for (Enemy* e : g->enemies)
     {
@@ -93,9 +96,17 @@ void LevelHandler::Update(unsigned int frame)
             // if enemy died, add coin amount. and display coin effect
             if (e->GetHealth() <= 0)
             {
+                if (e->GetID() == 6 && !dynamic_cast<SlimeEnemy*>(e)->small)
+                {
+                    slimeBursts.push_back(e->GetPosition());
+                }
+
                 this->currentLevelStats->coinsCollected += e->GetCoinDropAmount();
                 g->effectManager->DisplayCoinSplash(e->GetPosition(), e->GetCoinDropAmount());
                 e->isActive = false;
+
+                //if its a slime, split 3 small slimes
+                
             }
 
             //check if enemy has infiltrated the base
@@ -108,6 +119,11 @@ void LevelHandler::Update(unsigned int frame)
         }
     }   
 
+    for (const Vector2& pos : slimeBursts)
+    {
+        this->levelSpawner->SpawnSlimeBurst(pos);
+    }
+
     //because bomb/ice mode freezes button update so these will keep appearing.
     if (g->inputMode != 0)
     {
@@ -117,10 +133,13 @@ void LevelHandler::Update(unsigned int frame)
 
     if (!this->currentLevelLose) this->HandleCurrentLevelSpawning();
 
-    //handle try again button
-    g->tryAgainButton->Update(g->mousePos.x, g->mousePos.y);
+    else
+    {
+        //handle try again button
+        g->tryAgainButton->Update(g->mousePos.x, g->mousePos.y);
+    }
     
-
+    
     //check win/loss
     if (this->currentLevelStats->health <= 0)
     {
@@ -130,6 +149,7 @@ void LevelHandler::Update(unsigned int frame)
     else if (this->levelSpawner->IsFinishedSpawning() && this->NoActiveEnemies())
     {
         this->currentLevelComplete = true;
+        this->game->returnButton->Update(g->mousePos.x, g->mousePos.y);
     }
 }
 
@@ -149,6 +169,7 @@ bool LevelHandler::NoActiveEnemies()
 
     return true;
 }
+
 
 //if an ability button is pressed, activate its ability if it has a charge and it is not on cooldown
 void LevelHandler::ActivateUsedAbilities()
@@ -211,7 +232,8 @@ void LevelHandler::ActivateUsedAbilities()
 void LevelHandler::Draw()
 {
     //draw bg
-    DrawTexture(textures[6], 0, 0, WHITE);
+   // DrawTexture(textures[6], 0, 0, WHITE);
+    this->DrawCurrentLevelBackground();
 
     //draw boundaries
     DrawLine(deathBoundaryX, 0, deathBoundaryX, screenHeight, RED);
@@ -269,7 +291,7 @@ void LevelHandler::Draw()
 
     if (this->currentLevelComplete)
     {
-        DrawText("LEVEL COMPLETE\n\n\nPress Enter to exit", 700, 700, 50, RED);
+        this->game->returnButton->Draw();
         this->cooldownWarningFrames = 0;
         this->chargeWarningFrames = 0;
     }
@@ -286,15 +308,31 @@ void LevelHandler::Draw()
     }
 }
 
+void LevelHandler::DrawCurrentLevelBackground()
+{
+    int lvl = this->game->currentLevel;
+    Texture2D* bg;
+    if (lvl > 0 && lvl <= 6) bg = &textures[29];    // world 1
+    else if (lvl > 6 && lvl <= 10) bg = &textures[6]; // world 2
+    else bg = &textures[3];
+
+    Rectangle src = {0, 0, bg->width, bg->height};
+    Rectangle dest = { screenWidth / 2, screenHeight / 2, screenWidth, screenHeight};
+    Vector2 origin = { screenWidth / 2, screenHeight / 2 };
+
+    DrawTexturePro(*bg, src, dest, origin, 0.0f, WHITE);
+}
+
 void LevelHandler::HandleInput()
 {
     Game* g = this->game;
 
     if (this->currentLevelLose)
     {
-        if (IsKeyPressed(KEY_ENTER) || g->tryAgainButton->isClicked)
+        if (g->tryAgainButton->isClicked)
         {
             this->currentLevelLose = false;
+            g->tryAgainButton->isClicked = false; //since it doesnt update when its not active
             this->DeInitializeCurrentLevel();
             this->InitializeCurrentLevel();
         }
@@ -303,11 +341,12 @@ void LevelHandler::HandleInput()
 
     else if (this->currentLevelComplete)
     {
-        if (IsKeyPressed(KEY_ENTER))
+        if (g->returnButton->isClicked)
         {
             this->currentLevelComplete = false;
-            this->game->ExitCurrentLevel();
-            this->game->gameState = LevelSelectMenu;
+            g->ExitCurrentLevel();
+            g->returnButton->isClicked = false;
+            g->gameState = LevelSelectMenu;
         }  
     }
 

@@ -14,7 +14,7 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Decoration.h"
-#include "TryAgainButton.h";
+#include "TextButton.h"
 
 #include "BombExplosion.h"
 #include "IceSheet.h"
@@ -110,7 +110,7 @@ void Game::Initialize()
 {
     InitWindow(screenWidth, screenHeight, "TurretGame window");
     SetTargetFPS(60);
-    ToggleFullscreen();
+    //ToggleFullscreen();
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
 
@@ -124,7 +124,8 @@ void Game::Initialize()
     
     this->gameStats = new GameStats();
     this->effectManager = new VisualEffectsManager(this);
-    this->tryAgainButton = new TryAgainButton((screenWidth / 2) - (TryAgainButton::width / 2), (screenHeight / 2) - (TryAgainButton::height / 2));
+    this->tryAgainButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2), "TRY AGAIN");
+    this->returnButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2), "RETURN TO MENU");
 
     this->gameStats->totalCoins = 10000;
     this->gameStats->initialHealth = 30;

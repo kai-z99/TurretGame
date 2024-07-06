@@ -135,13 +135,16 @@
     <ClCompile Include="Decoration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TryAgainButton.cpp">
+    <ClCompile Include="TextButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LightningBullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SparkleEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SlimeEnemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -269,13 +272,16 @@
     <ClInclude Include="Decoration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TryAgainButton.h">
+    <ClInclude Include="TextButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LightningBullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SparkleEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SlimeEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,18 +14,13 @@ int main(void)
 // Refrain from front-end detailing until engine is finished.
 // 
 // 
-//hook try again button up
-//make lighting bullet that chains. recruse? void ActivateLightning(Enemy* e). 
-// 
-// 1. set enemylightning
-// 2. if there is a enemy close enough thats active and no lightning, ActivateLightning(closeEnemy)
-// 3. keep going until no enemy is close enough
-// 4. Now use linear scan in UseDetonateLightning() on all enemies, damaging them.
-// 5. creates a point on each enemy location, then draws line between each pair using a for loop. eg: 3 points is 2 lines.
-// 
+
+
 // 
 //resolve wanings
+// 
 //make each level have different bgs based on world
+// 
 //SENTRIES shoot closest enemy
 // 
 // 1. linearly scan all active enemies, find the closest one. Make a Sentry(), (child of turret) and set its angle using GetAngle with p1 at Sentry, p2 at closest enemy.

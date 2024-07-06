@@ -15,6 +15,9 @@ public:
 	void SetSpawnMap(int level);
 	void HandleCurrentLevelSpawning();
 
+	void SpawnSlimeBurst(Vector2 pos);
+
+
 	bool IsFinishedSpawning();
 
 private:

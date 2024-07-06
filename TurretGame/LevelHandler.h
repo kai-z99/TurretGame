@@ -35,6 +35,8 @@ private:
 	void HandleCurrentLevelSpawning();
 	bool NoActiveEnemies();
 
+	void DrawCurrentLevelBackground();
+
 	bool currentLevelComplete;
 	bool currentLevelLose;
 

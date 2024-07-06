@@ -16,7 +16,7 @@ class LevelHandler;
 class CollisionHandler;
 class LevelSelectHandler;
 class UpgradeMenuHandler;
-class TryAgainButton;
+class TextButton;
 
 class LevelButton;
 class UpgradeButton;
@@ -34,6 +34,7 @@ public:
 	friend class CollisionHandler;
 	friend class LevelSelectHandler;
 	friend class UpgradeMenuHandler;
+	friend class LevelSpawner;
 
 private:
 	void Initialize();
@@ -78,7 +79,8 @@ private:
 	Turret* turret;
 	Hotbar* hotbar;
 	GameStats* gameStats;
-	TryAgainButton* tryAgainButton;
+	TextButton* tryAgainButton;
+	TextButton* returnButton;
 
 	std::vector<Enemy*> enemies;
 	std::vector<Bullet*> bullets;

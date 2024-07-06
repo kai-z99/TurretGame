@@ -11,6 +11,7 @@
 #include "RedKoopaEnemy.h"
 #include "WolfEnemy.h"
 #include "BatEnemy.h"
+#include "SlimeEnemy.h"
 
 LevelSpawner::LevelSpawner(LevelHandler* levelHandler)
 {
@@ -32,6 +33,23 @@ void LevelSpawner::HandleCurrentLevelSpawning()
 			}
 		}
 	}
+}
+
+//spawn 3 small slimes at pos
+void LevelSpawner::SpawnSlimeBurst(Vector2 pos)
+{
+	SlimeEnemy* e1 = new SlimeEnemy(true);
+	e1->SetPosition(pos.x + GetRandomFloat(-50.0f,50.0f), pos.y + GetRandomFloat(-50.0f, 50.0f));
+
+	SlimeEnemy* e2 = new SlimeEnemy(true);
+	e2->SetPosition(pos.x + GetRandomFloat(-50.0f, 50.0f), pos.y + GetRandomFloat(-50.0f, 50.0f));
+
+	SlimeEnemy* e3 = new SlimeEnemy(true);
+	e3->SetPosition(pos.x + GetRandomFloat(-50.0f, 50.0f), pos.y + GetRandomFloat(-50.0f, 50.0f));
+
+	this->levelHandler->enemiesRef->push_back(e1);
+	this->levelHandler->enemiesRef->push_back(e2);
+	this->levelHandler->enemiesRef->push_back(e3);
 }
 
 bool LevelSpawner::IsFinishedSpawning()
@@ -78,6 +96,10 @@ void LevelSpawner::SpawnEnemyByID(int id)
 		e = b;
 		break;
 
+	case 6:
+		e = new SlimeEnemy(false);
+		break;
+
 	default:
 		std::cout << "Enemy id: " << id << " not found. Spawning soldier.";
 		e = new SoldierEnemy();
@@ -96,6 +118,7 @@ void LevelSpawner::SetSpawnMap(int level)
 	{
 	case 1:
 		this->spawnMap[1] = { 100,200,300,400,500 }; //temp
+		this->spawnMap[6] = { 1,200,300,400,500 }; //temp
 		break;
 
 	case 2:
