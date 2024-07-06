@@ -4,8 +4,8 @@
 FireBullet::FireBullet()
 {
 	this->id = 3;
-	this->baseSpeed = 25.0f;
-	this->baseDamage = 2.0f;
+	this->baseSpeed = 30.0f;
+	this->baseDamage = 64.0f;
 	this->baseKnockbackDuration = 1;
 	this->hitBoxRadius = 10.0f;
 

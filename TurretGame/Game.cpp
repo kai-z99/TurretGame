@@ -19,6 +19,7 @@
 #include "BombExplosion.h"
 #include "IceSheet.h"
 #include "Turret.h"
+#include "Sentry.h"
 #include "Hotbar.h"
 
 #include "textures.h"
@@ -134,6 +135,13 @@ void Game::Initialize()
 
     this->inputMode = false;
 
+    this->sentry1 = new Sentry();
+    this->sentry1->SetPosition(100.0f, 300);
+    this->sentry1->SetTargetMode(1);
+
+    this->sentry2 = new Sentry();
+    this->sentry2->SetPosition(100.0f, 900);
+    this->sentry2->SetTargetMode(0);
     
     //temp
     this->gameStats->initialAbilityValues =
@@ -143,7 +151,7 @@ void Game::Initialize()
         {Laser, {700, INT_MIN, 0, 0}},
         {Explosive, {800, INT_MIN, 0, 0}},
         {Ice, {750, INT_MIN, 0, 0}},
-        {Shock, {550, INT_MIN, 0, 0}},
+        {Clone, {1000, INT_MIN, 0, 0}},
         {Burn, {550, INT_MIN, 0, 0}}
     };
 
@@ -186,6 +194,8 @@ void Game::ExitCurrentLevel()
     delete this->hotbar;
     this->hotbar = nullptr;
 
+    this->lightningPoints.clear();
+
     //delete this->turret;
     //this->turret = nullptr;
 }
@@ -197,8 +207,7 @@ void Game::Draw()
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
-    
-
+   
     switch (this->gameState)
     {
     case InLevel:
@@ -213,6 +222,8 @@ void Game::Draw()
         this->DrawUpgradeMenu();
         break;
     }
+
+
 
     //make this a function
     //draw mouse

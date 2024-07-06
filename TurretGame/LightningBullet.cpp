@@ -8,8 +8,8 @@ LightningBullet::LightningBullet()
 	this->chain = 0;
 
 	this->id = 5;
-	this->baseSpeed = 20.0f;
-	this->baseDamage = 1.0f;
+	this->baseSpeed = 25.0f;
+	this->baseDamage = 25.0f;
 	this->baseKnockbackDuration = 0;
 	this->hitBoxRadius = 8.0f;
 	this->textureLoop = new TextureLoop(&textures[24], 6, 2.0f, this->position);

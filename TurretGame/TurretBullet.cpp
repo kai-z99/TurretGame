@@ -4,9 +4,9 @@
 TurretBullet::TurretBullet()
 {
 	this->id = 1;
-	this->baseSpeed = 30.0f;
-	this->baseDamage = 1.0f;
-	this->baseKnockbackDuration = 4;
+	this->baseSpeed = 40.0f;
+	this->baseDamage = 15.0f;
+	this->baseKnockbackDuration = 2;
 	this->hitBoxRadius = 10.0f;
 
 	//Texture init

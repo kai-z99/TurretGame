@@ -12,7 +12,7 @@ SlimeEnemy::SlimeEnemy(bool small)
 	if (!this->small) //big slime
 	{
 		this->damage = 10;
-		this->maxHealth = 30;
+		this->maxHealth = 350.0f;
 		this->health = this->maxHealth;
 		this->coinDropAmount = 50;
 
@@ -28,7 +28,7 @@ SlimeEnemy::SlimeEnemy(bool small)
 	else //mini slime
 	{
 		this->damage = 3;
-		this->maxHealth = 8;
+		this->maxHealth = 80.0f;
 		this->health = this->maxHealth;
 		this->coinDropAmount = 14;
 
@@ -78,5 +78,5 @@ void SlimeEnemy::Draw()
 	this->textureLoop->Draw();
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
 
-	Enemy::Draw(); // draw hitbox
+	//Enemy::Draw(); // draw hitbox
 }

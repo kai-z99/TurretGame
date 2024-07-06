@@ -3,7 +3,7 @@
 #include "textures.h"
 #include "Enemy.h"
 
-int BombExplosion::damage = 10;
+float BombExplosion::damage = 300.0f;
 int BombExplosion::knockbackFrames = 30;
 float BombExplosion::radius = 300.0f;
 

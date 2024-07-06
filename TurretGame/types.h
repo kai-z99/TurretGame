@@ -7,9 +7,8 @@ enum TurretAbility
 	Laser,
 	Ice,
 	Explosive,
-	Shock,
+	Clone,
 	Burn,
-
 };
 
 enum GameState
@@ -40,6 +39,7 @@ enum Upgrade
 	LaserU,
 	IceU,
 	ExplosiveU,
+	SentryU,
 };
 
 struct BulletCooldownInfo

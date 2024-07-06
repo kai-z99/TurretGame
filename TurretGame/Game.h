@@ -5,6 +5,7 @@
 #include "types.h"
 
 class Turret;
+class Sentry;
 class Bullet;
 class AreaEffect;
 class Enemy;
@@ -77,6 +78,8 @@ private:
 	void DrawMousePos(); //debug
 
 	Turret* turret;
+	Sentry* sentry1;
+	Sentry* sentry2;
 	Hotbar* hotbar;
 	GameStats* gameStats;
 	TextButton* tryAgainButton;

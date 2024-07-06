@@ -5,7 +5,7 @@
 #include "Turret.h"
 #include "Enemy.h"
 
-int TurretLaser::damage = 1;
+float TurretLaser::damage = 5.0f;
 int TurretLaser::duration = 100;
 Color TurretLaser::color = RED;
 
@@ -31,7 +31,7 @@ void TurretLaser::Update(unsigned int frame)
 	
 	this->thickness = 10.0f * (abs(sinf(frame * 0.05f)) + 0.2f);
 
-	if (frame % 20 == 0) this->isDamageFrame = true;
+	if (frame % 3 == 0) this->isDamageFrame = true;
 	else this->isDamageFrame = false;
 }
 

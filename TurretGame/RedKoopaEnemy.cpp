@@ -6,7 +6,7 @@ RedKoopaEnemy::RedKoopaEnemy()
 {
 	this->id = 3;
 	this->damage = 6;
-	this->maxHealth = 15;
+	this->maxHealth = 500.0f;
 	this->health = this->maxHealth;
 	this->coinDropAmount = GetRandomValue(20,30);
 

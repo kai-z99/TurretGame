@@ -42,4 +42,6 @@ private:
 
 	int cooldownWarningFrames;
 	int chargeWarningFrames;
+
+	int sentryFrames;
 };

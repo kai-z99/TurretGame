@@ -4,8 +4,8 @@
 SniperBullet::SniperBullet()
 {
 	this->id = 4;
-	this->baseSpeed = 40.0f;
-	this->baseDamage = 5.0f;
+	this->baseSpeed = 50.0f;
+	this->baseDamage = 100.0f;
 	this->baseKnockbackDuration = 10;
 	this->hitBoxRadius = 10.0f;
 

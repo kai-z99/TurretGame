@@ -22,6 +22,7 @@ public:
 	void SetBulletSpeedMultiplier(float multiplier);
 	void SetBaseFirerate(float firerate);
 	void SetFirerate(int id, float firerate);
+	void SetPosition(int x, int y);
 
 	void SetRapidFire(unsigned int frames);
 	void SetLaserFrames(unsigned int frames);
@@ -41,7 +42,7 @@ public:
 	static int rapidFireDuration;
 	static float rapidFirerateMultiplier;
 
-private:
+protected:
 	void UpdateAngle(int mouseX, int mouseY);
 
 	Vector2 position = { 100.0f, (screenHeight / 2.0f) + (menuBoundaryY / 2.0f)};

@@ -15,22 +15,16 @@ int main(void)
 // 
 // 
 
-
+//change button to have isReleased, isDown, isHovering, isPressed
 // 
 //resolve wanings
 // 
 //make each level have different bgs based on world
-// 
-//SENTRIES shoot closest enemy
-// 
-// 1. linearly scan all active enemies, find the closest one. Make a Sentry(), (child of turret) and set its angle using GetAngle with p1 at Sentry, p2 at closest enemy.
-// 2. choose a burst of bullets based on the sentry state. Or shoots laser periodically?
-// 
-// 
+//
 // 
 //enemies can drop abilities that can be clicked? maybe for later
 //splash damage bullet, uses small scale bombExplosionMaybe? or a new AreaEffect called buulletexplosion.
-//draw effec ton turret when ability is activated
+//draw different effects when ability is activated
 //fix bug where no charges availible shows after using ice or bomb
 // 
 //add a trail to turretbullet

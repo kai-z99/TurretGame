@@ -6,7 +6,7 @@ KoopaEnemy::KoopaEnemy()
 {
 	this->id = 2;
 	this->damage = 3;
-	this->maxHealth = 10;
+	this->maxHealth = 400.0f;
 	this->health = this->maxHealth;
 	this->coinDropAmount = GetRandomValue(12,18);
 

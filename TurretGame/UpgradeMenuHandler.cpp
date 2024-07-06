@@ -19,9 +19,9 @@ UpgradeMenuHandler::UpgradeMenuHandler(Game* g)
 {
 	this->game = g;
 
-	for (int i = 0; i <= 8; i++)
+	for (int i = 0; i <= 9; i++)
 	{
-		this->game->upgradeButtons.push_back(new UpgradeButton(200 * i + 200, 500, (Upgrade)i));
+		this->game->upgradeButtons.push_back(new UpgradeButton(130 * i + 200, 500, (Upgrade)i));
 		this->game->upgradeButtons[i]->SetPrice(this->game->gameStats->upgradeStates[Upgrade(i)].price);
 	}
 }
@@ -104,11 +104,11 @@ void UpgradeMenuHandler::HandleUpgrade(Upgrade u)
 		if (TurretLaser::duration >= 400)
 		{
 			TurretLaser::duration = 100;
-			TurretLaser::damage++;
+			TurretLaser::damage += 15.0f;
 			TurretLaser::color = RotateColorChannels(TurretLaser::color);
 		}
 
-		TurretLaser::duration += 50;
+		TurretLaser::duration += 100;
 
 		break;
 
@@ -137,10 +137,21 @@ void UpgradeMenuHandler::HandleUpgrade(Upgrade u)
 		}
 
 		BombExplosion::radius += 10.0f;
-		BombExplosion::damage += 1;
+		BombExplosion::damage += 50.0f;
 		BombExplosion::knockbackFrames += 3;
 		break;
 	
+	case SentryU:
+		if (g->gameStats->upgradeStates[u].level % 4 == 0)
+		{
+			g->gameStats->initialAbilityValues[Clone].charges += 1;
+			g->gameStats->initialAbilityValues[Clone].maxCharges += 1;
+
+		}
+
+		break;
+
+
 	default:
 		std::cout << "Upgrade does not exist.";
 		break;

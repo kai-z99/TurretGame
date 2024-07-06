@@ -7,7 +7,7 @@ BatEnemy::BatEnemy()
 {
 	this->id = 5;
 	this->damage = 3;
-	this->maxHealth = 5;
+	this->maxHealth = 90.0f;
 	this->health = this->maxHealth;
 	this->coinDropAmount = GetRandomValue(8, 18);
 

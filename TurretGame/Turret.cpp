@@ -76,6 +76,9 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
     //update its angle
     this->UpdateAngle(mouseX, mouseY);
 
+    //update this becasue position can change
+    this->textureDestRec = { this->position.x, this->position.y, (float)this->textureWidth, (float)this->textureHeight };
+
     //update the laser
     if (this->laserFrames > 0)
     {
@@ -128,7 +131,7 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
         {
         //TurretBullet
         case 1:
-            baseCooldownFrames = 60;
+            baseCooldownFrames = 20;
             break;
 
         //shockwave bullet
@@ -215,7 +218,7 @@ void Turret::ShootBullet(std::vector<Bullet*>& bullets, int id)
 
     //set its pos and velocity
     b->SetPosition(this->position.x, this->position.y);
-    b->SetCurrentVelocity(b->GetBaseSpeed() * this->bulletSpeedMultiplier * cosf(this->angle), b->GetBaseSpeed() * this->bulletSpeedMultiplier * sinf(this->angle));
+    b->SetCurrentVelocity(b->GetBaseSpeed() * this->bulletSpeedMultiplier * cosf(this->angle + GetRandomFloat(-0.02f, 0.02f)), b->GetBaseSpeed() * this->bulletSpeedMultiplier * sinf(this->angle + GetRandomFloat(-0.02f, 0.02f)));
 
     bullets.push_back(b);
     
@@ -242,6 +245,11 @@ void Turret::SetRapidFire(unsigned int frames)
 void Turret::SetFirerate(int id, float firerate)
 {
     this->bulletCooldownMap[id]->firerate = firerate;
+}
+
+void Turret::SetPosition(int x, int y)
+{
+    this->position = { (float)x,(float)y };
 }
 
 void Turret::SetLaserFrames(unsigned int frames)

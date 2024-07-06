@@ -17,7 +17,7 @@ public:
 
 	bool isDetonateFrame;
 
-	static int damage;
+	static float damage;
 	static int knockbackFrames;
 	static float radius;
 };

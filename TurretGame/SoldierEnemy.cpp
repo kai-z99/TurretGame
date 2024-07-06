@@ -6,7 +6,7 @@ SoldierEnemy::SoldierEnemy()
 {
 	this->id = 1;
 	this->damage = 1;
-	this->maxHealth = 4;
+	this->maxHealth = 100.0f;
 	this->health = this->maxHealth;
 	this->coinDropAmount = 10;
 

@@ -29,6 +29,10 @@ AbilityButton::AbilityButton(int posX, int posY, TurretAbility ability)
 		this->texture = &textures[15];
 		break;
 
+	case (Clone):
+		this->texture = &textures[30];
+		break;
+
 	default:
 		std::cout << "No texture found. Drawing default texture." << '\n';
 		this->texture = &textures[2];

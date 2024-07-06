@@ -33,6 +33,7 @@ std::vector<const char*> textureFilePaths = {
     "Sprites/lightningBulletIcon.png",  //27
     "Sprites/bullettest.png",           //28
     "Sprites/grass.png",                //29
+    "Sprites/sentryIcon.png",           //30
 
 };
 

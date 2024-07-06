@@ -9,6 +9,7 @@
 
 #include "Bullet.h"
 #include "Turret.h"
+#include "Sentry.h"
 #include "TurretLaser.h"
 
 #include "AreaEffect.h"
@@ -42,6 +43,7 @@ LevelHandler::LevelHandler(Game* game)
 
     this->cooldownWarningFrames = 0;
     this->chargeWarningFrames = 0;
+    this->sentryFrames = 0;
 }
 
 void LevelHandler::Update(unsigned int frame)
@@ -57,14 +59,27 @@ void LevelHandler::Update(unsigned int frame)
     if (g->effectManager->lightningAlpha > 0) g->effectManager->lightningAlpha -= 10;
     if (g->effectManager->lightningAlpha <= 0) g->lightningPoints.clear();
 
+    if (this->sentryFrames > 0) this->sentryFrames--;
+
     //update hotbar buttons
     if (g->hotbar != nullptr) g->hotbar->Update(this->currentLevelFrameCount, this->currentLevelStats->abilityStates);
 
     //if an ability button is pressed, activate its ability if it has a charge.
     this->ActivateUsedAbilities();
 
-    //update turret
-    if (!this->currentLevelComplete && !this->currentLevelLose) g->turret->Update(g->frameCount, (int)g->mousePos.x, (int)g->mousePos.y);
+    //update turret and sentries
+    if (!this->currentLevelComplete && !this->currentLevelLose)
+    {
+        g->turret->Update(g->frameCount, (int)g->mousePos.x, (int)g->mousePos.y);
+
+        if (this->sentryFrames > 0)
+        {
+            g->sentry1->Update(g->frameCount, (int)g->mousePos.x, (int)g->mousePos.y, g->enemies, g->bullets);
+            g->sentry2->Update(g->frameCount, (int)g->mousePos.x, (int)g->mousePos.y, g->enemies, g->bullets);
+        }
+        
+    }
+        
 
     //handle bullets
     for (Bullet* b : g->bullets)
@@ -89,7 +104,7 @@ void LevelHandler::Update(unsigned int frame)
             //apply shock
             if (e->shocked)
             {
-                e->SetHealth(e->GetHealth() - 3.0f);
+                e->SetHealth(e->GetHealth() - 50.0f);
                 e->shocked = false;
             }
                 
@@ -209,6 +224,10 @@ void LevelHandler::ActivateUsedAbilities()
                     g->inputMode = 2; //2 is ice mode
                     break;
 
+                case Clone:
+                    this->sentryFrames = 600;
+                    break;
+
                 default:
                     std::cout << a << "Ability does not exist.";
                     break;
@@ -231,6 +250,7 @@ void LevelHandler::ActivateUsedAbilities()
 
 void LevelHandler::Draw()
 {
+    Game* g = this->game;
     //draw bg
    // DrawTexture(textures[6], 0, 0, WHITE);
     this->DrawCurrentLevelBackground();
@@ -240,39 +260,50 @@ void LevelHandler::Draw()
     DrawLine(0, menuBoundaryY, screenWidth, menuBoundaryY, RED);
 
     //DRAW ICE UNDER
-    for (AreaEffect* a : this->game->areaEffects)
+    for (AreaEffect* a : g->areaEffects)
     {
         //id 2 is ice
         if (a->isActive && a->GetID() == 2) a->Draw();
     }
 
     //draw enemies based on type. elsewise default enemy drawing behavoir.
-    for (Enemy* e : this->game->enemies)
+    for (Enemy* e : g->enemies)
     {
         if (e->isActive) e->Draw();
     }
 
     //draw bullets based on type. elsewise default enemy drawing behavoir.
-    for (Bullet* b : this->game->bullets)
+    for (Bullet* b : g->bullets)
     {
         if (b->isActive) b->Draw();
     }
 
     //draw turret
-    this->game->turret->Draw();
+    g->turret->Draw();
+
+    //draw sentry
+    if (this->sentryFrames > 0)
+    {
+        g->sentry1->Draw();
+        g->sentry2->Draw();
+    }
+    
 
     //DRAW EXPLOSION ON TOP
-    for (AreaEffect* a : this->game->areaEffects)
+    for (AreaEffect* a : g->areaEffects)
     {
         //id 1 is bomb
         if (a->isActive && a->GetID() != 2) a->Draw();
     }
 
     //update and draw the effects that are on screen
-    this->game->effectManager->UpdateAndDraw();
+    g->effectManager->UpdateAndDraw();
 
     //draw hotbar
-    this->game->hotbar->Draw(*this->currentLevelStats);
+    g->hotbar->Draw(*this->currentLevelStats);
+
+
+    //draw warnings
 
     if (this->chargeWarningFrames > 0)
     {
@@ -288,6 +319,8 @@ void LevelHandler::Draw()
         DrawText("ABILITY ON COOLDOWN", (screenWidth / 2) - (width / 2), 300, 30, RED);
     }
 
+
+    //draw win/lose screens
 
     if (this->currentLevelComplete)
     {
@@ -425,6 +458,7 @@ void LevelHandler::DeInitializeCurrentLevel()
     this->game->ClearVectors();
     this->game->turret->SetLaserFrames(0);
     this->game->turret->SetRapidFire(0);
+    this->sentryFrames = 0;
 
     this->game->gameStats->totalCoins += this->currentLevelStats->coinsCollected;
 

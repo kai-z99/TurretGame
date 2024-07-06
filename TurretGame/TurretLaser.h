@@ -18,7 +18,7 @@ public:
 	bool isActive;
 	
 	static int duration;
-	static int damage;
+	static float damage;
 
 	static Color color;
 

@@ -51,6 +51,11 @@ UpgradeButton::UpgradeButton(int posX, int posY, Upgrade upgrade)
 	case ExplosiveU:
 		this->texture = &textures[13];
 		break;
+
+	case SentryU:
+		this->texture = &textures[30];
+		break;
+
 	}
 	//temp
 }
