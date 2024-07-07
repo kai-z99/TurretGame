@@ -38,22 +38,19 @@ void Enemy::Update(unsigned int frame)
 			case Burning:
 				//-10 hp 2 times per second
 				if (frame % 30 == 0) this->health -= 10.0f;
-				this->tint = ORANGE;
-
 				effect.second -= 1;
-				if (effect.second <= 0) this->tint = WHITE;
 				break;
 
 			case Chilled:
 				//slow movement
 				this->movementChilled = true;
-				this->tint = BLUE; //tint blue 
+				if (!this->resistChill) this->tint = BLUE; //tint blue 
 
 				effect.second -= 1;
 				if (effect.second <= 0)
 				{
 					this->movementChilled = false;
-					this->tint = WHITE;
+					if (!this->resistChill) this->tint = WHITE;
 				}
 				break;
 			}
@@ -62,7 +59,9 @@ void Enemy::Update(unsigned int frame)
 	}
 
 	//MOVE
-	if (!this->movementChilled)
+
+
+	if (!this->movementChilled || this->resistChill)
 	{
 		this->position.x += this->currentVelocity.x;
 		this->position.y += this->currentVelocity.y;

@@ -12,12 +12,14 @@ public:
 	void ToggleMirrorImage();
 	void SetTint(Color tint);
 	void SetScale(float scale);
+	void SetRotation(float rotation);
 
 private:
 	int segments;
 	int animationState;
 	float scale;
 	bool mirrored;
+	float rotation;
 	Color tint;
 
 	Vector2 position;

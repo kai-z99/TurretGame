@@ -23,6 +23,7 @@ private:
 	Vector2 retreatVelocity;
 
 	int cyclesComplete;
+	int phase;
 
 	const Vector2 basePosition = { (float)screenWidth, (screenHeight / 2) + (menuBoundaryY / 2) };
 };

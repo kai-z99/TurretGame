@@ -6,6 +6,7 @@ TextureLoop::TextureLoop(Texture2D* texture, int segments, float scale, Vector2 
 	this->scale = scale;
 	this->segments = segments;
 	this->mirrored = false;
+	this->rotation = 0.0f;
 	this->tint = WHITE;
 	this->animationState = 1;
 
@@ -39,6 +40,10 @@ void TextureLoop::SetScale(float scale)
 	this->scale = scale;
 }
 
+void TextureLoop::SetRotation(float rotation)
+{
+}
+
 void TextureLoop::Update()
 {
 	//update part of picture we want to show based off anim state
@@ -56,7 +61,7 @@ void TextureLoop::Update()
 
 void TextureLoop::Draw()
 {
-	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, this->tint);
+	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, this->rotation, this->tint);
 }
 
 void TextureLoop::NextFrame()

@@ -56,6 +56,7 @@ protected:
 	int knockbackFrames = 0;
 	int coinDropAmount;
 	bool movementChilled;
+	bool resistChill = false;
 
 	std::unordered_map<StatusEffect, int> statusEffects; // effect : frames;
 

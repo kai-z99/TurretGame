@@ -13,7 +13,7 @@ BalloonBossEnemy::BalloonBossEnemy()
 	this->coinDropAmount = GetRandomValue(502, 550);
 
 	this->knockbackMultiplier = 0.01f;
-
+	this->resistChill = true;
 	this->speed = 3.0f;
 
 	this->baseVelocity = { -this->speed,0.0f };
@@ -26,6 +26,7 @@ BalloonBossEnemy::BalloonBossEnemy()
 	this->textureLoop = new TextureLoop(&textures[31], 2, 8.0f, this->position);
 
 	this->mode = 0;
+	this->phase = 1;
 
 	this->rotateFrameCount = 0;
 	this->localFrameCount = 0;
@@ -36,14 +37,22 @@ void BalloonBossEnemy::Update(unsigned int frame)
 {
 	this->localFrameCount++;
 
-	if (this->health < (this->maxHealth / 3))
+	// update position and velocity and check if death
+	Enemy::Update(frame);
+
+	if (this->health < (this->maxHealth / 3) && this->mode != 2 && this->mode != 4) //dont disrupt cycles
+	{
+		this->phase = 2;
+	}
+
+	if (phase == 2)
 	{
 		this->speed = 5.0f;
 		this->baseVelocity = { -this->speed,0.0f };
 		this->ascendVelocity = { 0.0f, -this->speed };
 		this->retreatVelocity = { this->speed, 0.0f };
+		this->tint = ORANGE;
 	}
-
 
 	//while going forward 
 	if (this->mode == 0)
@@ -73,7 +82,6 @@ void BalloonBossEnemy::Update(unsigned int frame)
 			this->mode = 2;
 		}
 	}
-
 
 	//rotate twice
 	else if (this->mode == 2)
@@ -120,9 +128,6 @@ void BalloonBossEnemy::Update(unsigned int frame)
 
 	this->HandleMovement();
 
-	// update position and velocity and check if death
-	Enemy::Update(frame);
-
 	//update postion of texture
 	this->textureLoop->SetPosition((int)this->position.x, (int)this->position.y);
 
@@ -136,8 +141,6 @@ void BalloonBossEnemy::Update(unsigned int frame)
 
 	//update texture proteries based on new position
 	this->textureLoop->Update();
-
-
 }
 
 void BalloonBossEnemy::HandleMovement()
