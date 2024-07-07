@@ -2,6 +2,7 @@
 #include "Bullet.h"
 #include <iostream>
 #include "TextureLoop.h"
+#include "constants.h"
 
 Enemy::Enemy()
 {
@@ -35,8 +36,8 @@ void Enemy::Update(unsigned int frame)
 			switch (effect.first)
 			{
 			case Burning:
-				//-1 hp 2 times per second
-				if (frame % 30 == 0) this->health -= 1;
+				//-10 hp 2 times per second
+				if (frame % 30 == 0) this->health -= 10.0f;
 				this->tint = ORANGE;
 
 				effect.second -= 1;
@@ -90,6 +91,18 @@ void Enemy::DrawHealthbar(int yOffset, float barSize)
 
 	DrawRectangle((int)(this->position.x - (barWidth / 2)), (int)(this->position.y - yOffset), (int)barWidth, (int)barHeight, RED);
 	DrawRectangle((int)(this->position.x - (barWidth / 2)), (int)(this->position.y - yOffset), (int)(barWidth * (this->health / this->maxHealth)), (int)barHeight, GREEN);
+}
+
+void Enemy::DrawBossHealthbar(const char* title)
+{
+	float barWidth = 1200;
+	float barHeight = 50;
+
+	DrawRectangle((screenWidth / 2) - (barWidth / 2), 1000, (int)barWidth, (int)barHeight, RED);
+	DrawRectangle((screenWidth / 2) - (barWidth / 2), 1000, (int)(barWidth * (this->health / this->maxHealth)), (int)barHeight, GREEN);
+
+	int textWidth = MeasureText(title, 30);
+	DrawText(title, (screenWidth / 2) - (textWidth / 2), 900, 30, RED );
 }
 
 void Enemy::ApplyKnockback(Bullet* b)

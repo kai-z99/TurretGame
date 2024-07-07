@@ -38,6 +38,7 @@ public:
 	
 protected:
 	void DrawHealthbar(int yOffset, float barSize); //yOffset: how many px up from middle of image
+	void DrawBossHealthbar(const char* title);
 
 	Vector2 position = {-300, -300};
 	Vector2 currentVelocity;

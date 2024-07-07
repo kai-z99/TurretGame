@@ -12,6 +12,7 @@
 #include "WolfEnemy.h"
 #include "BatEnemy.h"
 #include "SlimeEnemy.h"
+#include "BalloonBossEnemy.h"
 
 LevelSpawner::LevelSpawner(LevelHandler* levelHandler)
 {
@@ -100,13 +101,26 @@ void LevelSpawner::SpawnEnemyByID(int id)
 		e = new SlimeEnemy(false);
 		break;
 
+	case 7:
+		e = new BalloonBossEnemy();
+		break;
+
 	default:
 		std::cout << "Enemy id: " << id << " not found. Spawning soldier.";
 		e = new SoldierEnemy();
 		break;
 	}
+	if (e->GetID() != 7)
+	{
+		e->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+	}
 
-	e->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+	else
+	{
+		e->SetPosition((float)screenWidth, (screenHeight / 2) + (menuBoundaryY / 2));
+		//e->SetPosition((float)screenWidth / 2, (screenHeight / 2) + (menuBoundaryY / 2));
+	}
+	
 	this->levelHandler->enemiesRef->push_back(e);
 }
 
@@ -151,11 +165,16 @@ void LevelSpawner::SetSpawnMap(int level)
 	case 4:
 		this->spawnMap[3] = { 300,600 };
 		this->spawnMap[4] = { 200,500,550 };
+		break;
 		
 	case 5:
 		this->spawnMap[1] = { 50,150,400 };
 		this->spawnMap[4] = { 100,200 };
 		this->spawnMap[3] = { 0, 10, 333 };
+		break;
+
+	case 6:
+		this->spawnMap[7] = { 1 };
 		break;
 
 	default:

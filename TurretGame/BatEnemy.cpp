@@ -36,7 +36,6 @@ void BatEnemy::Update(unsigned int frame)
 	else this->currentVelocity.y = this->amplitude * sinf(this->localFrameCount * 0.03f);
 
 
-	
 	//update postion of texture
 	this->textureLoop->SetPosition((int)this->position.x, (int)this->position.y);
 

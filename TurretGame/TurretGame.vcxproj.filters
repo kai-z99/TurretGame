@@ -150,6 +150,9 @@
     <ClCompile Include="Sentry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BalloonBossEnemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Turret.h">
@@ -288,6 +291,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Sentry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BalloonBossEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

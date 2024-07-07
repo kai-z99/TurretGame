@@ -14,6 +14,7 @@ int main(void)
 // Refrain from front-end detailing until engine is finished.
 // 
 // 
+//clones deal less dmg/kb than main
 
 //change button to have isReleased, isDown, isHovering, isPressed
 // 
@@ -31,4 +32,4 @@ int main(void)
 //make worldObject class and store them in worldojects in game. The chidren are decoration, levelButton, and worldMarker. The thing they ahve in common is they scroll
 //rebalnce health/dmg so basic enemy has 100.0f health.
 
-//idea: quad tree implementation in seperate project, just a visualizer of algs.
+//idea: quad tree implementation

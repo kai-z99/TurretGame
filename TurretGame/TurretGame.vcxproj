@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AreaEffect.cpp" />
+    <ClCompile Include="BalloonBossEnemy.cpp" />
     <ClCompile Include="BatEnemy.cpp" />
     <ClCompile Include="BombExplosion.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -175,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AreaEffect.h" />
+    <ClInclude Include="BalloonBossEnemy.h" />
     <ClInclude Include="BatEnemy.h" />
     <ClInclude Include="BombExplosion.h" />
     <ClInclude Include="Bullet.h" />

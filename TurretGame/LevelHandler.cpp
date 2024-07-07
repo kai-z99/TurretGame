@@ -327,6 +327,7 @@ void LevelHandler::Draw()
         this->game->returnButton->Draw();
         this->cooldownWarningFrames = 0;
         this->chargeWarningFrames = 0;
+        this->game->inputMode = 0;
     }
 
     else if (this->currentLevelLose)
@@ -338,6 +339,7 @@ void LevelHandler::Draw()
         this->game->tryAgainButton->Draw();
         this->cooldownWarningFrames = 0;
         this->chargeWarningFrames = 0;
+        this->game->inputMode = 0;
     }
 }
 
@@ -459,6 +461,7 @@ void LevelHandler::DeInitializeCurrentLevel()
     this->game->turret->SetLaserFrames(0);
     this->game->turret->SetRapidFire(0);
     this->sentryFrames = 0;
+    this->game->inputMode = 0;
 
     this->game->gameStats->totalCoins += this->currentLevelStats->coinsCollected;
 
