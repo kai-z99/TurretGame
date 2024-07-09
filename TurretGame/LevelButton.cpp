@@ -17,11 +17,11 @@ void LevelButton::Draw()
 
 	//DrawCircleV(this->position, this->radius, col);
 
-	DrawEllipse(this->position.x, this->position.y, this->radius + 10.0f, this->radius, BLACK);
-	DrawEllipse(this->position.x, this->position.y, this->radius + 3.0f , this->radius - 7.0f, col);
+	DrawEllipse((int)this->position.x, (int)this->position.y, this->radius + 10.0f, this->radius, BLACK);
+	DrawEllipse((int)this->position.x, (int)this->position.y, this->radius + 3.0f , this->radius - 7.0f, col);
 
 
-	DrawText(std::to_string(this->level).c_str(), this->position.x, this->position.y, 30, GREEN);
+	DrawText(std::to_string(this->level).c_str(), (int)this->position.x, (int)this->position.y, 30, GREEN);
 }
 
 void LevelButton::Update(int mouseX, int mouseY)

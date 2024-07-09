@@ -69,8 +69,8 @@ void UpgradeButton::Draw()
 	else tint = WHITE;
 
 	//temp
-	Rectangle source = { 0.0f, 0.0f, this->texture->width, this->texture->height };
-	Rectangle dest = { this->position.x, this->position.y, UpgradeButton::width, UpgradeButton::height };
+	Rectangle source = { 0.0f, 0.0f, (float)this->texture->width, (float)this->texture->height };
+	Rectangle dest = { this->position.x, this->position.y, (float)UpgradeButton::width, (float)UpgradeButton::height };
 	Vector2 origin = { (float)UpgradeButton::width / 2.0f, (float)UpgradeButton::height / 2.0f };
 
 	DrawTexturePro(*this->texture, source, dest, origin, 0.0f, tint);

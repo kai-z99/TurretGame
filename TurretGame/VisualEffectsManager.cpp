@@ -116,7 +116,7 @@ void VisualEffectsManager::DrawBulletTrails()
             //make it look a bit more sparratic
             sparklePos.y += GetRandomValue(-15, 15);
 
-            float scaleMod = GetRandomFloat(-0.4,0.4);
+            float scaleMod = GetRandomFloat(-0.4f,0.4f);
 
             g->effectManager->DisplaySparkle(sparklePos, 2.0f + scaleMod);
         }

@@ -33,7 +33,7 @@ LevelSelectHandler::LevelSelectHandler(Game* g)
 	{
 		for (const Vector2& pos : decoration.second)
 		{
-			this->game->decorations.push_back(new Decoration(decoration.first, pos.x, pos.y));
+			this->game->decorations.push_back(new Decoration(decoration.first, (int)pos.x, (int)pos.y));
 		}
 	}
 

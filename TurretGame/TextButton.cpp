@@ -15,12 +15,12 @@ void TextButton::Draw()
 	if (this->isHovering) col = { 122, 234, 240 , 255 };
 	else if (this->isHeld) col = BLUE;
 
-	DrawRectangleV({ this->position.x - 15.0f, this->position.y - 15.0f }, { (float)TextButton::width, (float)TextButton::height }, RED);
+	DrawRectangleV({ this->position.x - 15.0f, this->position.y - 15.0f }, { (float)TextButton::width, (float)TextButton::height }, BLACK);
 	DrawRectangleV(this->position, { (float)TextButton::width - 30.0f, (float)TextButton::height - 30.0f }, col);
 	
 	int x = (int)this->position.x + (int)(TextButton::width / 2) - (MeasureText(this->text, 35) / 2) - 15;
 	int y = (int)this->position.y + (int)(TextButton::height / 2) - 30;
-	DrawText(this->text, x, y, 35, RED);	
+	DrawText(this->text, x, y, 35, BLACK);	
 }
 
 void TextButton::Update(int mouseX, int mouseY)
@@ -30,6 +30,6 @@ void TextButton::Update(int mouseX, int mouseY)
 
 bool TextButton::MouseCollide(int mouseX, int mouseY)
 {
-	Rectangle rec = { this->position.x, this->position.y, TextButton::width, TextButton::height };
+	Rectangle rec = { this->position.x, this->position.y, (float)TextButton::width, (float)TextButton::height };
 	return CheckCollisionPointRec({ (float)mouseX, (float)mouseY }, rec);
 }

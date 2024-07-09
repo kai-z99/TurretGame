@@ -6,6 +6,7 @@
 #include "Game.h"
 #include "LevelHandler.h"
 
+#include "Enemy.h"
 #include "SoldierEnemy.h"
 #include "KoopaEnemy.h"
 #include "RedKoopaEnemy.h"
@@ -13,6 +14,8 @@
 #include "BatEnemy.h"
 #include "SlimeEnemy.h"
 #include "BalloonBossEnemy.h"
+#include "BalloonBulletEnemy.h"
+#include "SpinBirdEnemy.h"
 
 LevelSpawner::LevelSpawner(LevelHandler* levelHandler)
 {
@@ -34,7 +37,89 @@ void LevelSpawner::HandleCurrentLevelSpawning()
 			}
 		}
 	}
+	
+	this->HandleSpecialSpawning();
 }
+
+void LevelSpawner::HandleSpecialSpawning()
+{
+	switch (this->levelHandler->game->currentLevel)
+	{
+	//balloon boss
+	case 6:
+		BalloonBossEnemy* boss = dynamic_cast<BalloonBossEnemy*>((*this->levelHandler->enemiesRef)[0]);
+
+		//throw bullets
+		if (boss->isActive && boss->isShootFrame)
+		{
+			BalloonBulletEnemy* e = new BalloonBulletEnemy();
+			e->SetPosition(boss->GetPosition().x, boss->GetPosition().y + 60.0f);
+			if (boss->GetPhase() == 3) e->SetFast();
+			this->levelHandler->enemiesRef->push_back(e);
+		}
+
+		//spawn bird shield
+		if (boss->isActive && boss->GetPhase() == 2 && !boss->spawnedShield)
+		{
+			this->SpawnBirdShield(boss);
+			boss->spawnedShield = true;
+		}
+		break;
+	}
+
+	std::vector<Vector2> slimePositions = {};
+	//SLIME SPLITTING
+	for (Enemy* e : this->levelHandler->game->enemies)
+	{
+		if (e->GetID() == 6)
+		{
+			SlimeEnemy* slime = dynamic_cast<SlimeEnemy*>(e);
+
+			if (!slime->small && !slime->splitted && slime->GetHealth() <= 0)
+			{
+				slime->splitted = true;
+				slimePositions.push_back(slime->GetPosition());
+				
+			}		
+		}
+	}
+
+	for (const Vector2& pos : slimePositions)
+	{
+		this->SpawnSlimeBurst(pos);
+	}
+
+	slimePositions.clear();
+}
+
+//for balloon boss
+void LevelSpawner::SpawnBirdShield(BalloonBossEnemy* host)
+{
+	if (this->levelHandler->game->currentLevel == 6)
+	{
+		if (host->GetPhase() == 2)
+		{
+			//set the spinners
+			SpinBirdEnemy* s1 = new SpinBirdEnemy(dynamic_cast<BalloonBossEnemy*>(host));
+			s1->SetPosition(host->GetPosition().x - 300, host->GetPosition().y);
+
+			SpinBirdEnemy* s2 = new SpinBirdEnemy(dynamic_cast<BalloonBossEnemy*>(host));
+			s2->SetPosition(host->GetPosition().x + 300, host->GetPosition().y);
+
+			SpinBirdEnemy* s3 = new SpinBirdEnemy(dynamic_cast<BalloonBossEnemy*>(host));
+			s3->SetPosition(host->GetPosition().x, host->GetPosition().y - 300);
+
+			SpinBirdEnemy* s4 = new SpinBirdEnemy(dynamic_cast<BalloonBossEnemy*>(host));
+			s4->SetPosition(host->GetPosition().x, host->GetPosition().y + 300);
+
+			this->levelHandler->enemiesRef->push_back(s1);
+			this->levelHandler->enemiesRef->push_back(s2);
+			this->levelHandler->enemiesRef->push_back(s3);
+			this->levelHandler->enemiesRef->push_back(s4);
+		}
+	}
+}
+
 
 //spawn 3 small slimes at pos
 void LevelSpawner::SpawnSlimeBurst(Vector2 pos)
@@ -52,6 +137,8 @@ void LevelSpawner::SpawnSlimeBurst(Vector2 pos)
 	this->levelHandler->enemiesRef->push_back(e2);
 	this->levelHandler->enemiesRef->push_back(e3);
 }
+
+
 
 bool LevelSpawner::IsFinishedSpawning()
 {
@@ -105,23 +192,29 @@ void LevelSpawner::SpawnEnemyByID(int id)
 		e = new BalloonBossEnemy();
 		break;
 
+	case 8:
+		e = new BalloonBulletEnemy();
+		break;
+
 	default:
 		std::cout << "Enemy id: " << id << " not found. Spawning soldier.";
 		e = new SoldierEnemy();
 		break;
 	}
+
 	if (e->GetID() != 7)
 	{
 		e->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+		this->levelHandler->enemiesRef->push_back(e);
 	}
 
 	else
 	{
 		e->SetPosition((float)screenWidth, (screenHeight / 2) + (menuBoundaryY / 2));
-		//e->SetPosition((float)screenWidth / 2, (screenHeight / 2) + (menuBoundaryY / 2));
+		this->levelHandler->enemiesRef->push_back(e);
+
 	}
 	
-	this->levelHandler->enemiesRef->push_back(e);
 }
 
 void LevelSpawner::SetSpawnMap(int level)
@@ -175,6 +268,7 @@ void LevelSpawner::SetSpawnMap(int level)
 
 	case 6:
 		this->spawnMap[7] = { 1 };
+		//this->spawnMap[8] = { 4,5,6,7,8 };
 		break;
 
 	default:

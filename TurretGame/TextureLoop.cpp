@@ -7,6 +7,7 @@ TextureLoop::TextureLoop(Texture2D* texture, int segments, float scale, Vector2 
 	this->segments = segments;
 	this->mirrored = false;
 	this->rotation = 0.0f;
+	this->rotationOffset = 0.0f;
 	this->tint = WHITE;
 	this->animationState = 1;
 
@@ -42,6 +43,17 @@ void TextureLoop::SetScale(float scale)
 
 void TextureLoop::SetRotation(float rotation)
 {
+	this->rotation = rotation;
+}
+
+void TextureLoop::SetAnimationState(int state)
+{
+	this->animationState = state;
+}
+
+void TextureLoop::SetRotationOffset(float offset)
+{
+	this->rotationOffset = offset;
 }
 
 void TextureLoop::Update()
@@ -61,7 +73,7 @@ void TextureLoop::Update()
 
 void TextureLoop::Draw()
 {
-	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, this->rotation, this->tint);
+	DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, this->rotation + this->rotationOffset, this->tint);
 }
 
 void TextureLoop::NextFrame()

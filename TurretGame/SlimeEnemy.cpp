@@ -6,11 +6,13 @@
 SlimeEnemy::SlimeEnemy(bool small)
 {
 	this->small = small;
+	
 
 	this->id = 6;
 
 	if (!this->small) //big slime
 	{
+		this->splitted = false;
 		this->damage = 10;
 		this->maxHealth = 350.0f;
 		this->health = this->maxHealth;
@@ -27,6 +29,7 @@ SlimeEnemy::SlimeEnemy(bool small)
 
 	else //mini slime
 	{
+		this->splitted = true;
 		this->damage = 3;
 		this->maxHealth = 80.0f;
 		this->health = this->maxHealth;
@@ -48,6 +51,8 @@ void SlimeEnemy::Update(unsigned int frame)
 	// update position and velocity and check if death
 	Enemy::Update(frame);
 
+
+
 	//update position of texture
 	this->textureLoop->SetPosition((int)this->position.x, (int)this->position.y);
 
@@ -58,8 +63,8 @@ void SlimeEnemy::Update(unsigned int frame)
 	//this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100 };
 	if (!this->small)
 	{
-		this->hitbox.x = this->position.x - (75 / 2);
-		this->hitbox.y = this->position.y - (75 / 2);
+		this->hitbox.x = this->position.x - (75 / 2.0f);
+		this->hitbox.y = this->position.y - (75 / 2.0f);
 	}
 
 	else

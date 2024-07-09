@@ -94,14 +94,15 @@ void Enemy::DrawHealthbar(int yOffset, float barSize)
 
 void Enemy::DrawBossHealthbar(const char* title)
 {
-	float barWidth = 1200;
-	float barHeight = 50;
+	int barWidth = 1200;
+	int barHeight = 50;
 
-	DrawRectangle((screenWidth / 2) - (barWidth / 2), 1000, (int)barWidth, (int)barHeight, RED);
-	DrawRectangle((screenWidth / 2) - (barWidth / 2), 1000, (int)(barWidth * (this->health / this->maxHealth)), (int)barHeight, GREEN);
+	DrawRectangle((int)((screenWidth / 2.0f) + (deathBoundaryX / 2.0f) - (barWidth / 2.0f) - 5), 1000 - 5, barWidth + 10, barHeight + 10, BLACK);
+	DrawRectangle((int)((screenWidth / 2.0f) + (deathBoundaryX / 2.0f) - (barWidth / 2.0f)), 1000, (int)barWidth, (int)barHeight, RED);
+	DrawRectangle((int)((screenWidth / 2.0f) + (deathBoundaryX / 2.0f) - (barWidth / 2.0f)), 1000, (int)(barWidth * (this->health / this->maxHealth)), (int)barHeight, GREEN);
 
 	int textWidth = MeasureText(title, 30);
-	DrawText(title, (screenWidth / 2) - (textWidth / 2), 900, 30, RED );
+	DrawText(title, (int)((screenWidth / 2.0f) + (deathBoundaryX / 2.0f) - (barWidth / 2.0f)), 960, 30, RED );
 }
 
 void Enemy::ApplyKnockback(Bullet* b)
@@ -143,7 +144,6 @@ void Enemy::SetHealth(float health)
 {
 	this->health = health;
 }
-
 
 int Enemy::GetID() const
 {

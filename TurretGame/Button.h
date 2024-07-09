@@ -7,6 +7,7 @@ public:
 	virtual void Draw();
 	virtual void Update(int mouseX, int mouseY);
 
+	bool isReleased = false;
 	bool isHovering = false;
 	bool isClicked = false;
 	bool isHeld = false; 

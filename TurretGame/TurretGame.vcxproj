@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="AreaEffect.cpp" />
     <ClCompile Include="BalloonBossEnemy.cpp" />
+    <ClCompile Include="BalloonBulletEnemy.cpp" />
     <ClCompile Include="BatEnemy.cpp" />
     <ClCompile Include="BombExplosion.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="Sentry.cpp" />
     <ClCompile Include="SlimeEnemy.cpp" />
     <ClCompile Include="SparkleEffect.cpp" />
+    <ClCompile Include="SpinBirdEnemy.cpp" />
     <ClCompile Include="TextButton.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Projectile.cpp" />
@@ -177,6 +179,7 @@
   <ItemGroup>
     <ClInclude Include="AreaEffect.h" />
     <ClInclude Include="BalloonBossEnemy.h" />
+    <ClInclude Include="BalloonBulletEnemy.h" />
     <ClInclude Include="BatEnemy.h" />
     <ClInclude Include="BombExplosion.h" />
     <ClInclude Include="Bullet.h" />
@@ -204,6 +207,7 @@
     <ClInclude Include="Sentry.h" />
     <ClInclude Include="SlimeEnemy.h" />
     <ClInclude Include="SparkleEffect.h" />
+    <ClInclude Include="SpinBirdEnemy.h" />
     <ClInclude Include="TextButton.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="RedKoopaEnemy.h" />

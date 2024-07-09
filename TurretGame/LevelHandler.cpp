@@ -92,7 +92,7 @@ void LevelHandler::Update(unsigned int frame)
         if (a->isActive) a->Update(g->frameCount);
     }
 
-    std::vector<Vector2> slimeBursts = {};
+    //std::vector<Vector2> slimeBursts = {};
 
     //handle enemies
     for (Enemy* e : g->enemies)
@@ -111,17 +111,10 @@ void LevelHandler::Update(unsigned int frame)
             // if enemy died, add coin amount. and display coin effect
             if (e->GetHealth() <= 0)
             {
-                if (e->GetID() == 6 && !dynamic_cast<SlimeEnemy*>(e)->small)
-                {
-                    slimeBursts.push_back(e->GetPosition());
-                }
-
                 this->currentLevelStats->coinsCollected += e->GetCoinDropAmount();
                 g->effectManager->DisplayCoinSplash(e->GetPosition(), e->GetCoinDropAmount());
                 e->isActive = false;
-
-                //if its a slime, split 3 small slimes
-                
+          
             }
 
             //check if enemy has infiltrated the base
@@ -133,11 +126,6 @@ void LevelHandler::Update(unsigned int frame)
             }
         }
     }   
-
-    for (const Vector2& pos : slimeBursts)
-    {
-        this->levelSpawner->SpawnSlimeBurst(pos);
-    }
 
     //because bomb/ice mode freezes button update so these will keep appearing.
     if (g->inputMode != 0)
@@ -151,12 +139,12 @@ void LevelHandler::Update(unsigned int frame)
     else
     {
         //handle try again button
-        g->tryAgainButton->Update(g->mousePos.x, g->mousePos.y);
+        g->tryAgainButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
     }
     
     
     //check win/loss
-    if (this->currentLevelStats->health <= 0)
+    if (this->currentLevelStats->health <= 0 && !this->currentLevelComplete)
     {
         this->currentLevelLose = true;
     }
@@ -164,7 +152,7 @@ void LevelHandler::Update(unsigned int frame)
     else if (this->levelSpawner->IsFinishedSpawning() && this->NoActiveEnemies())
     {
         this->currentLevelComplete = true;
-        this->game->returnButton->Update(g->mousePos.x, g->mousePos.y);
+        this->game->returnButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
     }
 }
 
@@ -179,7 +167,7 @@ bool LevelHandler::NoActiveEnemies()
 {
     for (Enemy* e : this->game->enemies)
     {
-        if (e->isActive) return false;
+        if (e->isActive && e->GetID() != 8) return false; //id 8 is a bullet
     }
 
     return true;
@@ -335,7 +323,7 @@ void LevelHandler::Draw()
         const char* text = "YOU DIED :(";
         int width = MeasureText(text, 50);
 
-        DrawText(text, (screenWidth / 2) - (width / 2), 400, 50, RED);
+        DrawText(text, (screenWidth / 2) - (width / 2), 500, 50, RED);
         this->game->tryAgainButton->Draw();
         this->cooldownWarningFrames = 0;
         this->chargeWarningFrames = 0;
@@ -347,13 +335,14 @@ void LevelHandler::DrawCurrentLevelBackground()
 {
     int lvl = this->game->currentLevel;
     Texture2D* bg;
-    if (lvl > 0 && lvl <= 6) bg = &textures[29];    // world 1
-    else if (lvl > 6 && lvl <= 10) bg = &textures[6]; // world 2
+    if (lvl > 0 && lvl < 6) bg = &textures[29];    // world 1
+    else if (lvl == 6) bg = &textures[34]; //ballon boss
+    else if (lvl > 6 && lvl <= 10) bg = &textures[35]; // world 2
     else bg = &textures[3];
 
-    Rectangle src = {0, 0, bg->width, bg->height};
-    Rectangle dest = { screenWidth / 2, screenHeight / 2, screenWidth, screenHeight};
-    Vector2 origin = { screenWidth / 2, screenHeight / 2 };
+    Rectangle src = {0.0f, 0.0f, (float)bg->width, (float)bg->height};
+    Rectangle dest = { screenWidth / 2.0f, screenHeight / 2.0f, (float)screenWidth, (float)screenHeight};
+    Vector2 origin = { screenWidth / 2.0f, screenHeight / 2.0f };
 
     DrawTexturePro(*bg, src, dest, origin, 0.0f, WHITE);
 }

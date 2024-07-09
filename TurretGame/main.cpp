@@ -13,15 +13,18 @@ int main(void)
 
 // Refrain from front-end detailing until engine is finished.
 // 
+// fix jittering of reposition in balloon. use abs to fix this
 // 
+// make text button vary in size
 //clones deal less dmg/kb than main
-
+//"Base Tint"
 //change button to have isReleased, isDown, isHovering, isPressed
 // 
 //resolve wanings
 // 
 //make each level have different bgs based on world
 //
+// 
 // 
 //enemies can drop abilities that can be clicked? maybe for later
 //splash damage bullet, uses small scale bombExplosionMaybe? or a new AreaEffect called buulletexplosion.

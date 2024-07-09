@@ -2,15 +2,14 @@
 
 #include "Enemy.h"
 
-class SlimeEnemy : public Enemy
+
+class BalloonBulletEnemy : public Enemy
 {
 public:
-	SlimeEnemy(bool small);
+	BalloonBulletEnemy();
 
 	virtual void Update(unsigned int frame) override;
 	virtual void Draw() override;
-	bool small;
-	bool splitted;
 
-private:
+	void SetFast();
 };

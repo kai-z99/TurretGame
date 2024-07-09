@@ -13,6 +13,8 @@ public:
 	void SetTint(Color tint);
 	void SetScale(float scale);
 	void SetRotation(float rotation);
+	void SetAnimationState(int state);
+	void SetRotationOffset(float offset);
 
 private:
 	int segments;
@@ -20,6 +22,7 @@ private:
 	float scale;
 	bool mirrored;
 	float rotation;
+	float rotationOffset;
 	Color tint;
 
 	Vector2 position;

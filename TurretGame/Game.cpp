@@ -15,6 +15,7 @@
 #include "Bullet.h"
 #include "Decoration.h"
 #include "TextButton.h"
+#include "UpgradeButton.h"
 
 #include "BombExplosion.h"
 #include "IceSheet.h"
@@ -104,13 +105,13 @@ void Game::ClearVectors()
 void Game::DrawMousePos()
 {
     std::string text = std::to_string(GetMouseX()) + "," + std::to_string(GetMouseY());
-    DrawText(text.c_str(), this->mousePos.x, this->mousePos.y, 20.0f, BLACK);
+    DrawText(text.c_str(), (int)this->mousePos.x, (int)this->mousePos.y, 20, BLACK);
 }
 
 void Game::Initialize()
 {
     InitWindow(screenWidth, screenHeight, "TurretGame window");
-    SetTargetFPS(60);
+    SetTargetFPS(60);  
     //ToggleFullscreen();
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
@@ -125,8 +126,8 @@ void Game::Initialize()
     
     this->gameStats = new GameStats();
     this->effectManager = new VisualEffectsManager(this);
-    this->tryAgainButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2), "TRY AGAIN");
-    this->returnButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2), "RETURN TO MENU");
+    this->tryAgainButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2) + 200, "TRY AGAIN");
+    this->returnButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2) + 200, "RETURN TO MENU");
 
     this->gameStats->totalCoins = 10000;
     this->gameStats->initialHealth = 30;
@@ -136,11 +137,11 @@ void Game::Initialize()
     this->inputMode = false;
 
     this->sentry1 = new Sentry();
-    this->sentry1->SetPosition(100.0f, 300);
+    this->sentry1->SetPosition(100, 300);
     this->sentry1->SetTargetMode(1);
 
     this->sentry2 = new Sentry();
-    this->sentry2->SetPosition(100.0f, 900);
+    this->sentry2->SetPosition(100, 900);
     this->sentry2->SetTargetMode(0);
     
     //temp

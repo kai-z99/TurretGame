@@ -10,19 +10,28 @@ void Button::Update(int mouseX, int mouseY)
 {
 	if (this->MouseCollide(mouseX, mouseY))
 	{
-		if (IsMouseButtonDown(0))
+		if (IsMouseButtonPressed(0))
+		{
+			this->isClicked = true;
+			this->isHeld = false;
+			this->isHovering = false;
+			this->isReleased = false;
+		}
+
+		else if (IsMouseButtonDown(0))
 		{
 			this->isClicked = false;
 			this->isHeld = true;
 			this->isHovering = false;
-
+			this->isReleased = false;
 		}
 
 		else if (IsMouseButtonReleased(0))
 		{
-			this->isClicked = true;
+			this->isClicked = false;
 			this->isHeld = false;
 			this->isHovering = true;
+			this->isReleased = true;
 		}
 
 		else
@@ -30,6 +39,7 @@ void Button::Update(int mouseX, int mouseY)
 			this->isClicked = false;
 			this->isHeld = false;
 			this->isHovering = true;
+			this->isReleased = false;
 		}
 	}
 
@@ -38,6 +48,7 @@ void Button::Update(int mouseX, int mouseY)
 		this->isHovering = false;
 		this->isClicked = false;
 		this->isHeld = false;
+		this->isReleased = false;
 	}
 }
 

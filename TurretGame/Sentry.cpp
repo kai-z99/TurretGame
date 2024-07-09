@@ -62,7 +62,7 @@ void Sentry::Update(unsigned int frame, int mouseX, int mouseY, std::vector<Enem
 	//now that the target is set, update the angle to face it.
 	if (this->target != nullptr)
 	{
-		this->angle = CalculateAngle(this->position.x, this->position.y, target->GetPosition().x, target->GetPosition().y);
+		this->angle = CalculateAngle((int)this->position.x, (int)this->position.y, (int)target->GetPosition().x, (int)target->GetPosition().y);
 	}
 
 	//if no target exists, just face fwd.

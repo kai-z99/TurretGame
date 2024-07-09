@@ -51,7 +51,7 @@ Turret::Turret()
         if (i == 1) bcm[i]->unlocked = true;
         else bcm[i]->unlocked = false;
 
-        bcm[i]->canShoot = true;
+        bcm[i]->canShoot = false;
         bcm[i]->lastShotFrame = 0;
         bcm[i]->shotThisFrame = false;
         bcm[i]->firerate = 1.0f;
