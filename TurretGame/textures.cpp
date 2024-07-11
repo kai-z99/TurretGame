@@ -5,7 +5,7 @@ std::vector<Texture2D> textures;
 std::vector<const char*> textureFilePaths = {
     "Sprites/scarfy.png",               //0
     "Sprites/turret.png",               //1
-    "Sprites/TurretBullet.png",         //2
+    "Sprites/BombBullet.png",           //2
     "Sprites/koopa.png",                //3
     "Sprites/redKoopa.png",             //4
     "Sprites/redKoopaShell.png",        //5
@@ -31,7 +31,7 @@ std::vector<const char*> textureFilePaths = {
     "Sprites/slime.png",                //25
     "Sprites/sparkleEffect.png",        //26
     "Sprites/lightningBulletIcon.png",  //27
-    "Sprites/bullettest.png",           //28
+    "Sprites/TurretBullet.png",         //28
     "Sprites/grass.png",                //29
     "Sprites/sentryIcon.png",           //30
     "Sprites/balloonWalk.png",          //31

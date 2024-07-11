@@ -10,6 +10,7 @@
 #include "FireBullet.h"
 #include "SniperBullet.h"
 #include "LightningBullet.h"
+#include "BombBullet.h"
 #include "TurretLaser.h"
 
 #include "textures.h" 
@@ -44,7 +45,7 @@ Turret::Turret()
     //initate bullet cooldown map
     std::unordered_map<int, BulletCooldownInfo*>& bcm = this->bulletCooldownMap;
 
-    for (int i = 1; i <= 5; i++)
+    for (int i = 1; i <= 6; i++)
     {
         bcm[i] = new BulletCooldownInfo();
 
@@ -151,6 +152,10 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
             baseCooldownFrames = 210;
             break;
 
+        case 6:
+            baseCooldownFrames = 240;
+            break;
+
         default:
             baseCooldownFrames = 60; //deafault, shouldnt happen
             break;
@@ -191,27 +196,31 @@ void Turret::ShootBullet(std::vector<Bullet*>& bullets, int id)
     switch (id)
     {
     case 1:
-        b = new TurretBullet();
+        b = new TurretBullet(this);
         break;
 
     case 2:
-        b = new ShockwaveBullet();
+        b = new ShockwaveBullet(this);
         break;
 
     case 3:
-        b = new FireBullet();
+        b = new FireBullet(this);
         break;
     
     case 4:
-        b = new SniperBullet();
+        b = new SniperBullet(this);
         break;
 
     case 5:
-        b = new LightningBullet();
+        b = new LightningBullet(this);
+        break;
+
+    case 6:
+        b = new BombBullet(this);
         break;
 
     default: //fallback to turretbbullet on failure
-        b = new TurretBullet();
+        b = new TurretBullet(this);
         std::cout << "Could not find that bullet id. Shooting TurretBullet.\n";
         break;
     }

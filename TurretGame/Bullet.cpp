@@ -48,6 +48,11 @@ int Bullet::GetID() const
     return this->id;
 }
 
+Turret* Bullet::GetOwner() const
+{
+    return this->owner;
+}
+
 //bool Bullet::IsActive()
 //{
 //    return this->isActive;

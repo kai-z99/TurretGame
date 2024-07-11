@@ -7,7 +7,7 @@ class TextureLoop;
 class LightningBullet : public Bullet
 {
 public:
-	LightningBullet();
+	LightningBullet(Turret* owner);
 	~LightningBullet();
 	virtual void Draw() override;
 	virtual void Update(unsigned int frame) override;

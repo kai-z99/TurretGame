@@ -3,7 +3,7 @@
 #include "helpers.h"
 
 
-ShockwaveBullet::ShockwaveBullet()
+ShockwaveBullet::ShockwaveBullet(Turret* owner)
 {
 	this->id = 2;
 	this->baseSpeed = 35.0f;
@@ -19,6 +19,7 @@ ShockwaveBullet::ShockwaveBullet()
 	this->textureDestRec = { this->position.x, this->position.y, (float)this->textureWidth, (float)this->textureHeight};
 	this->textureOriginPoint = { this->textureWidth / 2.0f, this->textureHeight / 2.0f };
 
+	this->owner = owner;
 }
 
 void ShockwaveBullet::Draw()

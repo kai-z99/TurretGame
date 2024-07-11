@@ -36,6 +36,10 @@ UpgradeButton::UpgradeButton(int posX, int posY, Upgrade upgrade)
 		this->texture = &textures[27];
 		break;
 
+	case BombBulletU:
+		this->texture = &textures[2];
+		break;
+
 	case RapidfireU:
 		this->texture = &textures[10];
 		break;
@@ -52,7 +56,7 @@ UpgradeButton::UpgradeButton(int posX, int posY, Upgrade upgrade)
 		this->texture = &textures[13];
 		break;
 
-	case SentryU:
+	case CloneU:
 		this->texture = &textures[30];
 		break;
 
@@ -75,9 +79,9 @@ void UpgradeButton::Draw()
 
 	DrawTexturePro(*this->texture, source, dest, origin, 0.0f, tint);
 
-	std::string text = std::to_string(this->price) + " Coins";
-	int width = MeasureText(text.c_str(), 30);
-	DrawText(text.c_str(), (int)this->position.x - width / 2, (int)this->position.y - 90, 30, BLUE);
+	//std::string text = std::to_string(this->price) + " C";
+	//int width = MeasureText(text.c_str(), 30);
+	//DrawText(text.c_str(), (int)this->position.x - width / 2, (int)this->position.y - 90, 30, BLUE);
 }
 
 void UpgradeButton::Update(int mouseX, int mouseY)

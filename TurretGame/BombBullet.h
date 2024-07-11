@@ -1,13 +1,16 @@
 #pragma once
-#include "Bullet.h"
 
+#include "Bullet.h"
 
 class Turret;
 
-class FireBullet : public Bullet
+class BombBullet : public Bullet
 {
 public:
-	FireBullet(Turret* owner);
+	BombBullet(Turret* owner);
 	virtual void Draw() override;
 	virtual void Update(unsigned int frame) override;
+
+private:
+	Color tint;
 };

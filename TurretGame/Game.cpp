@@ -112,7 +112,7 @@ void Game::Initialize()
 {
     InitWindow(screenWidth, screenHeight, "TurretGame window");
     SetTargetFPS(60);  
-    //ToggleFullscreen();
+    ToggleFullscreen();
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
 
@@ -126,8 +126,23 @@ void Game::Initialize()
     
     this->gameStats = new GameStats();
     this->effectManager = new VisualEffectsManager(this);
-    this->tryAgainButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2) + 200, "TRY AGAIN");
-    this->returnButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2) + 200, "RETURN TO MENU");
+    //this->tryAgainButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2) + 200, "TRY AGAIN");
+    //this->returnButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2) + 200, "RETURN TO MENU");
+
+    int width = 500;
+    int height = 200;
+    int posX = (screenWidth / 2) - (width / 2);
+    int posY = (screenHeight / 2) - (height / 2) + 200;
+
+    this->tryAgainButton = new TextButton(posX, posY, width, height, "TRY AGAIN");
+    this->returnButton = new TextButton(posX, posY, width, height, "RETURN TO MENU");
+
+    width = 130;
+    height = 130;
+    posX = screenWidth - width - 10;
+    posY = (menuBoundaryY / 2) - (height / 2);
+
+    this->quitButton = new TextButton(posX, posY, width, height, "QUIT");
 
     this->gameStats->totalCoins = 10000;
     this->gameStats->initialHealth = 30;
@@ -160,14 +175,16 @@ void Game::Initialize()
     this->gameStats->upgradeStates =
     {
         {TurretBulletU,{1, 50}},
-        {ShockwaveBulletU,{0, 150}},
-        {FireBulletU,{0, 150}},
-        {SniperBulletU,{0, 150}},
-        {LightningBulletU,{0, 150}},
-        {RapidfireU,{1, 150}},
-        {LaserU,{0, 150}},
-        {IceU,{0, 150}},
-        {ExplosiveU, {0, 150}},
+        {ShockwaveBulletU,{0, 100}},
+        {FireBulletU,{0, 1000}},
+        {SniperBulletU,{0, 2000}},
+        {LightningBulletU,{0, 3000}},
+        {BombBulletU,{0, 5000}},
+        {RapidfireU,{1, 300}},
+        {LaserU,{0, 850}},
+        {IceU,{0, 2150}},
+        {ExplosiveU, {0, 3100}},
+        {CloneU, {0, 5150}},
     };
 
     this->levelHandler = new LevelHandler(this);
@@ -240,7 +257,7 @@ void Game::Draw()
 
     this->DrawMousePos();
 
-    DrawFPS(0, 0);
+    //DrawFPS(0, 0);
 
     EndDrawing();
 }
@@ -336,13 +353,6 @@ void Game::HandleInput()
 void Game::HandleInputInLevel()
 {
     this->levelHandler->HandleInput();
-    
-    //debug
-    if (IsKeyPressed(KEY_UP))
-    {
-        this->ExitCurrentLevel();
-        this->gameState = LevelSelectMenu;
-    }
 }
 
 void Game::HandleInputLevelSelectMenu()

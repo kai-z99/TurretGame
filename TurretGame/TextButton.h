@@ -5,16 +5,14 @@
 class TextButton : public Button
 {
 public:
-	TextButton(int x, int y, const char* text);
+	TextButton(Rectangle rec, const char* text);
+	TextButton(int posX, int posY, int w, int h, const char* text);
+
 	virtual void Draw() override;
 	virtual void Update(int mouseX, int mouseY) override;
-
-	static const char* tryAgainText;
-	static const char* returnText;
-	static int width;
-	static int height;
 
 private:
 	virtual bool MouseCollide(int mouseX, int mouseY) override;
 	const char* text;
+	Rectangle rec;
 };

@@ -6,6 +6,7 @@
 #include "Bullet.h"
 #include "TurretLaser.h"
 #include "Turret.h"
+#include "Sentry.h"
 
 #include "AreaEffect.h"
 #include "BombExplosion.h"
@@ -67,7 +68,12 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 		if (dynamic_cast<RedKoopaEnemy*>(e)->shellForm) break;
 
 	default:
-		e->SetHealth(e->GetHealth() - b->GetBaseDamage());
+
+		//if its a sentry, deal less damage.
+		float damage = b->GetBaseDamage();
+		if (!b->GetOwner()->main) damage *= Sentry::damageMultiplier;
+
+		e->SetHealth(e->GetHealth() - damage);
 		e->ApplyKnockback(b);
 		break;
 
@@ -106,6 +112,11 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 		{
 			e->AppendStatusEffect(Chilled, 20);
 		}
+		break;
+
+	//bomb bullet
+	case 6:
+		this->game->areaEffects.push_back(new BombExplosion(b->GetPosition().x, b->GetPosition().y, true));
 		break;
 
 	default:
@@ -159,8 +170,18 @@ void CollisionHandler::HandleAOEToEnemies(AreaEffect* a)
 				BombExplosion* exp = dynamic_cast<BombExplosion*>(a);
 				if (exp->isDetonateFrame && exp->EnemyCollided(e))
 				{
-					e->SetHealth(e->GetHealth() - BombExplosion::damage);
-					e->ApplyKnockback(BombExplosion::knockbackFrames);
+					//if it comes from ability
+					if (!exp->isBullet)
+					{
+						e->SetHealth(e->GetHealth() - BombExplosion::damage);
+						e->ApplyKnockback(BombExplosion::knockbackFrames);
+					}
+					//if it comes from bullet
+					else
+					{
+						e->SetHealth(e->GetHealth() - 65.0f);
+						e->ApplyKnockback(10);
+					}					
 				}
 			}	
 		}

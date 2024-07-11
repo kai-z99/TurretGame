@@ -154,6 +154,8 @@ void LevelHandler::Update(unsigned int frame)
         this->currentLevelComplete = true;
         this->game->returnButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
     }
+
+    g->quitButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
 }
 
 void LevelHandler::HandleCurrentLevelSpawning()
@@ -213,7 +215,7 @@ void LevelHandler::ActivateUsedAbilities()
                     break;
 
                 case Clone:
-                    this->sentryFrames = 600;
+                    this->sentryFrames = Sentry::duration;
                     break;
 
                 default:
@@ -329,6 +331,8 @@ void LevelHandler::Draw()
         this->chargeWarningFrames = 0;
         this->game->inputMode = 0;
     }
+
+    this->game->quitButton->Draw();
 }
 
 void LevelHandler::DrawCurrentLevelBackground()
@@ -357,24 +361,36 @@ void LevelHandler::HandleInput()
         {
             this->currentLevelLose = false;
             g->tryAgainButton->isClicked = false; //since it doesnt update when its not active
+
             this->DeInitializeCurrentLevel();
             this->InitializeCurrentLevel();
+        }
+
+        else if (g->quitButton->isClicked)
+        {
+            this->currentLevelLose = false;
+            g->quitButton->isClicked = false; //since it doesnt update when its not active
+
+            g->ExitCurrentLevel();
+            g->gameState = LevelSelectMenu;
         }
         
     }
 
     else if (this->currentLevelComplete)
     {
-        if (g->returnButton->isClicked)
+        if (g->returnButton->isClicked || g->quitButton->isClicked)
         {
             this->currentLevelComplete = false;
-            g->ExitCurrentLevel();
             g->returnButton->isClicked = false;
+            g->quitButton->isClicked = false;
+
+            g->ExitCurrentLevel();
             g->gameState = LevelSelectMenu;
         }  
     }
 
-    else
+    else // in game
     {
         //bomb and ice place mode
         if (g->inputMode == 1 || g->inputMode == 2)
@@ -387,7 +403,7 @@ void LevelHandler::HandleInput()
                     //bomb
                 case 1:
                     //push bomb in vector at x,y
-                    g->areaEffects.push_back(new BombExplosion((int)g->mousePos.x, (int)g->mousePos.y));
+                    g->areaEffects.push_back(new BombExplosion((int)g->mousePos.x, (int)g->mousePos.y, false));
                     break;
                     //ice
                 case 2:
@@ -399,7 +415,7 @@ void LevelHandler::HandleInput()
             }
         }
 
-        //standard shooting 
+        //standard shooting , quit availible
         else
         {
             //handle button clicking on hotbar (NOTE when in other input more this wont update so it will get stuck in a blue background after clikcing bomb or ice)
@@ -420,9 +436,16 @@ void LevelHandler::HandleInput()
 
                 if (g->bullets.size() > g->bulletLimit) g->CleanBulletVector(); //if the bullet vector is too big, cleanup
             }
+
+            if (g->quitButton->isClicked)
+            {
+                g->quitButton->isClicked = false;
+
+                g->ExitCurrentLevel();
+                g->gameState = LevelSelectMenu;
+            }
         }
-    }
-    
+    } 
 }
 
 void LevelHandler::InitializeCurrentLevel()

@@ -100,10 +100,10 @@ void LevelSelectHandler::Draw()
 		d->Draw();
 	}
 
+	std::string text = std::to_string(g->gameStats->totalCoins) + " C";
+	DrawText(text.c_str(), 10, 10, 30, BLACK);
 
-	DrawText(std::to_string(g->gameStats->totalCoins).c_str(), 10, 10, 30, BLUE);
-
-	std::string text = "WORLD " + std::to_string(this->currentWorld);
+	text = "WORLD " + std::to_string(this->currentWorld);
 	DrawText(text.c_str(), screenWidth / 2 - 70, 50, 50, BLACK);
 	
 	//debug

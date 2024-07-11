@@ -35,11 +35,12 @@ enum Upgrade
 	FireBulletU,
 	SniperBulletU,
 	LightningBulletU,
+	BombBulletU,
 	RapidfireU,
 	LaserU,
 	IceU,
 	ExplosiveU,
-	SentryU,
+	CloneU,
 };
 
 struct BulletCooldownInfo

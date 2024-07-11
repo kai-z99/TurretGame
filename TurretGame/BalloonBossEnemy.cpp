@@ -139,6 +139,7 @@ void BalloonBossEnemy::HandleMovement()
 
 		//re-position
 	case 5:
+		//x axis reposition
 		if (this->position.x < this->basePosition.x)
 		{
 			this->currentVelocity.x = this->speed;
@@ -148,11 +149,12 @@ void BalloonBossEnemy::HandleMovement()
 			this->currentVelocity.x = 0;
 		}
 
-		if (this->position.y < this->basePosition.y)
+		//y axis reposition
+		if (this->position.y < this->basePosition.y - 4.0f)
 		{
 			this->currentVelocity.y = this->speed;
 		}
-		else if (this->position.y > this->basePosition.y)
+		else if (this->position.y > this->basePosition.y + 4.0f)
 		{
 			this->currentVelocity.y = -this->speed;
 		}

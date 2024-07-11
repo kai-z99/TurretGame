@@ -84,6 +84,7 @@ private:
 	GameStats* gameStats;
 	TextButton* tryAgainButton;
 	TextButton* returnButton;
+	TextButton* quitButton;
 
 	std::vector<Enemy*> enemies;
 	std::vector<Bullet*> bullets;

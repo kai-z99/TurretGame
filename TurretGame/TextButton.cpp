@@ -1,12 +1,17 @@
 #include "TextButton.h"
 
-int TextButton::height = 150;
-int TextButton::width = 400;
-
-TextButton::TextButton(int x, int y, const char* text)
+TextButton::TextButton(Rectangle rec, const char* text)
 {
-	this->position = { (float)x, (float)y, };
+	this->rec = rec;
 	this->text = text;
+	this->position = { rec.x, rec.y };
+}
+
+TextButton::TextButton(int posX, int posY, int w, int h, const char* text)
+{
+	this->rec = { (float)posX, (float)posY, (float)w, (float)h };
+	this->text = text;
+	this->position = { (float)posX,(float)posY };
 }
 
 void TextButton::Draw()
@@ -15,11 +20,15 @@ void TextButton::Draw()
 	if (this->isHovering) col = { 122, 234, 240 , 255 };
 	else if (this->isHeld) col = BLUE;
 
-	DrawRectangleV({ this->position.x - 15.0f, this->position.y - 15.0f }, { (float)TextButton::width, (float)TextButton::height }, BLACK);
-	DrawRectangleV(this->position, { (float)TextButton::width - 30.0f, (float)TextButton::height - 30.0f }, col);
-	
-	int x = (int)this->position.x + (int)(TextButton::width / 2) - (MeasureText(this->text, 35) / 2) - 15;
-	int y = (int)this->position.y + (int)(TextButton::height / 2) - 30;
+	//DrawRectangle(this->rec.x - 15.0f, this->rec.y - 15.0f, this->rec.width + 30.0f, this->rec.height + 30.0f, BLACK);
+	//DrawRectangleRec(this->rec, col);
+	//
+
+	DrawRectangleRec(this->rec, BLACK);
+	DrawRectangle(this->rec.x + 15.0f, this->rec.y + 15.0f, this->rec.width - 30.0f, this->rec.height - 30.0f, col);
+
+	int x = (int)this->position.x + (int)(this->rec.width / 2) - (MeasureText(this->text, 35) / 2);
+	int y = (int)this->position.y + (int)(this->rec.height / 2) - 11;
 	DrawText(this->text, x, y, 35, BLACK);	
 }
 
@@ -30,6 +39,5 @@ void TextButton::Update(int mouseX, int mouseY)
 
 bool TextButton::MouseCollide(int mouseX, int mouseY)
 {
-	Rectangle rec = { this->position.x, this->position.y, (float)TextButton::width, (float)TextButton::height };
-	return CheckCollisionPointRec({ (float)mouseX, (float)mouseY }, rec);
+	return CheckCollisionPointRec({ (float)mouseX, (float)mouseY }, this->rec);
 }

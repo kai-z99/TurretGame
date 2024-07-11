@@ -2,6 +2,7 @@
 #include "Projectile.h"
 
 class Enemy;
+class Turret;
 
 class Bullet : public Projectile
 {
@@ -14,8 +15,10 @@ public:
 	float GetBaseDamage() const;
 	int GetBaseKnockbackDuration() const;
 	int GetID() const;
+	Turret* GetOwner() const;
 
 	bool isActive = true;
+
 	
 
 protected:
@@ -36,6 +39,8 @@ protected:
 	float angle;
 
 	int id; // 1: turret 2: shockwave
+
+	Turret* owner;
 
 
 };

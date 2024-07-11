@@ -3,7 +3,7 @@
 #include "TextureLoop.h"
 #include "textures.h"
 
-LightningBullet::LightningBullet()
+LightningBullet::LightningBullet(Turret* owner)
 {
 	this->chain = 0;
 
@@ -13,6 +13,8 @@ LightningBullet::LightningBullet()
 	this->baseKnockbackDuration = 0;
 	this->hitBoxRadius = 8.0f;
 	this->textureLoop = new TextureLoop(&textures[24], 6, 2.0f, this->position);
+
+	this->owner = owner;
 }
 
 LightningBullet::~LightningBullet()

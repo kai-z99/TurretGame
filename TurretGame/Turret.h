@@ -34,6 +34,8 @@ public:
 	bool IsBulletUnlocked(int id);
 	void UnlockBullet(int id);
 
+	bool main = true; // main is the main turret only not sentry
+
 	friend class UpgradeMenuHandler;
 	friend class TurretLaser;
 

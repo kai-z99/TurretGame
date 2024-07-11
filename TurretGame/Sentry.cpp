@@ -5,10 +5,17 @@
 
 #include "helpers.h"
 
+
+
+float Sentry::damageMultiplier = 0.5f;
+int Sentry::duration = 500;
+
 Sentry::Sentry()
 {
 	this->targetMode = 0;
 	this->target = nullptr;
+
+	this->main = false; // main is the main turret only not sentry
 }
 
 void Sentry::Update(unsigned int frame, int mouseX, int mouseY, std::vector<Enemy*>& enemies, std::vector<Bullet*>& bullets)

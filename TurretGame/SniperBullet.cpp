@@ -1,7 +1,7 @@
 #include "SniperBullet.h"
 #include "textures.h"
 
-SniperBullet::SniperBullet()
+SniperBullet::SniperBullet(Turret* owner)
 {
 	this->id = 4;
 	this->baseSpeed = 50.0f;
@@ -16,6 +16,8 @@ SniperBullet::SniperBullet()
 	this->textureSourceRec = { 0.0f, 0.0f, (float)this->textureWidth, (float)this->textureHeight };
 	this->textureDestRec = { this->position.x, this->position.y, (float)this->textureWidth * 2.0f, (float)this->textureHeight * 2.0f };
 	this->textureOriginPoint = { this->textureWidth * 2.0f / 2.0f, this->textureHeight * 2.0f / 2.0f };
+
+	this->owner = owner;
 }
 
 void SniperBullet::Draw()

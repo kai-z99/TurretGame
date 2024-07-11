@@ -15,7 +15,8 @@ public:
 
 	void SetTargetMode(int mode);
 
-
+	static float damageMultiplier;
+	static int duration;
 private:
 	Enemy* target;
 	int targetMode; //0: close, 1: strong

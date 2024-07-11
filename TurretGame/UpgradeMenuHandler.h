@@ -16,4 +16,7 @@ public:
 private:
 	Game* game;
 	void HandleUpgrade(Upgrade u);
+
+	void HandleBulletUpgrade(int bulletID);
+	void HandleAbilityUpgrade(Upgrade upgrade);
 };

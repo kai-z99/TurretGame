@@ -1,7 +1,7 @@
 #include "TurretBullet.h"
 #include "textures.h"
 #include "helpers.h"
-TurretBullet::TurretBullet()
+TurretBullet::TurretBullet(Turret* owner)
 {
 	this->id = 1;
 	this->baseSpeed = 40.0f;
@@ -16,6 +16,8 @@ TurretBullet::TurretBullet()
 	this->textureSourceRec = { 0.0f, 0.0f, (float)this->textureWidth, (float)this->textureHeight };
 	this->textureDestRec = { this->position.x, this->position.y, (float)this->textureWidth * 0.2f, (float)this->textureHeight * 0.2f };
 	this->textureOriginPoint = { this->textureWidth * 0.2f / 2.0f, this->textureHeight * 0.2f / 2.0f };
+
+	this->owner = owner;
 }
 
 void TurretBullet::Draw() // sould draw sprite

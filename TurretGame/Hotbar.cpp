@@ -32,7 +32,7 @@ void Hotbar::Draw(CurrentLevelStats& currentLevelStats)
 	DrawTextEx(GetFontDefault(), text.c_str(), { xPos ,yPos }, fontsize, spacing, RED);
 
 	//draw coins (same fontsize and spacing as health)
-	text = "Coins: " + std::to_string(currentLevelStats.coinsCollected);
+	text = "Coins: " + std::to_string(currentLevelStats.coinsCollected) + " C";
 	textDimensions = MeasureTextEx(GetFontDefault(), text.c_str(), fontsize, 5);
 	xPos = ((float)deathBoundaryX / 2) - (textDimensions.x / 2);
 	yPos = (2*(float)menuBoundaryY / 3) - (textDimensions.y / 2);
