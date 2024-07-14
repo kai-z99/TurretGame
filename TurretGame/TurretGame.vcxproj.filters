@@ -162,6 +162,15 @@
     <ClCompile Include="BombBullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BeetleEnemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sounds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Turret.h">
@@ -312,6 +321,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BombBullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BeetleEnemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sounds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

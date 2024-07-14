@@ -13,20 +13,25 @@ int main(void)
 
 // Refrain from front-end detailing until engine is finished.
 // 
-// make text button vary in size
-//clones deal less dmg/kb than main
+// ability sounds already started, check sound handler
+//laser sound, "HandleMiscSounds" in level handler OR just no func and handle it directly in update
 //"Base Tint"
 //
+// Sound effect overlap system: "maxSounds"
 // 
+// 
+// MUSIC
+// 
+// level progress bar
 //resolve wanings
 // 
 //shop button, more back buttons
 //
-// 
+// title screen
 // 
 //enemies can drop abilities that can be clicked? maybe for later
-//splash damage bullet, uses small scale bombExplosionMaybe? or a new AreaEffect called buulletexplosion.
-// piercing bullet
+//
+//
 //draw different effects when ability is activated
 //fix bug where no charges availible shows after using ice or bomb
 // 

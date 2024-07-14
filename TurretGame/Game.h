@@ -17,8 +17,9 @@ class LevelHandler;
 class CollisionHandler;
 class LevelSelectHandler;
 class UpgradeMenuHandler;
-class TextButton;
+class SoundHandler;
 
+class TextButton;
 class LevelButton;
 class UpgradeButton;
 
@@ -36,6 +37,7 @@ public:
 	friend class LevelSelectHandler;
 	friend class UpgradeMenuHandler;
 	friend class LevelSpawner;
+	friend class SoundHandler;
 
 private:
 	void Initialize();
@@ -69,6 +71,7 @@ private:
 	void HandleInputUpgradeMenu();
 	//-----------------------------------------
 
+
 	void StartCurrentLevel();
 	void ExitCurrentLevel();
 
@@ -82,9 +85,11 @@ private:
 	Sentry* sentry2;
 	Hotbar* hotbar;
 	GameStats* gameStats;
+
 	TextButton* tryAgainButton;
 	TextButton* returnButton;
 	TextButton* quitButton;
+	TextButton* shopButton;
 
 	std::vector<Enemy*> enemies;
 	std::vector<Bullet*> bullets;
@@ -100,6 +105,7 @@ private:
 	CollisionHandler* collisionHandler;
 	LevelSelectHandler* levelSelectHandler;
 	UpgradeMenuHandler* upgradeMenuHandler;
+	SoundHandler* soundHandler;
 
 	int currentLevel;
 	const int bulletLimit = 1000; //how many bullets can be on the screen

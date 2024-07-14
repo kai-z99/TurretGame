@@ -11,6 +11,7 @@ void Bullet::Draw() //default draw is a red circle hitbox; debug only
 
 void Bullet::Update(unsigned int frame)
 {
+    this->localFrameCount++;
     Projectile::Update(frame);
 
     //check if its off the screen
@@ -46,6 +47,11 @@ int Bullet::GetBaseKnockbackDuration() const
 int Bullet::GetID() const
 {
     return this->id;
+}
+
+unsigned int Bullet::GetLocalFramecount() const
+{
+    return this->localFrameCount;
 }
 
 Turret* Bullet::GetOwner() const

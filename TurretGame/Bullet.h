@@ -15,6 +15,7 @@ public:
 	float GetBaseDamage() const;
 	int GetBaseKnockbackDuration() const;
 	int GetID() const;
+	unsigned int GetLocalFramecount() const;
 	Turret* GetOwner() const;
 
 	bool isActive = true;
@@ -22,6 +23,8 @@ public:
 	
 
 protected:
+	unsigned int localFrameCount = 0;
+
 
 	//TEXTURE PROPERTIES---------------
 	Texture2D* texture;

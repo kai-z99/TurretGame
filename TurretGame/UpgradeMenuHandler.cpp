@@ -13,6 +13,7 @@
 #include "TurretLaser.h"
 #include "IceSheet.h"
 #include "BombExplosion.h"
+#include "TextButton.h"
 
 #include "textures.h"
 
@@ -20,11 +21,20 @@ UpgradeMenuHandler::UpgradeMenuHandler(Game* g)
 {
 	this->game = g;
 
-	for (int i = 0; i <= 10; i++)
+	//bullets
+	for (int i = 0; i <= 5; i++)
 	{
-		this->game->upgradeButtons.push_back(new UpgradeButton(130 * i + 200, 500, (Upgrade)i));
+		this->game->upgradeButtons.push_back(new UpgradeButton(130 * i + 300, 500, (Upgrade)i));
 		this->game->upgradeButtons[i]->SetPrice(this->game->gameStats->upgradeStates[Upgrade(i)].price);
 	}
+
+	//abilities
+	for (int i = 6; i <= 10; i++)
+	{
+		this->game->upgradeButtons.push_back(new UpgradeButton(130 * i + 300, 800, (Upgrade)i));
+		this->game->upgradeButtons[i]->SetPrice(this->game->gameStats->upgradeStates[Upgrade(i)].price);
+	}
+
 }
 
 void UpgradeMenuHandler::Update()
@@ -50,6 +60,8 @@ void UpgradeMenuHandler::Update()
 
 		}
 	}
+
+	g->quitButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
 }
 
 void UpgradeMenuHandler::HandleUpgrade(Upgrade u)
@@ -196,7 +208,7 @@ void UpgradeMenuHandler::HandleAbilityUpgrade(Upgrade upgrade)
 void UpgradeMenuHandler::Draw()
 {
 	Game* g = this->game;
-	DrawText("Upgrade!", screenWidth / 2 - 100, 100, 50, RED);
+	DrawText("Upgrade!", screenWidth / 2 - 100, 100, 50, BLACK);
 
 	std::string text = std::to_string(g->gameStats->totalCoins) + " C";
 	DrawText(text.c_str(), 10, 10, 30, BLACK);
@@ -215,13 +227,16 @@ void UpgradeMenuHandler::Draw()
 		width = MeasureText(text.c_str(), 30);
 		DrawText(text.c_str(), (int)u->GetPosition().x - (width / 2), (int)u->GetPosition().y + 70, 30, BLACK);
 	}
+
+	g->quitButton->Draw();
 }
 
 void UpgradeMenuHandler::HandleInput()
 {
-	if (IsKeyPressed(KEY_UP))
+	if (this->game->quitButton->isReleased)
 	{
 		this->game->gameState = LevelSelectMenu;
+		//this->game->quitButton->isClicked = false;
 	}
 }
 

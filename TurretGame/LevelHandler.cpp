@@ -24,6 +24,8 @@
 #include "SlimeEnemy.h"
 
 #include "VisualEffectsManager.h"
+#include "CollisionHandler.h"
+#include "SoundHandler.h"
 #include "Hotbar.h"
 #include "TextButton.h"
 
@@ -38,6 +40,8 @@ LevelHandler::LevelHandler(Game* game)
     this->currentLevelStats = new CurrentLevelStats();
     this->currentLevelFrameCount = 0;
 
+    this->redScreen = { 255,0,0,0 };
+
     this->currentLevelComplete = false;
     this->currentLevelLose = false;
 
@@ -51,6 +55,8 @@ void LevelHandler::Update(unsigned int frame)
     Game* g = this->game;
 
     this->currentLevelFrameCount++;
+
+    if (this->redScreen.a > 0) this->redScreen.a -= 2;
 
     if (this->chargeWarningFrames > 0) this->chargeWarningFrames--;
     if (this->cooldownWarningFrames > 0) this->cooldownWarningFrames--;
@@ -80,19 +86,40 @@ void LevelHandler::Update(unsigned int frame)
         
     }
         
-
     //handle bullets
     for (Bullet* b : g->bullets)
     {
-        if (b->isActive) b->Update(g->frameCount);
+        if (b->isActive)
+        {
+            b->Update(g->frameCount);
+
+            //CHECK FOR BULLET COLLISIONS
+            for (Enemy* e : g->enemies)
+            {
+                if (e->isActive && b->EnemyCollided(e)) //if collide, remove buullet and deal damage
+                {
+                    g->collisionHandler->HandleBulletToEnemy(b, e);
+                    g->soundHandler->HandleBulletCollisionSound(b);
+                }
+            }
+
+            if (b->GetLocalFramecount() == 1)
+            {
+                g->soundHandler->HandleBulletShootSound(b);
+            }
+        }
     }
 
     for (AreaEffect* a : g->areaEffects)
     {
-        if (a->isActive) a->Update(g->frameCount);
-    }
+        if (a->isActive)
+        {
+            a->Update(g->frameCount);
 
-    //std::vector<Vector2> slimeBursts = {};
+            //CHECK IF ANY ENEMY COLLIDES WITH IT AND HANDLE EFFECT
+            this->game->collisionHandler->HandleAOEToEnemies(a);       
+        }      
+    }
 
     //handle enemies
     for (Enemy* e : g->enemies)
@@ -107,7 +134,10 @@ void LevelHandler::Update(unsigned int frame)
                 e->SetHealth(e->GetHealth() - 50.0f);
                 e->shocked = false;
             }
-                
+
+            // check if turret laser damages it
+            if (g->turret->GetLaser()->isActive) this->game->collisionHandler->HandleLaserToEnemy(g->turret->GetLaser(), e);
+
             // if enemy died, add coin amount. and display coin effect
             if (e->GetHealth() <= 0)
             {
@@ -123,6 +153,9 @@ void LevelHandler::Update(unsigned int frame)
                 this->currentLevelStats->health -= e->GetDamage();
                 if (this->currentLevelStats->health < 0) this->currentLevelStats->health = 0;
                 e->isActive = false;
+
+                //make screen red for a bit
+                if (!this->currentLevelLose) this->redScreen.a = 60;
             }
         }
     }   
@@ -141,7 +174,6 @@ void LevelHandler::Update(unsigned int frame)
         //handle try again button
         g->tryAgainButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
     }
-    
     
     //check win/loss
     if (this->currentLevelStats->health <= 0 && !this->currentLevelComplete)
@@ -289,6 +321,10 @@ void LevelHandler::Draw()
     //update and draw the effects that are on screen
     g->effectManager->UpdateAndDraw();
 
+    //draw redscreen 
+    DrawRectangle(0,0,screenWidth,screenHeight,this->redScreen);
+
+
     //draw hotbar
     g->hotbar->Draw(*this->currentLevelStats);
 
@@ -341,7 +377,8 @@ void LevelHandler::DrawCurrentLevelBackground()
     Texture2D* bg;
     if (lvl > 0 && lvl < 6) bg = &textures[29];    // world 1
     else if (lvl == 6) bg = &textures[34]; //ballon boss
-    else if (lvl > 6 && lvl <= 10) bg = &textures[35]; // world 2
+    else if (lvl > 6 && lvl < 10) bg = &textures[37]; // world 2
+    else if (lvl == 10) bg = &textures[35]; // wrld 2 boss
     else bg = &textures[3];
 
     Rectangle src = {0.0f, 0.0f, (float)bg->width, (float)bg->height};

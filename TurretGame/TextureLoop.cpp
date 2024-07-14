@@ -6,6 +6,7 @@ TextureLoop::TextureLoop(Texture2D* texture, int segments, float scale, Vector2 
 	this->scale = scale;
 	this->segments = segments;
 	this->mirrored = false;
+	this->reflected = false;
 	this->rotation = 0.0f;
 	this->rotationOffset = 0.0f;
 	this->tint = WHITE;
@@ -29,6 +30,12 @@ void TextureLoop::ToggleMirrorImage()
 {
 	if (!this->mirrored) this->mirrored = true;
 	else this->mirrored = false;
+}
+
+void TextureLoop::ToggleReflectedImage()
+{
+	if (!this->reflected) this->reflected = true;
+	else this->reflected = false;
 }
 
 void TextureLoop::SetTint(Color tint)
@@ -64,8 +71,9 @@ void TextureLoop::Update()
 								((float)this->textureWidth / segments),								//x1
 								(float)this->textureHeight };										//y1
 
-	//mirror the image if mirrored is on
+	//mirror/reflect the image
 	if (this->mirrored) this->textureSourceRec.width = -this->textureSourceRec.width;
+	if (this->reflected) this->textureSourceRec.height = -this->textureSourceRec.height;
 	
 	//update the destination rectangle
 	this->textureDestRec = { this->position.x, this->position.y, ((float)this->textureWidth / segments) * this->scale, (float)this->textureHeight * this->scale };

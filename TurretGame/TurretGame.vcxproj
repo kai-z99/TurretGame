@@ -131,6 +131,7 @@
     <ClCompile Include="BalloonBossEnemy.cpp" />
     <ClCompile Include="BalloonBulletEnemy.cpp" />
     <ClCompile Include="BatEnemy.cpp" />
+    <ClCompile Include="BeetleEnemy.cpp" />
     <ClCompile Include="BombBullet.cpp" />
     <ClCompile Include="BombExplosion.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -156,6 +157,8 @@
     <ClCompile Include="LightningBullet.cpp" />
     <ClCompile Include="Sentry.cpp" />
     <ClCompile Include="SlimeEnemy.cpp" />
+    <ClCompile Include="SoundHandler.cpp" />
+    <ClCompile Include="sounds.cpp" />
     <ClCompile Include="SparkleEffect.cpp" />
     <ClCompile Include="SpinBirdEnemy.cpp" />
     <ClCompile Include="TextButton.cpp" />
@@ -182,6 +185,7 @@
     <ClInclude Include="BalloonBossEnemy.h" />
     <ClInclude Include="BalloonBulletEnemy.h" />
     <ClInclude Include="BatEnemy.h" />
+    <ClInclude Include="BeetleEnemy.h" />
     <ClInclude Include="BombBullet.h" />
     <ClInclude Include="BombExplosion.h" />
     <ClInclude Include="Bullet.h" />
@@ -208,6 +212,8 @@
     <ClInclude Include="LightningBullet.h" />
     <ClInclude Include="Sentry.h" />
     <ClInclude Include="SlimeEnemy.h" />
+    <ClInclude Include="SoundHandler.h" />
+    <ClInclude Include="sounds.h" />
     <ClInclude Include="SparkleEffect.h" />
     <ClInclude Include="SpinBirdEnemy.h" />
     <ClInclude Include="TextButton.h" />

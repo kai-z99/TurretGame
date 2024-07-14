@@ -39,8 +39,10 @@ std::vector<const char*> textureFilePaths = {
     "Sprites/balloonThrow.png",         //33
     "Sprites/sky.png",                  //34
     "Sprites/desert.png",               //35
-    "Sprites/spinBird.png",              //36
-
+    "Sprites/spinBird.png",             //36
+    "Sprites/sand.png",                 //37
+    "Sprites/beetleWalk.png",           //38
+    "Sprites/beetleVertical.png",       //39
 };
 
 void LoadAllTextures() 
@@ -61,3 +63,4 @@ void UnloadAllTextures()
 
     textures.clear();
 }
+

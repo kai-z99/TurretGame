@@ -10,6 +10,7 @@
 #include "VisualEffectsManager.h"
 #include "LevelSelectMenuHandler.h"
 #include "UpgradeMenuHandler.h"
+#include "SoundHandler.h"
 
 #include "Enemy.h"
 #include "Bullet.h"
@@ -24,6 +25,7 @@
 #include "Hotbar.h"
 
 #include "textures.h"
+#include "sounds.h"
 
 Game::Game()
 {
@@ -63,6 +65,14 @@ Game::~Game()
     delete this->upgradeMenuHandler;
     delete this->levelSelectHandler;
     delete this->levelHandler;
+
+    delete this->tryAgainButton;
+    delete this->returnButton;
+    delete this->quitButton;
+    delete this->shopButton;
+
+    UnloadAllTextures();
+    UnloadAllSounds();
 }
 
 void Game::Run()
@@ -112,9 +122,10 @@ void Game::Initialize()
 {
     InitWindow(screenWidth, screenHeight, "TurretGame window");
     SetTargetFPS(60);  
-    ToggleFullscreen();
+    //ToggleFullscreen();
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
+    LoadAllSounds();
 
     this->frameCount = 0;
     this->mousePos = { 0,0 };
@@ -126,8 +137,8 @@ void Game::Initialize()
     
     this->gameStats = new GameStats();
     this->effectManager = new VisualEffectsManager(this);
-    //this->tryAgainButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2) + 200, "TRY AGAIN");
-    //this->returnButton = new TextButton((screenWidth / 2) - (TextButton::width / 2), (screenHeight / 2) - (TextButton::height / 2) + 200, "RETURN TO MENU");
+
+    //BUTTONS------------------------------------------
 
     int width = 500;
     int height = 200;
@@ -143,6 +154,17 @@ void Game::Initialize()
     posY = (menuBoundaryY / 2) - (height / 2);
 
     this->quitButton = new TextButton(posX, posY, width, height, "QUIT");
+
+    width = 230;
+    height = 130;
+    posX = 10;
+    posY = (menuBoundaryY / 2) - (height / 2);
+
+    this->shopButton = new TextButton(posX, posY, width, height, "SHOP");
+    
+    //------------------------------------------------
+
+
 
     this->gameStats->totalCoins = 10000;
     this->gameStats->initialHealth = 30;
@@ -191,7 +213,8 @@ void Game::Initialize()
     this->collisionHandler = new CollisionHandler(this);
     this->levelSelectHandler = new LevelSelectHandler(this);
     this->upgradeMenuHandler = new UpgradeMenuHandler(this);
-    
+    this->soundHandler = new SoundHandler(this);
+
     //this->hotbar = new Hotbar(this->levelHandler->currentLevelStats->abilityStates); 
     this->lightningPoints = {};
 }
@@ -305,12 +328,13 @@ void Game::Update()
     case UpgradeMenu:
         this->UpdateUpgradeMenu();
     }
+
+    this->soundHandler->Update();
 }
 
 void Game::UpdateInLevel()
 {
     this->levelHandler->Update(this->frameCount);
-    this->collisionHandler->HandleEnemyCollisions();
 }
 
 void Game::UpdateLevelSelectMenu()
@@ -358,11 +382,6 @@ void Game::HandleInputInLevel()
 void Game::HandleInputLevelSelectMenu()
 {
     this->levelSelectHandler->HandleInput();
-
-    if (IsKeyPressed(KEY_UP))
-    {
-        this->gameState = UpgradeMenu;
-    }
 }
 
 void Game::HandleInputUpgradeMenu()

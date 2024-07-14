@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "raylib.h"
 
 class Game;
 class Enemy;
@@ -29,6 +30,7 @@ private:
 	LevelSpawner* levelSpawner;
 	std::vector<Enemy*>* enemiesRef;
 
+	Color redScreen;
 	unsigned int currentLevelFrameCount;
 	
 	void ActivateUsedAbilities();

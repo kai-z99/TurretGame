@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "LevelButton.h"
 #include "Decoration.h"
+#include "TextButton.h"
 
 #include "textures.h"
 
@@ -14,7 +15,7 @@ LevelSelectHandler::LevelSelectHandler(Game* g)
 {
 	this->game = g;
 
-	//temp
+	this->localFramecount = 0;
 
 	//inital states here
 	this->worldMarkers[1] = worldBoundaries[0];
@@ -42,19 +43,30 @@ LevelSelectHandler::LevelSelectHandler(Game* g)
 
 void LevelSelectHandler::Update(unsigned int frame)
 {
+	//prevents delta from bugging out, since its not updated properly when going in/out of levels
+	if (this->localFramecount == 0)
+	{
+		this->StoreInitialPositions();
+	}
+
+	this->localFramecount++;
+
 	Game* g = this->game;
 
 	for (LevelButton* b : g->levelButtons)
 	{
 		b->Update((int)g->mousePos.x, (int)g->mousePos.y);
 
-		if (b->isClicked)
-		{
+		if (b->isReleased)
+		{			
 			g->currentLevel = b->GetLevel();
 			g->gameState = InLevel;
 			g->StartCurrentLevel();
+			this->localFramecount = 0;
 		}
 	}
+
+	g->shopButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
 
 
 	int boundaryX = 400;
@@ -100,8 +112,11 @@ void LevelSelectHandler::Draw()
 		d->Draw();
 	}
 
+	g->shopButton->Draw();
+
 	std::string text = std::to_string(g->gameStats->totalCoins) + " C";
-	DrawText(text.c_str(), 10, 10, 30, BLACK);
+	int width = MeasureText(text.c_str(), 30);
+	DrawText(text.c_str(), (240 / 2) - (width / 2), 150, 30, BLACK);
 
 	text = "WORLD " + std::to_string(this->currentWorld);
 	DrawText(text.c_str(), screenWidth / 2 - 70, 50, 50, BLACK);
@@ -119,24 +134,7 @@ void LevelSelectHandler::HandleInput()
 
 	if (IsMouseButtonPressed(0))
 	{
-		initialMouseX = (int)g->mousePos.x;
-		initialMouseY = (int)g->mousePos.y;
-		
-
-		for (LevelButton* l : g->levelButtons)
-		{
-			this->initialLevelButtonPositions[l] = l->GetPosition();
-		}
-
-		for (Decoration* d : g->decorations)
-		{
-			this->initialDecorationPositions[d] = d->GetPosition();
-		}
-
-		for (auto& x : this->worldMarkers)
-		{
-			this->initialMarkerPositions[x.first] = x.second;
-		}
+		this->StoreInitialPositions();
 	}
 	
 	if (IsMouseButtonDown(0))
@@ -146,70 +144,73 @@ void LevelSelectHandler::HandleInput()
 
 		if (deltaMouseX > 0)
 		{
-			for (LevelButton* b : g->levelButtons)
-			{
-				b->SetPosition((int)this->initialLevelButtonPositions[b].x - deltaMouseX, (int)this->initialLevelButtonPositions[b].y - deltaMouseY);
-			}
-
-			for (Decoration* d : g->decorations)
-			{
-				d->SetPosition((int)this->initialDecorationPositions[d].x - deltaMouseX, (int)this->initialDecorationPositions[d].y - deltaMouseY);
-			}
-
-			for (auto& x : this->worldMarkers)
-			{
-				x.second = this->initialMarkerPositions[x.first] - deltaMouseX;
-			}
+			this->UpdatePositionsWithDelta();
 		}
+
 		else if (deltaMouseX < 0) // mouse right
 		{
 
 			if (g->levelButtons[0]->GetPosition().x <= 200) //left is ok right is disabled
 			{
-				for (LevelButton* b : g->levelButtons)
-				{
-					b->SetPosition((int)this->initialLevelButtonPositions[b].x - deltaMouseX, (int)this->initialLevelButtonPositions[b].y - deltaMouseY);
-				}
-
-				for (Decoration* d : g->decorations)
-				{
-					d->SetPosition((int)this->initialDecorationPositions[d].x - deltaMouseX, (int)this->initialDecorationPositions[d].y - deltaMouseY);
-				}
-
-				for (auto& x : this->worldMarkers)
-				{
-					x.second = this->initialMarkerPositions[x.first] - deltaMouseX;
-				}
+				this->UpdatePositionsWithDelta();
 			}
 
 			else
 			{
-				initialMouseX = (int)g->mousePos.x;
-				initialMouseY = (int)g->mousePos.y;
-
-
-				for (LevelButton* l : g->levelButtons)
-				{
-					this->initialLevelButtonPositions[l] = l->GetPosition();
-				}
-
-				for (Decoration* d : g->decorations)
-				{
-					this->initialDecorationPositions[d] = d->GetPosition();
-				}
-
-				for (auto& x : this->worldMarkers)
-				{
-					this->initialMarkerPositions[x.first] = x.second;
-				}
+				this->StoreInitialPositions();
 			}
 
 		}
-
-
-
-
 	}
 
+	if (g->shopButton->isReleased)
+	{
+		g->shopButton->isReleased = false;
+		g->gameState = UpgradeMenu;
+	}
+}
 
+void LevelSelectHandler::StoreInitialPositions()
+{
+	Game* g = this->game;
+
+	initialMouseX = (int)g->mousePos.x;
+	initialMouseY = (int)g->mousePos.y;
+
+
+	for (LevelButton* l : g->levelButtons)
+	{
+		this->initialLevelButtonPositions[l] = l->GetPosition();
+	}
+
+	for (Decoration* d : g->decorations)
+	{
+		this->initialDecorationPositions[d] = d->GetPosition();
+	}
+
+	for (auto& x : this->worldMarkers)
+	{
+		this->initialMarkerPositions[x.first] = x.second;
+	}
+
+}
+
+void LevelSelectHandler::UpdatePositionsWithDelta()
+{
+	Game* g = this->game;
+
+	for (LevelButton* b : g->levelButtons)
+	{
+		b->SetPosition((int)this->initialLevelButtonPositions[b].x - deltaMouseX, (int)this->initialLevelButtonPositions[b].y - deltaMouseY);
+	}
+
+	for (Decoration* d : g->decorations)
+	{
+		d->SetPosition((int)this->initialDecorationPositions[d].x - deltaMouseX, (int)this->initialDecorationPositions[d].y - deltaMouseY);
+	}
+
+	for (auto& x : this->worldMarkers)
+	{
+		x.second = this->initialMarkerPositions[x.first] - deltaMouseX;
+	}
 }

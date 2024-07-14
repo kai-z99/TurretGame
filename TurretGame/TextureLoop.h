@@ -10,6 +10,7 @@ public:
 	void Update();
 	void SetPosition(int x, int y);
 	void ToggleMirrorImage();
+	void ToggleReflectedImage();
 	void SetTint(Color tint);
 	void SetScale(float scale);
 	void SetRotation(float rotation);
@@ -21,6 +22,7 @@ private:
 	int animationState;
 	float scale;
 	bool mirrored;
+	bool reflected;
 	float rotation;
 	float rotationOffset;
 	Color tint;

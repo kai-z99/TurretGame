@@ -6,3 +6,4 @@ extern std::vector<Texture2D> textures;
 
 void LoadAllTextures();
 void UnloadAllTextures();
+

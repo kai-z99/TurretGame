@@ -10,7 +10,7 @@ Hotbar::Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& initialAbilityVal
 
 	int buttonY = (menuBoundaryY / 2) - (AbilityButton::height / 2);
 
-	for (int i = 0; i <= 5; i++)
+	for (int i = 0; i <= 4; i++)
 	{
 		this->buttons.push_back(new AbilityButton(300 + i * 150, buttonY, static_cast<TurretAbility>(i)));
 	}
@@ -50,7 +50,7 @@ void Hotbar::Draw(CurrentLevelStats& currentLevelStats)
 void Hotbar::Update(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& abilityStates)
 {
 	// for every ability button set its charge bar and cooldown progress accorrding to thye gamestate
-	for (int i = 0; i <= 5; i++)
+	for (int i = 0; i <= 4; i++)
 	{
 		//cast button to abilityButton
 		AbilityButton* b = dynamic_cast<AbilityButton*>(this->buttons[i]);
@@ -108,7 +108,7 @@ std::vector<TurretAbility> Hotbar::GetActiveAbilityButtons()
 	std::vector<TurretAbility> v = {};
 
 	//go through each ability button and check if its clicked. if it is, add to return vector
-	for (int i = 0; i <= 5; i++)
+	for (int i = 0; i <= 4; i++)
 	{
 		TurretAbility ability = static_cast<TurretAbility>(i);
 		if (this->buttons[i]->isClicked)

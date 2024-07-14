@@ -18,6 +18,9 @@ public:
 private:
 	Game* game;
 
+
+	unsigned int localFramecount;
+
 	int initialMouseX;
 	int initialMouseY;
 
@@ -29,6 +32,9 @@ private:
 	std::unordered_map<int, int> initialMarkerPositions;
 
 	std::unordered_map<int, int> worldMarkers; //world, xPos
+
+	void StoreInitialPositions();
+	void UpdatePositionsWithDelta();
 
 	int currentWorld;
 

@@ -1,4 +1,5 @@
 #include "CollisionHandler.h"
+#include <iostream>
 #include "Game.h"
 
 #include "VisualEffectsManager.h"
@@ -15,43 +16,12 @@
 #include "Enemy.h"
 #include "RedKoopaEnemy.h"
 
+#include "sounds.h"
+
 
 CollisionHandler::CollisionHandler(Game* game)
 {
 	this->game = game;
-}
-
-void CollisionHandler::HandleEnemyCollisions()
-{
-	Game* g = this->game;
-	//bullet collisions
-	for (Bullet* b : g->bullets)
-	{
-		if (b->isActive)
-		{
-			for (Enemy* e : g->enemies)
-			{
-				if (e->isActive && b->EnemyCollided(e)) //if collide, remove buullet and deal damage
-				{
-					this->HandleBulletToEnemy(b, e);
-				}
-
-			}
-		}
-	}
-
-	//AOE collisions
-	for (AreaEffect* a : g->areaEffects)
-	{
-		if (a->isActive)
-		{
-			this->HandleAOEToEnemies(a);
-		}
-	}
-
-	//laser
-	if (g->turret->GetLaser()->isActive) this->HandleLaserToEnemies(g->turret->GetLaser());
-
 }
 
 void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
@@ -210,16 +180,12 @@ void CollisionHandler::HandleAOEToEnemies(AreaEffect* a)
 	}
 }
 
-void CollisionHandler::HandleLaserToEnemies(TurretLaser* laser)
+void CollisionHandler::HandleLaserToEnemy(TurretLaser* laser, Enemy* e)
 {
-	for (Enemy* e : this->game->enemies)
+	if (laser->isCollide(e) && laser->isDamageFrame)
 	{
-		if (laser->isCollide(e) && laser->isDamageFrame)
-		{
-			e->SetHealth(e->GetHealth() - TurretLaser::damage);
-		}
+		e->SetHealth(e->GetHealth() - TurretLaser::damage);
 	}
-
 }
 
 
