@@ -13,11 +13,11 @@ int main(void)
 
 // Refrain from front-end detailing until engine is finished.
 // 
-// ability sounds already started, check sound handler
-//laser sound, "HandleMiscSounds" in level handler OR just no func and handle it directly in update
+//
+//
 //"Base Tint"
 //
-// Sound effect overlap system: "maxSounds"
+// 
 // 
 // 
 // MUSIC

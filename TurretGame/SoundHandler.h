@@ -17,6 +17,10 @@ public:
 	void HandleBulletCollisionSound(Bullet* b);
 	void HandleBulletShootSound(Bullet* b);
 	void HandleActivateAbilitySound(TurretAbility a);
+	
+	void HandleEnterLevel(int level);
+	void HandleGoToLevelSelect();
+	void HandleGoToMainMenu();
 
 
 private:

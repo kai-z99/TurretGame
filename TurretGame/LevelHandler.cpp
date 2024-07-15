@@ -254,6 +254,8 @@ void LevelHandler::ActivateUsedAbilities()
                     std::cout << a << "Ability does not exist.";
                     break;
                 }
+
+                g->soundHandler->HandleActivateAbilitySound(a);
             }
 
             else
@@ -326,7 +328,7 @@ void LevelHandler::Draw()
 
 
     //draw hotbar
-    g->hotbar->Draw(*this->currentLevelStats);
+    g->hotbar->Draw(*this->currentLevelStats, this->currentLevelFrameCount, this->levelSpawner->GetCurrentLevelLength());
 
 
     //draw warnings
@@ -410,6 +412,7 @@ void LevelHandler::HandleInput()
 
             g->ExitCurrentLevel();
             g->gameState = LevelSelectMenu;
+            g->soundHandler->HandleGoToLevelSelect();
         }
         
     }
@@ -424,6 +427,7 @@ void LevelHandler::HandleInput()
 
             g->ExitCurrentLevel();
             g->gameState = LevelSelectMenu;
+            g->soundHandler->HandleGoToLevelSelect();
         }  
     }
 
@@ -480,6 +484,7 @@ void LevelHandler::HandleInput()
 
                 g->ExitCurrentLevel();
                 g->gameState = LevelSelectMenu;
+                g->soundHandler->HandleGoToLevelSelect();
             }
         }
     } 

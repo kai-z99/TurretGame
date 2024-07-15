@@ -25,7 +25,7 @@ void SoundHandler::HandleBulletCollisionSound(Bullet* b)
 	switch (b->GetID())
 	{
 	default:
-		this->PlaySoundEffect(0); // bullet connect effect
+		this->PlaySoundEffect(4); // bullet connect effect
 		break;
 	}
 }
@@ -42,6 +42,32 @@ void SoundHandler::HandleBulletShootSound(Bullet* b)
 
 void SoundHandler::HandleActivateAbilitySound(TurretAbility a)
 {
+	switch (a)
+	{
+	default:
+		PlaySoundEffect(3);
+		break;
+	}
+}
+
+void SoundHandler::HandleEnterLevel(int level)
+{
+	if (level > 0 && level < 6) this->PlayMusic(0);    // world 1
+	else if (level == 6) this->PlayMusic(4); //ballon boss
+	else if (level > 6 && level < 10) this->PlayMusic(1); // world 2
+	else if (level == 10) this->PlayMusic(0); // wrld 2 boss
+	else this->PlayMusic(0);
+
+}
+
+void SoundHandler::HandleGoToLevelSelect()
+{
+	this->PlayMusic(3);
+}
+
+void SoundHandler::HandleGoToMainMenu()
+{
+	this->PlayMusic(4);
 }
 
 
@@ -52,7 +78,7 @@ void SoundHandler::PlaySoundEffect(int id)
 
 void SoundHandler::PlayMusic(int id)
 {
-	StopMusicStream(*this->currentSong);
+	if (this->currentSong != nullptr) StopMusicStream(*this->currentSong);
 	this->currentSong = &tracks[id];
 	PlayMusicStream(*this->currentSong);
 }

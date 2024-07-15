@@ -7,12 +7,16 @@ std::vector<const char*> trackFilePaths = {
     "Tracks/World1.mp3",               //0
     "Tracks/World2.mp3",               //1
     "Tracks/World3.mp3",               //2
+    "Tracks/LevelSelect.mp3",          //3
+    "Tracks/Boss1.mp3",                //4
 };
 
 std::vector<const char*> soundEffectFilePaths = {
     "Sounds/ShootBasic.ogg",           //0
     "Sounds/ShootElectric.ogg",        //1
     "Sounds/Explosion1.ogg",           //2
+    "Sounds/PowerUp.ogg",              //3
+    "Sounds/HitBasic.ogg",             //4
 };
 
 void LoadAllSounds()

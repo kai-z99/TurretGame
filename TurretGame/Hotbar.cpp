@@ -3,6 +3,9 @@
 #include "constants.h"
 #include "AbilityButton.h"
 
+#include "raymath.h"
+
+
 
 Hotbar::Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& initialAbilityValues)
 {
@@ -16,7 +19,7 @@ Hotbar::Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& initialAbilityVal
 	}
 }
 
-void Hotbar::Draw(CurrentLevelStats& currentLevelStats)
+void Hotbar::Draw(CurrentLevelStats& currentLevelStats, unsigned int currentLevelFrame, int currentLevelLength)
 {
 	//draw the background
 	DrawRectangle(0, 0, screenWidth, menuBoundaryY, GRAY);
@@ -44,6 +47,9 @@ void Hotbar::Draw(CurrentLevelStats& currentLevelStats)
 	{
 		b->Draw();
 	}
+
+	//draw level progress
+	this->DrawLevelProgressBar(currentLevelFrame, currentLevelLength);
 
 }
 
@@ -118,4 +124,62 @@ std::vector<TurretAbility> Hotbar::GetActiveAbilityButtons()
 	}
 
 	return v;
+}
+
+void Hotbar::DrawLevelProgressBar(unsigned int frame, int levelLength)
+{
+	int barWidth = 500;
+	int barHeight = 50;
+
+	float w = barWidth;
+	int h = barHeight;
+	int posX = 1150;
+	int posY = (menuBoundaryY / 2) - (h / 2);
+
+	//progress text
+	const char* text = "LEVEL PROGRESS";
+	Vector2 textSize = MeasureTextEx(GetFontDefault(),text, 19, 5);
+	DrawTextEx(GetFontDefault(), text, { posX + (w / 2) - (textSize.x / 2), (float)posY + h + 16 }, 19, 5, BLACK);
+
+	//boss levels are one frame long
+	// 
+	//normal level
+	if (levelLength > 1)
+	{
+		//black outline
+		DrawRectangle(posX - 5, posY - 5, w + 10, h + 10, BLACK);
+
+		//main bar-------------------------------------
+		DrawRectangle(posX, posY, (int)w, h, RED);
+
+		w = (float)barWidth * ((float)frame / (float)levelLength);
+		if (w > barWidth) w = barWidth;
+		h = barHeight;
+		posX = 1150;
+		posY = (menuBoundaryY / 2) - (h / 2);
+
+		DrawRectangle(posX, posY, (int)w, h, GREEN);
+		//-----------------------------------------------
+	}
+
+	//boss level
+	else
+	{
+		//black outline
+		DrawRectangle(posX - 5, posY - 5, w + 10, h + 10, BLACK);
+		//main bar
+		//---------------------------------------------
+		DrawRectangle(posX, posY, (int)w, h, BLUE);
+
+		const char* text = "BOSS";
+		int textWidth = MeasureText(text, 40);
+
+		//boss text
+		DrawText(text, 1150 + (w / 2) - (textWidth / 2.0f), (menuBoundaryY / 2) - (h / 2) + 10, 40, BLACK);
+		//---------------------------------------------
+
+	}
+	
+
+	
 }

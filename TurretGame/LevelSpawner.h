@@ -19,6 +19,8 @@ public:
 	void SpawnSlimeBurst(Vector2 pos);
 
 	bool IsFinishedSpawning();
+	int GetCurrentLevelLength();
+
 
 private:
 	//better as map

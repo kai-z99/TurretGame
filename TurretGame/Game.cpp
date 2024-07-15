@@ -10,6 +10,7 @@
 #include "VisualEffectsManager.h"
 #include "LevelSelectMenuHandler.h"
 #include "UpgradeMenuHandler.h"
+#include "MainMenuHandler.h"
 #include "SoundHandler.h"
 
 #include "Enemy.h"
@@ -133,7 +134,7 @@ void Game::Initialize()
     this->turret = new Turret();
     this->hotbar = nullptr;
 
-    this->gameState = LevelSelectMenu;
+    this->gameState = MainMenu;
     
     this->gameStats = new GameStats();
     this->effectManager = new VisualEffectsManager(this);
@@ -213,7 +214,9 @@ void Game::Initialize()
     this->collisionHandler = new CollisionHandler(this);
     this->levelSelectHandler = new LevelSelectHandler(this);
     this->upgradeMenuHandler = new UpgradeMenuHandler(this);
+    this->mainMenuHandler = new MainMenuHandler(this);
     this->soundHandler = new SoundHandler(this);
+    this->soundHandler->HandleGoToMainMenu();
 
     //this->hotbar = new Hotbar(this->levelHandler->currentLevelStats->abilityStates); 
     this->lightningPoints = {};
@@ -262,9 +265,11 @@ void Game::Draw()
     case UpgradeMenu:
         this->DrawUpgradeMenu();
         break;
+
+    case MainMenu:
+        this->DrawMainMenu();
+        break;
     }
-
-
 
     //make this a function
     //draw mouse
@@ -305,6 +310,11 @@ void Game::DrawUpgradeMenu()
     this->upgradeMenuHandler->Draw();
 }
 
+void Game::DrawMainMenu()
+{
+    this->mainMenuHandler->Draw();
+}
+
 //------------------------------------------------------------------------------------
 
 void Game::Update()
@@ -327,6 +337,10 @@ void Game::Update()
 
     case UpgradeMenu:
         this->UpdateUpgradeMenu();
+
+    case MainMenu:
+        this->UpdateMainMenu();
+        break;
     }
 
     this->soundHandler->Update();
@@ -347,6 +361,11 @@ void Game::UpdateUpgradeMenu()
     this->upgradeMenuHandler->Update();
 }
 
+void Game::UpdateMainMenu()
+{
+    this->mainMenuHandler->Update(this->frameCount);
+}
+
 //------------------------------------------------------------------------------------
 
 void Game::HandleInput()
@@ -361,11 +380,12 @@ void Game::HandleInput()
         this->HandleInputLevelSelectMenu();
         break;
 
-    case MainMenu:
-        break;
-
     case UpgradeMenu:
         this->HandleInputUpgradeMenu();
+        break;
+
+    case MainMenu:
+        this->HandleInputMainMenu();
         break;
 
     default:
@@ -387,6 +407,11 @@ void Game::HandleInputLevelSelectMenu()
 void Game::HandleInputUpgradeMenu()
 {
     this->upgradeMenuHandler->HandleInput();
+}
+
+void Game::HandleInputMainMenu()
+{
+    this->mainMenuHandler->HandleInput();
 }
 
 //------------------------------------------------------------------------------

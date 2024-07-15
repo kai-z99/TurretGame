@@ -155,6 +155,7 @@
     <ClCompile Include="LevelHandler.cpp" />
     <ClCompile Include="LevelSelectMenuHandler.cpp" />
     <ClCompile Include="LightningBullet.cpp" />
+    <ClCompile Include="MainMenuHandler.cpp" />
     <ClCompile Include="Sentry.cpp" />
     <ClCompile Include="SlimeEnemy.cpp" />
     <ClCompile Include="SoundHandler.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="LevelHandler.h" />
     <ClInclude Include="LevelSelectMenuHandler.h" />
     <ClInclude Include="LightningBullet.h" />
+    <ClInclude Include="MainMenuHandler.h" />
     <ClInclude Include="Sentry.h" />
     <ClInclude Include="SlimeEnemy.h" />
     <ClInclude Include="SoundHandler.h" />

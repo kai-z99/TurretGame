@@ -17,6 +17,7 @@ class LevelHandler;
 class CollisionHandler;
 class LevelSelectHandler;
 class UpgradeMenuHandler;
+class MainMenuHandler;
 class SoundHandler;
 
 class TextButton;
@@ -32,12 +33,14 @@ public:
 	void Run();
 
 	friend class VisualEffectsManager;
-	friend class LevelHandler;
 	friend class CollisionHandler;
+	friend class LevelHandler;
 	friend class LevelSelectHandler;
 	friend class UpgradeMenuHandler;
+	friend class MainMenuHandler;
 	friend class LevelSpawner;
 	friend class SoundHandler;
+	
 
 private:
 	void Initialize();
@@ -53,6 +56,8 @@ private:
 	void DrawLevelSelectMenu();
 
 	void DrawUpgradeMenu();
+
+	void DrawMainMenu();
 	//----------------------------------------
 	void Update();
 
@@ -61,6 +66,8 @@ private:
 	void UpdateLevelSelectMenu();
 
 	void UpdateUpgradeMenu();
+
+	void UpdateMainMenu();
 	//----------------------------------------
 	void HandleInput();
 
@@ -69,6 +76,8 @@ private:
 	void HandleInputLevelSelectMenu();
 
 	void HandleInputUpgradeMenu();
+
+	void HandleInputMainMenu();
 	//-----------------------------------------
 
 
@@ -105,6 +114,7 @@ private:
 	CollisionHandler* collisionHandler;
 	LevelSelectHandler* levelSelectHandler;
 	UpgradeMenuHandler* upgradeMenuHandler;
+	MainMenuHandler* mainMenuHandler;
 	SoundHandler* soundHandler;
 
 	int currentLevel;

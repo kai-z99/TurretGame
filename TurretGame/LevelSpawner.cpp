@@ -154,6 +154,19 @@ bool LevelSpawner::IsFinishedSpawning()
 	return this->levelHandler->currentLevelFrameCount > lastFrame;
 }
 
+int LevelSpawner::GetCurrentLevelLength()
+{
+	int lastFrame = 0;
+
+	//find the frame of the last enemy spawned in this level
+	for (const auto& pair : this->spawnMap)
+	{
+		lastFrame = std::max((int)pair.second.back(), lastFrame);
+	}
+
+	return lastFrame;
+}
+
 void LevelSpawner::SpawnEnemyByID(int id)
 {
 	Enemy* e;

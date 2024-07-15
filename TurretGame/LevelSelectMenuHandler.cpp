@@ -8,6 +8,7 @@
 #include "LevelButton.h"
 #include "Decoration.h"
 #include "TextButton.h"
+#include "SoundHandler.h"
 
 #include "textures.h"
 
@@ -56,17 +57,10 @@ void LevelSelectHandler::Update(unsigned int frame)
 	for (LevelButton* b : g->levelButtons)
 	{
 		b->Update((int)g->mousePos.x, (int)g->mousePos.y);
-
-		if (b->isReleased)
-		{			
-			g->currentLevel = b->GetLevel();
-			g->gameState = InLevel;
-			g->StartCurrentLevel();
-			this->localFramecount = 0;
-		}
 	}
 
 	g->shopButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
+	g->quitButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
 
 
 	int boundaryX = 400;
@@ -113,6 +107,7 @@ void LevelSelectHandler::Draw()
 	}
 
 	g->shopButton->Draw();
+	g->quitButton->Draw();
 
 	std::string text = std::to_string(g->gameStats->totalCoins) + " C";
 	int width = MeasureText(text.c_str(), 30);
@@ -167,6 +162,25 @@ void LevelSelectHandler::HandleInput()
 	{
 		g->shopButton->isReleased = false;
 		g->gameState = UpgradeMenu;
+	}
+
+	else if (g->quitButton->isClicked)
+	{
+		g->quitButton->isReleased = false;
+		g->gameState = MainMenu;
+		g->soundHandler->HandleGoToMainMenu();
+	}
+
+	for (LevelButton* b : g->levelButtons)
+	{
+		if (b->isReleased)
+		{
+			g->currentLevel = b->GetLevel();
+			g->gameState = InLevel;
+			g->StartCurrentLevel();
+			g->soundHandler->HandleEnterLevel(b->GetLevel());
+			this->localFramecount = 0;
+		}
 	}
 }
 
