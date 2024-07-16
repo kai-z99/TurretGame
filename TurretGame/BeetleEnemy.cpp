@@ -9,7 +9,7 @@ BeetleEnemy::BeetleEnemy()
 {
 	this->id = 9;
 	this->damage = 10;
-	this->maxHealth = 1000.0f;
+	this->maxHealth = 800.0f;
 	this->health = this->maxHealth;
 	this->coinDropAmount = GetRandomValue(142, 148);
 

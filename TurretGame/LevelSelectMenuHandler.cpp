@@ -23,15 +23,14 @@ LevelSelectHandler::LevelSelectHandler(Game* g)
 	this->worldMarkers[2] = worldBoundaries[1];
 	this->worldMarkers[3] = worldBoundaries[2];
 
-	g->levelButtons.push_back(new LevelButton(200, 500, 1));
-	g->levelButtons.push_back(new LevelButton(500, 500, 2));
-	g->levelButtons.push_back(new LevelButton(700, 700, 3));
-	g->levelButtons.push_back(new LevelButton(1000, 550, 4));
-	g->levelButtons.push_back(new LevelButton(1200, 400, 5));
-	g->levelButtons.push_back(new LevelButton(1400, 600, 6));
-	g->levelButtons.push_back(new LevelButton(1900, 700, 7));
+	for (const auto& level : MapPositions::levelPositions)
+	{
+		int levelID = level.first;
+		Vector2 pos = level.second;
+		g->levelButtons.push_back(new LevelButton(pos.x, pos.y, levelID));
+	}
 
-	for (const auto& decoration : decorationPositions)
+	for (const auto& decoration : MapPositions::decorationPositions)
 	{
 		for (const Vector2& pos : decoration.second)
 		{
@@ -173,7 +172,7 @@ void LevelSelectHandler::HandleInput()
 
 	for (LevelButton* b : g->levelButtons)
 	{
-		if (b->isReleased)
+		if (b->isClicked)
 		{
 			g->currentLevel = b->GetLevel();
 			g->gameState = InLevel;

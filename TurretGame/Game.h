@@ -99,6 +99,7 @@ private:
 	TextButton* returnButton;
 	TextButton* quitButton;
 	TextButton* shopButton;
+	TextButton* startButton;
 
 	std::vector<Enemy*> enemies;
 	std::vector<Bullet*> bullets;

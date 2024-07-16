@@ -132,6 +132,7 @@
     <ClCompile Include="BalloonBulletEnemy.cpp" />
     <ClCompile Include="BatEnemy.cpp" />
     <ClCompile Include="BeetleEnemy.cpp" />
+    <ClCompile Include="BlackSoldierEnemy.cpp" />
     <ClCompile Include="BombBullet.cpp" />
     <ClCompile Include="BombExplosion.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="BalloonBulletEnemy.h" />
     <ClInclude Include="BatEnemy.h" />
     <ClInclude Include="BeetleEnemy.h" />
+    <ClInclude Include="BlackSoldierEnemy.h" />
     <ClInclude Include="BombBullet.h" />
     <ClInclude Include="BombExplosion.h" />
     <ClInclude Include="Bullet.h" />

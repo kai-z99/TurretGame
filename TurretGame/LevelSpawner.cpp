@@ -17,6 +17,7 @@
 #include "BalloonBulletEnemy.h"
 #include "SpinBirdEnemy.h"
 #include "BeetleEnemy.h"
+#include "BlackSoldierEnemy.h"
 
 LevelSpawner::LevelSpawner(LevelHandler* levelHandler)
 {
@@ -213,6 +214,11 @@ void LevelSpawner::SpawnEnemyByID(int id)
 	case 9:
 		e = new BeetleEnemy();
 		break;
+
+	case 10:
+		e = new BlackSoldierEnemy();
+		break;
+
 	default:
 		std::cout << "Enemy id: " << id << " not found. Spawning soldier.";
 		e = new SoldierEnemy();
@@ -292,6 +298,14 @@ void LevelSpawner::SetSpawnMap(int level)
 		this->spawnMap[9] = { 1,102,153,664 };
 
 		this->spawnMap[3] = { 501,602,703,804,905,906 };
+		break;
+
+	case 8:
+
+		this->spawnMap[4] = { 2000,2101,2202,2300,  };
+		this->spawnMap[9] = { 500, 1000,1001,1002, 2300,2301, 2700 };
+		this->spawnMap[10] = { 1, 600, 1500, 1501 , 3000};
+		break;
 
 	default:
 		std::cout << "Cannot set spawnmap for level " << level << '\n';

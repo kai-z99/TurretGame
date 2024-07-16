@@ -54,8 +54,8 @@ void SoundHandler::HandleEnterLevel(int level)
 {
 	if (level > 0 && level < 6) this->PlayMusic(0);    // world 1
 	else if (level == 6) this->PlayMusic(4); //ballon boss
-	else if (level > 6 && level < 10) this->PlayMusic(1); // world 2
-	else if (level == 10) this->PlayMusic(0); // wrld 2 boss
+	else if (level >= 7 && level < 12) this->PlayMusic(1); // world 2
+	else if (level == 12) this->PlayMusic(0); // wrld 2 boss
 	else this->PlayMusic(0);
 
 }

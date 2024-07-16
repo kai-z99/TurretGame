@@ -20,12 +20,12 @@ int main(void)
 // 
 // 
 // 
-// MUSIC
 // 
-// level progress bar
+// 
+// 
 //resolve wanings
 // 
-//shop button, more back buttons
+//
 //
 // title screen
 // 

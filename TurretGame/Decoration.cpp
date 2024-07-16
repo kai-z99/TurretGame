@@ -32,6 +32,43 @@ Decoration::Decoration(int id, int x, int y)
 		this->scale = 3.0f;
 		break;
 
+
+	//cactus1
+	case 4:
+		this->texture = &textures[40];
+		this->scale = 1.0f;
+		break;
+
+	//cactus2
+	case 5:
+		this->texture = &textures[41];
+		this->scale = 1.0f;
+		break;
+
+	//cactus3
+	case 6:
+		this->texture = &textures[42];
+		this->scale = 1.0f;
+		break;
+
+	//pyramid
+	case 7:
+		this->texture = &textures[43];
+		this->scale = 1.0f;
+		break;
+
+	//stone1
+	case 8:
+		this->texture = &textures[44];
+		this->scale = 0.7f;
+		break;
+
+	//stone2
+	case 9:
+		this->texture = &textures[45];
+		this->scale = 1.0f;
+		break;
+
 	default:
 		std::cout << "texture not found, drawing Grass1" << '\n';
 		this->texture = &textures[20];

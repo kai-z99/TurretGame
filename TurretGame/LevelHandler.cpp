@@ -379,8 +379,8 @@ void LevelHandler::DrawCurrentLevelBackground()
     Texture2D* bg;
     if (lvl > 0 && lvl < 6) bg = &textures[29];    // world 1
     else if (lvl == 6) bg = &textures[34]; //ballon boss
-    else if (lvl > 6 && lvl < 10) bg = &textures[37]; // world 2
-    else if (lvl == 10) bg = &textures[35]; // wrld 2 boss
+    else if (lvl >= 7 && lvl < 12) bg = &textures[37]; // world 2
+    else if (lvl == 12) bg = &textures[35]; // wrld 2 boss
     else bg = &textures[3];
 
     Rectangle src = {0.0f, 0.0f, (float)bg->width, (float)bg->height};

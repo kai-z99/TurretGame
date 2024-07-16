@@ -163,8 +163,15 @@ void Game::Initialize()
 
     this->shopButton = new TextButton(posX, posY, width, height, "SHOP");
     
-    //------------------------------------------------
+    width = 230;
+    height = 130;
+    posX = (screenWidth / 2) - (width / 2);
+    posY = 700;
 
+    this->startButton = new TextButton(posX, posY, width, height, "START!");
+
+
+    //------------------------------------------------
 
 
     this->gameStats->totalCoins = 10000;
