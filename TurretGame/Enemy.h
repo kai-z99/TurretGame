@@ -16,6 +16,7 @@ public:
 
 	void SetPosition(float x, float y);
 	void SetCurrentVelocity(float x, float y);
+	void SetBaseVelocity(float x, float y);
 	void SetHealth(float health);
 	void ApplyKnockback(Bullet* b);
 	void ApplyKnockback(int frames);
@@ -38,7 +39,8 @@ public:
 	
 protected:
 	void DrawHealthbar(int yOffset, float barSize); //yOffset: how many px up from middle of image
-	void DrawBossHealthbar(const char* title);
+	void DrawBossHealthbar(const char* title, Color barColor, Color textColor);
+	void DrawShadow(int yOffset, int xOffset, float scale);
 
 	Vector2 position = {-300, -300};
 	Vector2 currentVelocity;

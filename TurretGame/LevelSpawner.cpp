@@ -18,6 +18,9 @@
 #include "SpinBirdEnemy.h"
 #include "BeetleEnemy.h"
 #include "BlackSoldierEnemy.h"
+#include "WizardBossEnemyP1.h"
+#include "WizardBulletEnemy.h"
+#include "WizardFireEnemy.h"
 
 LevelSpawner::LevelSpawner(LevelHandler* levelHandler)
 {
@@ -49,6 +52,7 @@ void LevelSpawner::HandleSpecialSpawning()
 	{
 	//balloon boss
 	case 6:
+	{
 		BalloonBossEnemy* boss = dynamic_cast<BalloonBossEnemy*>((*this->levelHandler->enemiesRef)[0]);
 
 		//throw bullets
@@ -67,6 +71,63 @@ void LevelSpawner::HandleSpecialSpawning()
 			boss->spawnedShield = true;
 		}
 		break;
+	}
+	//wizard boss
+	case 12:
+	{
+		WizardBossEnemyP1* boss = dynamic_cast<WizardBossEnemyP1*>((*this->levelHandler->enemiesRef)[0]);
+
+		//spawn bullets
+		if (boss->isActive && boss->isShootFrame)
+		{
+			WizardBulletEnemy* e = new WizardBulletEnemy();
+
+			std::pair<Vector2, Vector2> spawnInfo = boss->GetBulletSpawnInstructions();
+			Vector2 pos = spawnInfo.first;
+			Vector2 vel = spawnInfo.second;
+
+			e->SetPosition(pos.x, pos.y);
+			e->SetBaseVelocity(vel.x, vel.y);
+			this->levelHandler->enemiesRef->push_back(e);
+
+			//spawn fire if in phase 2
+			if (boss->GetPhase() == 2 && GetRandomValue(1,2) == 1)
+			{
+				WizardFireEnemy* w = new WizardFireEnemy();
+				w->SetPosition(GetRandomValue(deathBoundaryX + 80, screenWidth - 380), screenHeight + 100);
+				this->levelHandler->enemiesRef->push_back(w);
+			}
+			
+		}
+
+		else if (boss->isActive && boss->isBurstFrame)
+		{
+			this->SpawnWizardBurst(boss);
+		}
+
+		//make bullets blue if touch flame
+		if (boss->GetPhase() == 2)
+		{
+			for (Enemy* fire : *this->levelHandler->enemiesRef)
+			{
+				if (fire->isActive && fire->GetID() == 13 && dynamic_cast<WizardFireEnemy*>(fire)->GetLocalFramecount() > 1) //wizard fire enemy. check if local frame is 1 because at frame 0/1 its position is at {-300,300}
+				{
+					for (Enemy* bullet : *this->levelHandler->enemiesRef)
+					{
+						if (bullet->GetID() == 12) //wizard bullet enemy
+						{
+							if (CheckCollisionRecs(fire->GetHitbox(), bullet->GetHitbox()))
+							{
+								dynamic_cast<WizardBulletEnemy*>(bullet)->ignited = true;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		break;
+	}
 	}
 
 	std::vector<Vector2> slimePositions = {};
@@ -120,6 +181,54 @@ void LevelSpawner::SpawnBirdShield(BalloonBossEnemy* host)
 			this->levelHandler->enemiesRef->push_back(s4);
 		}
 	}
+}
+
+void LevelSpawner::SpawnWizardBurst(WizardBossEnemyP1* host)
+{
+	Vector2 bossPos = host->GetPosition();
+
+	//front
+	WizardBulletEnemy* e1 = new WizardBulletEnemy();
+	e1->SetPosition(bossPos.x - 200.0f, bossPos.y);
+	e1->SetBaseVelocity(-3.0f, 0.0f);
+
+	//front up
+	WizardBulletEnemy* e2 = new WizardBulletEnemy();
+	e2->SetPosition(bossPos.x - 200.0f * cosf(PI / 4.0f), bossPos.y + 200.0f * sinf(PI / 4.0f));
+	e2->SetBaseVelocity(-3.0 * cosf(PI / 4.0f), 3.0f * sinf(PI / 4.0f));
+
+	//most up
+	WizardBulletEnemy* e3 = new WizardBulletEnemy();
+	e3->SetPosition(bossPos.x - 200.0f * cosf(PI / 3.0f), bossPos.y + 200.0f * sinf(PI / 3.0f));
+	e3->SetBaseVelocity(-3.0f * cosf(PI / 3.0f), 3.0f * sinf(PI / 3.0f));
+
+	//front down
+	WizardBulletEnemy* e4 = new WizardBulletEnemy();
+	e4->SetPosition(bossPos.x - 200.0f * cosf(PI / 4.0f), bossPos.y - 200.0f * sinf(PI / 4.0f));
+	e4->SetBaseVelocity(-3.0 * cosf(PI / 4.0f), -3.0f * sinf(PI / 4.0f));
+
+	//most down
+	WizardBulletEnemy* e5 = new WizardBulletEnemy();
+	e5->SetPosition(bossPos.x - 200.0f * cosf(PI / 3.0f), bossPos.y - 200.0f * sinf(PI / 3.0f));
+	e5->SetBaseVelocity(-3.0f * cosf(PI / 3.0f), -3.0f * sinf(PI / 3.0f));
+
+	//30 degrees up
+	WizardBulletEnemy* e6 = new WizardBulletEnemy();
+	e6->SetPosition(bossPos.x - 200.0f * cosf(PI / 6.0f), bossPos.y + 200.0f * sinf(PI / 6.0f));
+	e6->SetBaseVelocity(-3.0f * cosf(PI / 6.0f), 3.0f * sinf(PI / 6.0f));
+
+	//30 degrees down
+	WizardBulletEnemy* e7 = new WizardBulletEnemy();
+	e7->SetPosition(bossPos.x - 200.0f * cosf(PI / 6.0f), bossPos.y - 200.0f * sinf(PI / 6.0f));
+	e7->SetBaseVelocity(-3.0f * cosf(PI / 6.0f), -3.0f * sinf(PI / 6.0f));
+
+	this->levelHandler->enemiesRef->push_back(e1);
+	this->levelHandler->enemiesRef->push_back(e2);
+	this->levelHandler->enemiesRef->push_back(e3);
+	this->levelHandler->enemiesRef->push_back(e4);
+	this->levelHandler->enemiesRef->push_back(e5);
+	this->levelHandler->enemiesRef->push_back(e6);
+	this->levelHandler->enemiesRef->push_back(e7);
 }
 
 
@@ -219,25 +328,41 @@ void LevelSpawner::SpawnEnemyByID(int id)
 		e = new BlackSoldierEnemy();
 		break;
 
+	case 11:
+		e = new WizardBossEnemyP1();
+		break;
+
+	case 12:
+		e = new WizardBulletEnemy();
+		break;
+
+	case 13:
+		e = new WizardFireEnemy();
+		break;
+
 	default:
 		std::cout << "Enemy id: " << id << " not found. Spawning soldier.";
 		e = new SoldierEnemy();
 		break;
 	}
 
-	if (e->GetID() != 7)
+	if (e->GetID() == 7)
 	{
-		e->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
+		e->SetPosition((float)screenWidth, (screenHeight / 2) + (menuBoundaryY / 2));
+		this->levelHandler->enemiesRef->push_back(e);
+	}
+
+	else if (e->GetID() == 11)
+	{
+		e->SetPosition((float)halfwayLevelX, (float)halfwayLevelY);
 		this->levelHandler->enemiesRef->push_back(e);
 	}
 
 	else
 	{
-		e->SetPosition((float)screenWidth, (screenHeight / 2) + (menuBoundaryY / 2));
+		e->SetPosition((float)screenWidth, (float)GetRandomValue(menuBoundaryY + 50, screenHeight - 50));
 		this->levelHandler->enemiesRef->push_back(e);
-
-	}
-	
+	}	
 }
 
 void LevelSpawner::SetSpawnMap(int level)
@@ -305,6 +430,10 @@ void LevelSpawner::SetSpawnMap(int level)
 		this->spawnMap[4] = { 2000,2101,2202,2300,  };
 		this->spawnMap[9] = { 500, 1000,1001,1002, 2300,2301, 2700 };
 		this->spawnMap[10] = { 1, 600, 1500, 1501 , 3000};
+		break;
+
+	case 12:
+		this->spawnMap[11] = { 1 };
 		break;
 
 	default:

@@ -124,6 +124,7 @@ void Game::Initialize()
     InitWindow(screenWidth, screenHeight, "TurretGame window");
     SetTargetFPS(60);  
     //ToggleFullscreen();
+    //ToggleBorderlessWindowed();
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
     LoadAllSounds();
@@ -174,7 +175,7 @@ void Game::Initialize()
     //------------------------------------------------
 
 
-    this->gameStats->totalCoins = 10000;
+    this->gameStats->totalCoins = 50000;
     this->gameStats->initialHealth = 30;
 
     this->currentLevel = 1;

@@ -98,7 +98,7 @@ void UpgradeMenuHandler::HandleUpgrade(Upgrade u)
 	case RapidfireU:
 		//increase a chrage every 4 levels
 		this->HandleAbilityUpgrade(u);
-		Turret::rapidFirerateMultiplier += 0.15f;
+		Turret::rapidFirerateMultiplier += 0.12f;
 
 		break;
 
@@ -123,7 +123,7 @@ void UpgradeMenuHandler::HandleUpgrade(Upgrade u)
 
 		IceSheet::width += 15;
 		IceSheet::height += 10;
-		IceSheet::duration += 15;
+		IceSheet::duration += 20;
 		IceSheet::intensity += 10;
 		break;
 
@@ -132,7 +132,7 @@ void UpgradeMenuHandler::HandleUpgrade(Upgrade u)
 		this->HandleAbilityUpgrade(u);
 
 		BombExplosion::radius += 10.0f;
-		BombExplosion::damage += 50.0f;
+		BombExplosion::damage += 170.0f;
 		BombExplosion::knockbackFrames += 3;
 		break;
 	
@@ -155,7 +155,7 @@ void UpgradeMenuHandler::HandleBulletUpgrade(int bulletID)
 	Game* g = this->game;
 	Turret* t = g->turret;
 
-	if (t->IsBulletUnlocked(bulletID)) t->SetFirerate(bulletID, t->GetFirerate(bulletID) + 0.2f);
+	if (t->IsBulletUnlocked(bulletID)) t->SetFirerate(bulletID, t->GetFirerate(bulletID) + this->GetFirerateIncreaseAmountByID(bulletID));
 	else (t->UnlockBullet(bulletID));
 
 	Sentry* s1 = this->game->sentry1;
@@ -203,6 +203,45 @@ void UpgradeMenuHandler::HandleAbilityUpgrade(Upgrade upgrade)
 		g->gameStats->initialAbilityValues[ability].charges += 1;
 		g->gameStats->initialAbilityValues[ability].maxCharges += 1;
 	}
+}
+
+float UpgradeMenuHandler::GetFirerateIncreaseAmountByID(int id)
+{
+	float increase;
+
+	switch (id)
+	{
+	case 1:
+		increase = 0.2f;
+		break;
+
+	case 2:
+		increase = 0.4f;
+		break;
+
+	case 3:
+		increase = 0.6f;
+		break;
+
+	case 4:
+		increase = 0.8f;
+		break;
+
+	case 5:
+		increase = 1.0f;
+		break;
+
+	case 6:
+		increase = 1.2f;
+		break;
+
+	default:
+		increase = 0.0f;
+		break;
+
+	}
+
+	return increase;
 }
 
 void UpgradeMenuHandler::Draw()

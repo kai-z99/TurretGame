@@ -29,7 +29,7 @@ private:
 
 	void DrawBulletTrails();
 	void DrawIceSheetParticles();
-	void DrawEnemyBurning();
+	void DrawEnemyEmits();
 	void DrawLightning();
 
 	const int taskLimit = 700;

@@ -12,6 +12,8 @@ public:
 
 	int GetLevel() const;
 
+	bool isBoss = false;
+
 private:
 	virtual bool MouseCollide(int mouseX, int mouseY);
 

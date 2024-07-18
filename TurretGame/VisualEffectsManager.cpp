@@ -71,7 +71,7 @@ void VisualEffectsManager::UpdateAndDraw()
 
     this->DrawBulletTrails();
     this->DrawIceSheetParticles();
-    this->DrawEnemyBurning();
+    this->DrawEnemyEmits();
     this->DrawLightning();
 }
 
@@ -147,7 +147,7 @@ void VisualEffectsManager::DrawIceSheetParticles()
 
 }
 
-void VisualEffectsManager::DrawEnemyBurning()
+void VisualEffectsManager::DrawEnemyEmits()
 {
     Game* g = this->game;
     for (Enemy* e : g->enemies)

@@ -286,7 +286,7 @@ void BalloonBossEnemy::Draw()
 	//else show the idle animation
 	else this->textureLoop->Draw();
 	
-	this->DrawBossHealthbar("ANGRY BALLOON BOY");
+	this->DrawBossHealthbar("ANGRY BALLOON BOY", GREEN, RED);
 
 	//Enemy::Draw(); // draw hitbox
 }

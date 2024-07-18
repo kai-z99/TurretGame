@@ -40,6 +40,7 @@ void KoopaEnemy::Update(unsigned int frame)
 
 void KoopaEnemy::Draw()
 {
+	this->DrawShadow(-8 ,0 ,0.7f);
 	this->textureLoop->Draw();
 	//DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);

@@ -59,11 +59,24 @@ void BeetleEnemy::Update(unsigned int frame)
 
 void BeetleEnemy::Draw()
 {
+	
 	//moving fwd
-	if (this->currentVelocity.x < 0.0f) this->textureLoop->Draw();
+	if (this->currentVelocity.x < 0.0f)
+	{
+		this->DrawShadow(-15, 10, 1.0f);
+		this->textureLoop->Draw();
+	}
+	
 
 	//moving vertical
-	else this->upLoop->Draw();
+	else
+	{
+		this->upLoop->Draw();
+		this->DrawShadow(-15, 0, 1.0f);
+	}
+		
+		
+		
 	//DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
 

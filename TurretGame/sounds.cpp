@@ -9,6 +9,7 @@ std::vector<const char*> trackFilePaths = {
     "Tracks/World3.mp3",               //2
     "Tracks/LevelSelect.mp3",          //3
     "Tracks/Boss1.mp3",                //4
+    "Tracks/Boss2.mp3",                //5
 };
 
 std::vector<const char*> soundEffectFilePaths = {

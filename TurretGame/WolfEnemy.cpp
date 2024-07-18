@@ -76,6 +76,7 @@ void WolfEnemy::Update(unsigned int frame)
 
 void WolfEnemy::Draw()
 {
+	this->DrawShadow(0, 0, 0.9f);
 	if (this->runFrames <= 0) this->textureLoop->Draw();
 	else this->runTexture->Draw();
 	//DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);

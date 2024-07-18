@@ -95,7 +95,7 @@ void Hotbar::HandleInput()
 	}
 
 	// manually check if keyboard activated ablility buttons.
-	for (int i = 0; i <= 5; i++)
+	for (int i = 0; i <= 4; i++)
 	{
 		if (IsKeyDown(49 + i))
 		{

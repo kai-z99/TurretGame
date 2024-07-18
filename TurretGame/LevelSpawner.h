@@ -7,6 +7,7 @@ class Game;
 class Enemy;
 class LevelHandler;
 class BalloonBossEnemy;
+class WizardBossEnemyP1;
 
 class LevelSpawner
 {
@@ -28,6 +29,7 @@ private:
 
 	void HandleSpecialSpawning();
 	void SpawnBirdShield(BalloonBossEnemy* host);
+	void SpawnWizardBurst(WizardBossEnemyP1* host);
 	
 	LevelHandler* levelHandler;
 	std::unordered_map<int, std::vector<unsigned int>> spawnMap; //id : frames to spawn

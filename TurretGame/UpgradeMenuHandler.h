@@ -19,4 +19,6 @@ private:
 
 	void HandleBulletUpgrade(int bulletID);
 	void HandleAbilityUpgrade(Upgrade upgrade);
+
+	float GetFirerateIncreaseAmountByID(int id);
 };

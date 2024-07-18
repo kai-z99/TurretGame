@@ -63,6 +63,11 @@ void TextureLoop::SetRotationOffset(float offset)
 	this->rotationOffset = offset;
 }
 
+Vector2 TextureLoop::GetDestDimensions() const
+{
+	return { this->textureDestRec.width, this->textureDestRec.height};
+}
+
 void TextureLoop::Update()
 {
 	//update part of picture we want to show based off anim state

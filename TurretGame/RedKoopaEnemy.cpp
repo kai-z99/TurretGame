@@ -62,8 +62,18 @@ void RedKoopaEnemy::Update(unsigned int frame)
 
 void RedKoopaEnemy::Draw()
 {
-	if (!this->shellForm) this->textureLoop->Draw();
-	else this->shellTextureLoop->Draw();
+	
+	if (!this->shellForm)
+	{
+		this->DrawShadow(-7, 0, 0.7f);
+		this->textureLoop->Draw();
+	}
+			
+	else
+	{
+		this->DrawShadow(-22, 0, 0.7f);
+		this->shellTextureLoop->Draw();
+	}
 	
 	//DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);

@@ -28,6 +28,8 @@ LevelSelectHandler::LevelSelectHandler(Game* g)
 		int levelID = level.first;
 		Vector2 pos = level.second;
 		g->levelButtons.push_back(new LevelButton(pos.x, pos.y, levelID));
+
+		if (levelID == 6 || levelID == 12) g->levelButtons[levelID - 1]->isBoss = true;
 	}
 
 	for (const auto& decoration : MapPositions::decorationPositions)

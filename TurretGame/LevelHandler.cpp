@@ -201,7 +201,7 @@ bool LevelHandler::NoActiveEnemies()
 {
     for (Enemy* e : this->game->enemies)
     {
-        if (e->isActive && e->GetID() != 8) return false; //id 8 is a bullet
+        if (e->isActive && e->GetID() != 8 && e->GetID() != 12 && e->GetID() != 13) return false; //id 8,12,13 are boss projectiles
     }
 
     return true;

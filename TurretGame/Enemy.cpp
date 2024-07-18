@@ -60,7 +60,6 @@ void Enemy::Update(unsigned int frame)
 
 	//MOVE
 
-
 	if (!this->movementChilled || this->resistChill)
 	{
 		this->position.x += this->currentVelocity.x;
@@ -92,17 +91,22 @@ void Enemy::DrawHealthbar(int yOffset, float barSize)
 	DrawRectangle((int)(this->position.x - (barWidth / 2)), (int)(this->position.y - yOffset), (int)(barWidth * (this->health / this->maxHealth)), (int)barHeight, GREEN);
 }
 
-void Enemy::DrawBossHealthbar(const char* title)
+void Enemy::DrawBossHealthbar(const char* title, Color barColor, Color textColor)
 {
 	int barWidth = 1200;
 	int barHeight = 50;
 
 	DrawRectangle((int)((screenWidth / 2.0f) + (deathBoundaryX / 2.0f) - (barWidth / 2.0f) - 5), 1000 - 5, barWidth + 10, barHeight + 10, BLACK);
 	DrawRectangle((int)((screenWidth / 2.0f) + (deathBoundaryX / 2.0f) - (barWidth / 2.0f)), 1000, (int)barWidth, (int)barHeight, RED);
-	DrawRectangle((int)((screenWidth / 2.0f) + (deathBoundaryX / 2.0f) - (barWidth / 2.0f)), 1000, (int)(barWidth * (this->health / this->maxHealth)), (int)barHeight, GREEN);
+	DrawRectangle((int)((screenWidth / 2.0f) + (deathBoundaryX / 2.0f) - (barWidth / 2.0f)), 1000, (int)(barWidth * (this->health / this->maxHealth)), (int)barHeight, barColor);
 
 	int textWidth = MeasureText(title, 30);
-	DrawText(title, (int)((screenWidth / 2.0f) + (deathBoundaryX / 2.0f) - (barWidth / 2.0f)), 960, 30, RED );
+	DrawText(title, (int)((screenWidth / 2.0f) + (deathBoundaryX / 2.0f) - (barWidth / 2.0f)), 960, 30, textColor);
+}
+
+void Enemy::DrawShadow(int yOffset, int xOffset, float scale)
+{
+	DrawEllipse((int)this->position.x + xOffset, (int)this->position.y + (this->textureLoop->GetDestDimensions().y / 2) + yOffset, 49 * scale, 21 * scale, {0,0,0,100});
 }
 
 void Enemy::ApplyKnockback(Bullet* b)
@@ -138,6 +142,11 @@ void Enemy::SetPosition(float x, float y)
 void Enemy::SetCurrentVelocity(float x, float y)
 {
 	this->currentVelocity = { x,y };
+}
+
+void Enemy::SetBaseVelocity(float x, float y)
+{
+	this->baseVelocity = { x,y };
 }
 
 void Enemy::SetHealth(float health)

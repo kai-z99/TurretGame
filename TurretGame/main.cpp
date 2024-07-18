@@ -17,17 +17,20 @@ int main(void)
 //
 //"Base Tint"
 //
+// particles for wiazrd bullet enemy. will emit even if ignited
+// blue fire partivle effect which wixard bullet will show like normal fire if ignited.
 // 
 // 
 // 
+// defeat enemy sound
 // 
-// 
+// database page
 // 
 //resolve wanings
 // 
 //
 //
-// title screen
+//
 // 
 //enemies can drop abilities that can be clicked? maybe for later
 //

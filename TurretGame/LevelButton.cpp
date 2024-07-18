@@ -19,6 +19,7 @@ void LevelButton::Draw()
 
 	DrawEllipse((int)this->position.x, (int)this->position.y, this->radius + 10.0f, this->radius, BLACK);
 	DrawEllipse((int)this->position.x, (int)this->position.y, this->radius + 3.0f , this->radius - 7.0f, col);
+	if (this->isBoss) DrawEllipse((int)this->position.x, (int)this->position.y, this->radius - 7.0f, this->radius - 17.0f, BLACK);
 
 
 	DrawText(std::to_string(this->level).c_str(), (int)this->position.x, (int)this->position.y, 30, GREEN);

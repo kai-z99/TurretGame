@@ -17,6 +17,8 @@ public:
 	void SetAnimationState(int state);
 	void SetRotationOffset(float offset);
 
+	Vector2 GetDestDimensions() const;
+
 private:
 	int segments;
 	int animationState;
