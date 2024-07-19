@@ -4,6 +4,7 @@
 
 #include "types.h"
 #include "helpers.h"
+#include "Database.h"
 
 #include "LevelHandler.h"
 #include "CollisionHandler.h"
@@ -191,32 +192,46 @@ void Game::Initialize()
     this->sentry2->SetTargetMode(0);
     
     //temp
+    //this->gameStats->initialAbilityValues =
+    //{
+    //    // type, {cooldown, lastshotframe, maxcharges, charges}
+    //    {Rapidfire, {550, INT_MIN, 1, 1}},
+    //    {Laser, {700, INT_MIN, 0, 0}},
+    //    {Explosive, {800, INT_MIN, 0, 0}},
+    //    {Ice, {750, INT_MIN, 0, 0}},
+    //    {Clone, {1000, INT_MIN, 0, 0}},
+    //};
+
+    //get starting ability charges
+    std::unordered_map<TurretAbility, short> startingCharges = AbilityDatabase::GetRoundStartAbilityCharges();
+
     this->gameStats->initialAbilityValues =
     {
-        // type, {cooldown, lastshotframe, maxcharges, charges}
-        {Rapidfire, {550, INT_MIN, 1, 1}},
-        {Laser, {700, INT_MIN, 0, 0}},
-        {Explosive, {800, INT_MIN, 0, 0}},
-        {Ice, {750, INT_MIN, 0, 0}},
-        {Clone, {1000, INT_MIN, 0, 0}},
-        {Burn, {550, INT_MIN, 0, 0}}
+        // type,    {               cooldown,                       lastshotframe,     maxcharges,                    charges}
+        {Rapidfire, {AbilityDatabase::abilityCooldowns.at(Rapidfire), INT_MIN, startingCharges[Rapidfire], startingCharges[Rapidfire]}},
+        {Laser,     {AbilityDatabase::abilityCooldowns.at(Laser),     INT_MIN, startingCharges[Laser],     startingCharges[Laser]}},
+        {Explosive, {AbilityDatabase::abilityCooldowns.at(Explosive), INT_MIN, startingCharges[Explosive], startingCharges[Explosive]}},
+        {Ice,       {AbilityDatabase::abilityCooldowns.at(Ice),       INT_MIN, startingCharges[Ice],       startingCharges[Ice]}},
+        {Clone,     {AbilityDatabase::abilityCooldowns.at(Clone),     INT_MIN, startingCharges[Clone],     startingCharges[Clone]}},
     };
 
     //upgrade , {level,price,}
     this->gameStats->upgradeStates =
     {
-        {TurretBulletU,{1, 50}},
-        {ShockwaveBulletU,{0, 100}},
-        {FireBulletU,{0, 1000}},
-        {SniperBulletU,{0, 2000}},
-        {LightningBulletU,{0, 3000}},
-        {BombBulletU,{0, 5000}},
-        {RapidfireU,{1, 300}},
-        {LaserU,{0, 850}},
-        {IceU,{0, 2150}},
-        {ExplosiveU, {0, 3100}},
-        {CloneU, {0, 5150}},
+        {TurretBulletU,      UpgradeDatabase::initalUpgradeInfo.at(TurretBulletU)},
+        {ShockwaveBulletU,   UpgradeDatabase::initalUpgradeInfo.at(ShockwaveBulletU)},
+        {FireBulletU,        UpgradeDatabase::initalUpgradeInfo.at(FireBulletU)},
+        {SniperBulletU,      UpgradeDatabase::initalUpgradeInfo.at(SniperBulletU)},
+        {LightningBulletU,   UpgradeDatabase::initalUpgradeInfo.at(LightningBulletU)},
+        {BombBulletU,        UpgradeDatabase::initalUpgradeInfo.at(BombBulletU)},
+        {RapidfireU,         UpgradeDatabase::initalUpgradeInfo.at(RapidfireU)},
+        {LaserU,             UpgradeDatabase::initalUpgradeInfo.at(LaserU)},
+        {IceU,               UpgradeDatabase::initalUpgradeInfo.at(IceU)},
+        {ExplosiveU,         UpgradeDatabase::initalUpgradeInfo.at(ExplosiveU)},
+        {CloneU,             UpgradeDatabase::initalUpgradeInfo.at(CloneU)},
     };
+
+    this->gameStats->upgradeStates = UpgradeDatabase::initalUpgradeInfo;
 
     this->levelHandler = new LevelHandler(this);
     this->collisionHandler = new CollisionHandler(this);

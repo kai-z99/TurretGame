@@ -133,6 +133,7 @@
     <ClCompile Include="BatEnemy.cpp" />
     <ClCompile Include="BeetleEnemy.cpp" />
     <ClCompile Include="BlackSoldierEnemy.cpp" />
+    <ClCompile Include="BlueFireEffect.cpp" />
     <ClCompile Include="BombBullet.cpp" />
     <ClCompile Include="BombExplosion.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="WizardBossEnemyP1.cpp" />
     <ClCompile Include="WizardBulletEnemy.cpp" />
     <ClCompile Include="WizardFireEnemy.cpp" />
+    <ClCompile Include="WizardSparkleEffect.cpp" />
     <ClCompile Include="WolfEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +194,7 @@
     <ClInclude Include="BatEnemy.h" />
     <ClInclude Include="BeetleEnemy.h" />
     <ClInclude Include="BlackSoldierEnemy.h" />
+    <ClInclude Include="BlueFireEffect.h" />
     <ClInclude Include="BombBullet.h" />
     <ClInclude Include="BombExplosion.h" />
     <ClInclude Include="Bullet.h" />
@@ -243,6 +246,7 @@
     <ClInclude Include="WizardBossEnemyP1.h" />
     <ClInclude Include="WizardBulletEnemy.h" />
     <ClInclude Include="WizardFireEnemy.h" />
+    <ClInclude Include="WizardSparkleEffect.h" />
     <ClInclude Include="WolfEnemy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

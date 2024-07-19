@@ -8,7 +8,6 @@ enum TurretAbility
 	Ice,
 	Explosive,
 	Clone,
-	Burn,
 };
 
 enum GameState
@@ -62,13 +61,6 @@ struct AbilityInfo
 	short charges;
 };
 
-
-struct UpgradeInfo
-{
-	int level;
-	int price;
-};
-
 struct GameStats
 {
 	int totalCoins;
@@ -77,7 +69,7 @@ struct GameStats
 
 	//abilities
 	std::unordered_map<TurretAbility, AbilityInfo> initialAbilityValues;
-	std::unordered_map<Upgrade, UpgradeInfo> upgradeStates;
+	std::unordered_map<Upgrade, std::pair<int,int>> upgradeStates; // Upgrade , {level,price}
 
 };
 

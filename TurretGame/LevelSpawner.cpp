@@ -91,7 +91,7 @@ void LevelSpawner::HandleSpecialSpawning()
 			this->levelHandler->enemiesRef->push_back(e);
 
 			//spawn fire if in phase 2
-			if (boss->GetPhase() == 2 && GetRandomValue(1,2) == 1)
+			if (boss->GetPhase() == 2 && boss->fireWithBullet)
 			{
 				WizardFireEnemy* w = new WizardFireEnemy();
 				w->SetPosition(GetRandomValue(deathBoundaryX + 80, screenWidth - 380), screenHeight + 100);

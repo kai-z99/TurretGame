@@ -17,10 +17,10 @@ int main(void)
 //
 //"Base Tint"
 //
-// particles for wiazrd bullet enemy. will emit even if ignited
-// blue fire partivle effect which wixard bullet will show like normal fire if ignited.
 // 
-// 
+//
+// finish db implementation. dont worry about progress save just yet. just finish making the game use it like upgrade changes db instead of games state. 
+// then games state uses db to update
 // 
 // defeat enemy sound
 // 

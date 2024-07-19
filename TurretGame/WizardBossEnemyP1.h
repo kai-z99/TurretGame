@@ -17,7 +17,7 @@ public:
 	std::pair<Vector2, Vector2> GetBulletSpawnInstructions(); // Position, Velocity. based on position and mode
 
 	bool isShootFrame;
-	bool isFireFrame;
+	bool fireWithBullet;
 	bool isBurstFrame;
 
 	friend class WizardBulletEnemy;

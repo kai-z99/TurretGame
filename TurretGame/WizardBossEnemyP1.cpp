@@ -40,6 +40,8 @@ WizardBossEnemyP1::WizardBossEnemyP1()
 	this->mode = 1;
 	this->timesCrossed = 0;
 
+	this->fireWithBullet = true;
+
 }
 
 void WizardBossEnemyP1::Update(unsigned int frame)
@@ -272,17 +274,16 @@ void WizardBossEnemyP1::HandleMovement()
 void WizardBossEnemyP1::HandleShooting()
 {
 	// in bounds
-	if (this->mode != 4 && this->position.y > menuBoundaryY + 100 && this->position.y < screenHeight - 100)
+	if (this->position.y > menuBoundaryY + 100 && this->position.y < screenHeight - 100)
 	{
-		this->isBurstFrame = false;
-
 		//phase 1
 		if (this->phase == 1)
 		{
-			int rand = GetRandomValue(1, 3);
+			this->isBurstFrame = false;
+			int rand = GetRandomValue(1, 4);
 
-			// always shoots if in dropping mode
-			if (this->localFramecount % 60 == 0 && (rand != 1 || this->mode == 2)) //66% chance every 60 frames
+			// 75% chance every 60 frames, always shoots if in dropping mode
+			if (this->localFramecount % 60 == 0 && (rand != 1 || this->mode == 2))
 			{
 				this->isShootFrame = true;
 			}
@@ -296,30 +297,69 @@ void WizardBossEnemyP1::HandleShooting()
 		else
 		{
 			int rand = GetRandomValue(1, 100);
+			
+			//cross and reposition: slower shooting with chance of burst
+			if (this->mode == 1 || this->mode == 3)
+			{
+				//30 percent chance of burst
+				if (this->localFramecount % 50 == 0 && rand > 70)
+				{
+					this->isBurstFrame = true;
+					this->isShootFrame = false;
+				}
 
-			// always shoots if in dropping mode
-			if (this->localFramecount % 50 == 0 && (rand > 25 || this->mode == 2)) //75% chance every 50 frames
-			{
-				this->isShootFrame = true;
+				//high chance of normal shot
+				else if (this->localFramecount % 50 == 0 && rand > 15) //85% chance every 50 frames
+				{
+					this->isShootFrame = true;
+					this->isBurstFrame = false;
+					this->fireWithBullet = !this->fireWithBullet;
+				}
+
+				else
+				{
+					this->isShootFrame = false;
+					this->isBurstFrame = false;
+				}
 			}
-			//shoot frequently in ascending mode
-			else if (this->localFramecount % 30 == 0 && this->mode == 5 && rand != 1)
+
+			//ascending/drop: shoot frequently. never burst.
+			else if (this->mode == 5 || this->mode == 2)
 			{
-				this->isShootFrame = true;
+				this->isBurstFrame = false;
+
+				if (this->localFramecount % 30 == 0)
+				{
+					this->isShootFrame = true;
+					this->fireWithBullet = !this->fireWithBullet;
+				}
+
+				else
+				{
+					this->isShootFrame = false;
+				}
+				
 			}
-			else
+
+			//hover: always shoot burst at modeframe 60
+			else if (this->mode == 4)
 			{
 				this->isShootFrame = false;
+
+				if (this->modeFramecount == 60)
+				{
+					this->isBurstFrame = true;
+				}
+				else
+				{
+					this->isBurstFrame = false;
+				}
+				
 			}
 		}	
 	}
 
-	//in mode 4
-	else if (this->mode == 4 && this->modeFramecount == 60)
-	{
-		this->isBurstFrame = true;
-	}
-
+	//no shooting out of bounds
 	else
 	{
 		this->isShootFrame = false;

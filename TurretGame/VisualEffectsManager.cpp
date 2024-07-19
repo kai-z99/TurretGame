@@ -2,12 +2,16 @@
 #include "CoinSplashEffect.h"
 #include "ExplosionEffect.h"
 #include "FireEffect.h"
+#include "BlueFireEffect.h"
 #include "IceSparkleEffect.h"
 #include "SparkleEffect.h"
+#include "WizardSparkleEffect.h"
+
 
 #include "Game.h"
 #include "Bullet.h"
 #include "Enemy.h"
+#include "WizardBulletEnemy.h"
 #include "IceSheet.h"
 
 #include "helpers.h"
@@ -47,6 +51,12 @@ void VisualEffectsManager::DisplayFire(Vector2 pos, float scale)
 	this->tasks.push_back(v);
 }
 
+void VisualEffectsManager::DisplayBlueFire(Vector2 pos, float scale)
+{
+    VisualEffect* v = new BlueFireEffect(pos, scale);
+    this->tasks.push_back(v);
+}
+
 void VisualEffectsManager::DisplayIceSparkle(Vector2 pos, float scale)
 {
     VisualEffect* v = new IceSparkleEffect(pos, scale);
@@ -58,6 +68,13 @@ void VisualEffectsManager::DisplaySparkle(Vector2 pos, float scale)
     VisualEffect* v = new SparkleEffect(pos, scale);
     this->tasks.push_back(v);
 }
+
+void VisualEffectsManager::DisplayWizardSparkle(Vector2 pos, float scale)
+{
+    VisualEffect* v = new WizardSparkleEffect(pos, scale);
+    this->tasks.push_back(v);
+}
+
 
 
 void VisualEffectsManager::UpdateAndDraw()
@@ -80,7 +97,7 @@ void VisualEffectsManager::DrawBulletTrails()
     Game* g = this->game;
     for (Bullet* b : g->bullets)
     {
-        //draw firebullet on fire
+        //draw firebullet trail
         if (b->isActive && b->GetID() == 3 && g->frameCount % 2 == 0)
         {
             Vector2 firePos = b->GetPosition();
@@ -150,9 +167,39 @@ void VisualEffectsManager::DrawIceSheetParticles()
 void VisualEffectsManager::DrawEnemyEmits()
 {
     Game* g = this->game;
+
+    //private local frame count
+    static int frame = 0;
+    frame++;
+
     for (Enemy* e : g->enemies)
     {
+        //draw fire if burning
         if (e->isActive && e->GetStatusEffects()[Burning] % 8 == 7) g->effectManager->DisplayFire(e->GetPosition(), 1.0f);
+
+        
+        if (e->isActive && e->GetID() == 12 )
+        {
+            //particle
+            if (frame % 10 == 0)
+            {
+                Vector2 pos = e->GetPosition();
+                pos.x += GetRandomFloat(-10.0f, 10.0f);
+                pos.y += GetRandomFloat(-10.0f, 10.0f);
+                this->DisplayWizardSparkle(pos, GetRandomFloat(1.5f,3.5f));
+            }
+
+
+            //ignited fire
+            if (dynamic_cast<WizardBulletEnemy*>(e)->ignited && frame % 6 == 0)
+            {
+                this->DisplayBlueFire(e->GetPosition(), 3.0f);
+            }
+
+
+        }
+
+
     }
 }
 

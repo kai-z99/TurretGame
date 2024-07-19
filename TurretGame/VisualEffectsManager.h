@@ -13,8 +13,10 @@ public:
 	void DisplayCoinSplash(Vector2 pos, int amount);
 	void DisplayExplosion(Vector2 pos);
 	void DisplayFire(Vector2 pos, float scale);
+	void DisplayBlueFire(Vector2 pos, float scale);
 	void DisplayIceSparkle(Vector2 pos, float scale);
 	void DisplaySparkle(Vector2 pos, float scale);
+	void DisplayWizardSparkle(Vector2 pos, float scale);
 
 	void UpdateAndDraw();
 

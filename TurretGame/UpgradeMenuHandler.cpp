@@ -25,14 +25,14 @@ UpgradeMenuHandler::UpgradeMenuHandler(Game* g)
 	for (int i = 0; i <= 5; i++)
 	{
 		this->game->upgradeButtons.push_back(new UpgradeButton(130 * i + 300, 500, (Upgrade)i));
-		this->game->upgradeButtons[i]->SetPrice(this->game->gameStats->upgradeStates[Upgrade(i)].price);
+		this->game->upgradeButtons[i]->SetPrice(this->game->gameStats->upgradeStates[Upgrade(i)].second);
 	}
 
 	//abilities
 	for (int i = 6; i <= 10; i++)
 	{
 		this->game->upgradeButtons.push_back(new UpgradeButton(130 * i + 300, 800, (Upgrade)i));
-		this->game->upgradeButtons[i]->SetPrice(this->game->gameStats->upgradeStates[Upgrade(i)].price);
+		this->game->upgradeButtons[i]->SetPrice(this->game->gameStats->upgradeStates[Upgrade(i)].second);
 	}
 
 }
@@ -52,11 +52,11 @@ void UpgradeMenuHandler::Update()
 			this->HandleUpgrade(u->GetUpgrade()); //do what the upgrade does
 
 			//add a levl to that upgrade
-			g->gameStats->upgradeStates[u->GetUpgrade()].level += 1;
+			g->gameStats->upgradeStates[u->GetUpgrade()].first += 1; //increase level by one. u
 
 			//increase the price of it
-			g->gameStats->upgradeStates[u->GetUpgrade()].price += (int)(10 + g->gameStats->upgradeStates[u->GetUpgrade()].price * 0.2);
-			g->upgradeButtons[u->GetUpgrade()]->SetPrice(this->game->gameStats->upgradeStates[u->GetUpgrade()].price);
+			g->gameStats->upgradeStates[u->GetUpgrade()].second += (int)(10 + g->gameStats->upgradeStates[u->GetUpgrade()].second * 0.2);
+			g->upgradeButtons[u->GetUpgrade()]->SetPrice(this->game->gameStats->upgradeStates[u->GetUpgrade()].second);
 
 		}
 	}
@@ -198,7 +198,7 @@ void UpgradeMenuHandler::HandleAbilityUpgrade(Upgrade upgrade)
 		break;
 	}
 
-	if (g->gameStats->upgradeStates[upgrade].level % 4 == 0)
+	if (g->gameStats->upgradeStates[upgrade].first % 4 == 0)
 	{
 		g->gameStats->initialAbilityValues[ability].charges += 1;
 		g->gameStats->initialAbilityValues[ability].maxCharges += 1;
@@ -262,7 +262,7 @@ void UpgradeMenuHandler::Draw()
 		DrawText(text.c_str(), (int)u->GetPosition().x - width / 2, (int)u->GetPosition().y - 90, 30, (g->gameStats->totalCoins >= u->GetPrice()) ? GREEN : RED);
 
 		//level
-		text = std::to_string(g->gameStats->upgradeStates[u->GetUpgrade()].level);
+		text = std::to_string(g->gameStats->upgradeStates[u->GetUpgrade()].first);
 		width = MeasureText(text.c_str(), 30);
 		DrawText(text.c_str(), (int)u->GetPosition().x - (width / 2), (int)u->GetPosition().y + 70, 30, BLACK);
 	}
