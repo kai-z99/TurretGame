@@ -7,10 +7,9 @@
 
 
 
-Hotbar::Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& initialAbilityValues)
+Hotbar::Hotbar()
 {
 	//create the buttons
-
 	int buttonY = (menuBoundaryY / 2) - (AbilityButton::height / 2);
 
 	for (int i = 0; i <= 4; i++)

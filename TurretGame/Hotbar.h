@@ -10,7 +10,7 @@ class Button;
 class Hotbar
 {
 public:
-	Hotbar(std::unordered_map<TurretAbility, AbilityInfo>& initialAbilityValues);
+	Hotbar();
 	void Draw(CurrentLevelStats& currentLevelStats, unsigned int currentLevelFrame, int currentLevelLength);
 	void Update(unsigned int frame, std::unordered_map<TurretAbility, AbilityInfo>& abilityStates);
 	void HandleInput();

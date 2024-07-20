@@ -5,6 +5,7 @@
 #include "constants.h"
 #include "types.h"
 #include "helpers.h"
+#include "Database.h"
 
 #include "Game.h"
 #include "UpgradeButton.h"
@@ -47,201 +48,25 @@ void UpgradeMenuHandler::Update()
 
 		if (u->isClicked && (g->gameStats->totalCoins >= u->GetPrice()))
 		{
-			g->gameStats->totalCoins -= u->GetPrice(); //spend coins
+			//update coin amount in db
+			UpgradeDatabase::totalCoins -= u->GetPrice();
 
-			this->HandleUpgrade(u->GetUpgrade()); //do what the upgrade does
+			//update level in db
+			UpgradeDatabase::currentUpgradeInfo[u->GetUpgrade()].first += 1;
 
-			//add a levl to that upgrade
-			g->gameStats->upgradeStates[u->GetUpgrade()].first += 1; //increase level by one. u
+			//update price in db
+			UpgradeDatabase::currentUpgradeInfo[u->GetUpgrade()].second += (int)(10 + UpgradeDatabase::currentUpgradeInfo[u->GetUpgrade()].second * 0.2);
 
-			//increase the price of it
-			g->gameStats->upgradeStates[u->GetUpgrade()].second += (int)(10 + g->gameStats->upgradeStates[u->GetUpgrade()].second * 0.2);
+			//use that new db info to set game stats
+			g->SetGameStatsToDatabaseValues();
+
+			//increase the price of the button
 			g->upgradeButtons[u->GetUpgrade()]->SetPrice(this->game->gameStats->upgradeStates[u->GetUpgrade()].second);
 
 		}
 	}
 
 	g->quitButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
-}
-
-void UpgradeMenuHandler::HandleUpgrade(Upgrade u)
-{
-	Game* g = this->game;
-	Turret* t = g->turret;
-
-	switch (u)
-	{
-	case TurretBulletU:
-		this->HandleBulletUpgrade(1);
-		break;
-
-	case ShockwaveBulletU: //id for shockwave bullet is 2
-		this->HandleBulletUpgrade(2);
-		break;
-
-	case FireBulletU://id for shockwave bullet is 3
-		this->HandleBulletUpgrade(3);
-		break;
-
-	case SniperBulletU:
-		this->HandleBulletUpgrade(4);
-		break;
-
-	case LightningBulletU:
-		this->HandleBulletUpgrade(5);
-		break;
-
-	case BombBulletU:
-		this->HandleBulletUpgrade(6);
-		break;
-
-	case RapidfireU:
-		//increase a chrage every 4 levels
-		this->HandleAbilityUpgrade(u);
-		Turret::rapidFirerateMultiplier += 0.12f;
-
-		break;
-
-	case LaserU:
-		this->HandleAbilityUpgrade(u);
-
-		if (TurretLaser::duration >= 400)
-		{
-			TurretLaser::duration = 100;
-			TurretLaser::damage += 15.0f;
-			TurretLaser::color = RotateColorChannels(TurretLaser::color);
-		}
-
-		TurretLaser::duration += 100;
-
-		break;
-
-	//TEMP
-	case IceU:
-		//increase a chrage every 4 levels
-		this->HandleAbilityUpgrade(u);
-
-		IceSheet::width += 15;
-		IceSheet::height += 10;
-		IceSheet::duration += 20;
-		IceSheet::intensity += 10;
-		break;
-
-	//TEMP
-	case ExplosiveU:
-		this->HandleAbilityUpgrade(u);
-
-		BombExplosion::radius += 10.0f;
-		BombExplosion::damage += 170.0f;
-		BombExplosion::knockbackFrames += 3;
-		break;
-	
-	case CloneU:
-		this->HandleAbilityUpgrade(u);
-
-		Sentry::damageMultiplier += 0.1f;
-		Sentry::duration += 20;
-		break;
-
-
-	default:
-		std::cout << "Upgrade does not exist.";
-		break;
-	}
-}
-
-void UpgradeMenuHandler::HandleBulletUpgrade(int bulletID)
-{
-	Game* g = this->game;
-	Turret* t = g->turret;
-
-	if (t->IsBulletUnlocked(bulletID)) t->SetFirerate(bulletID, t->GetFirerate(bulletID) + this->GetFirerateIncreaseAmountByID(bulletID));
-	else (t->UnlockBullet(bulletID));
-
-	Sentry* s1 = this->game->sentry1;
-	Sentry* s2 = this->game->sentry2;
-
-	//sentries
-	if (s1->IsBulletUnlocked(bulletID)) s1->SetFirerate(bulletID, s1->GetFirerate(bulletID) + 0.1f);
-	else (s1->UnlockBullet(bulletID));
-
-	if (s2->IsBulletUnlocked(bulletID)) s2->SetFirerate(bulletID, s2->GetFirerate(bulletID) + 0.1f);
-	else (s2->UnlockBullet(bulletID));
-}
-
-void UpgradeMenuHandler::HandleAbilityUpgrade(Upgrade upgrade)
-{
-	Game* g = this->game;
-
-	TurretAbility ability;
-
-	switch (upgrade)
-	{
-	case RapidfireU:
-		ability = Rapidfire;
-		break;
-
-	case LaserU:
-		ability = Laser;
-		break;
-
-	case IceU:
-		ability = Ice;
-		break;
-
-	case ExplosiveU:
-		ability = Explosive;
-		break;
-
-	case CloneU:
-		ability = Clone;
-		break;
-	}
-
-	if (g->gameStats->upgradeStates[upgrade].first % 4 == 0)
-	{
-		g->gameStats->initialAbilityValues[ability].charges += 1;
-		g->gameStats->initialAbilityValues[ability].maxCharges += 1;
-	}
-}
-
-float UpgradeMenuHandler::GetFirerateIncreaseAmountByID(int id)
-{
-	float increase;
-
-	switch (id)
-	{
-	case 1:
-		increase = 0.2f;
-		break;
-
-	case 2:
-		increase = 0.4f;
-		break;
-
-	case 3:
-		increase = 0.6f;
-		break;
-
-	case 4:
-		increase = 0.8f;
-		break;
-
-	case 5:
-		increase = 1.0f;
-		break;
-
-	case 6:
-		increase = 1.2f;
-		break;
-
-	default:
-		increase = 0.0f;
-		break;
-
-	}
-
-	return increase;
 }
 
 void UpgradeMenuHandler::Draw()
@@ -276,6 +101,12 @@ void UpgradeMenuHandler::HandleInput()
 	{
 		this->game->gameState = LevelSelectMenu;
 		//this->game->quitButton->isClicked = false;
+
+
+
+
+
+
 	}
 }
 

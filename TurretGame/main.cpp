@@ -28,7 +28,7 @@ int main(void)
 // 
 //resolve wanings
 // 
-//
+// levels compelte in gamestats. another db item.
 //
 //
 // 

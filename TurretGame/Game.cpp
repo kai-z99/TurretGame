@@ -23,6 +23,7 @@
 #include "BombExplosion.h"
 #include "IceSheet.h"
 #include "Turret.h"
+#include "TurretLaser.h"
 #include "Sentry.h"
 #include "Hotbar.h"
 
@@ -120,6 +121,216 @@ void Game::DrawMousePos()
     DrawText(text.c_str(), (int)this->mousePos.x, (int)this->mousePos.y, 20, BLACK);
 }
 
+void Game::SetGameStatsToDefault()
+{
+    //upgrade , {level,price,}
+    this->gameStats->upgradeStates =
+    {
+        //should change to currentUpgradeInfo? no?
+        {TurretBulletU,      UpgradeDatabase::initialUpgradeInfo.at(TurretBulletU)},
+        {ShockwaveBulletU,   UpgradeDatabase::initialUpgradeInfo.at(ShockwaveBulletU)},
+        {FireBulletU,        UpgradeDatabase::initialUpgradeInfo.at(FireBulletU)},
+        {SniperBulletU,      UpgradeDatabase::initialUpgradeInfo.at(SniperBulletU)},
+        {LightningBulletU,   UpgradeDatabase::initialUpgradeInfo.at(LightningBulletU)},
+        {BombBulletU,        UpgradeDatabase::initialUpgradeInfo.at(BombBulletU)},
+        {RapidfireU,         UpgradeDatabase::initialUpgradeInfo.at(RapidfireU)},
+        {LaserU,             UpgradeDatabase::initialUpgradeInfo.at(LaserU)},
+        {IceU,               UpgradeDatabase::initialUpgradeInfo.at(IceU)},
+        {ExplosiveU,         UpgradeDatabase::initialUpgradeInfo.at(ExplosiveU)},
+        {CloneU,             UpgradeDatabase::initialUpgradeInfo.at(CloneU)},
+    };
+
+    //get starting ability charges
+    std::unordered_map<TurretAbility, short> startingCharges = AbilityDatabase::GetRoundStartAbilityCharges();
+
+    this->gameStats->initialAbilityValues =
+    {
+        // type,    {               cooldown,                       lastshotframe,     maxcharges,                    charges}
+        {Rapidfire, {AbilityDatabase::abilityCooldowns.at(Rapidfire), INT_MIN, startingCharges[Rapidfire], startingCharges[Rapidfire]}},
+        {Laser,     {AbilityDatabase::abilityCooldowns.at(Laser),     INT_MIN, startingCharges[Laser],     startingCharges[Laser]}},
+        {Explosive, {AbilityDatabase::abilityCooldowns.at(Explosive), INT_MIN, startingCharges[Explosive], startingCharges[Explosive]}},
+        {Ice,       {AbilityDatabase::abilityCooldowns.at(Ice),       INT_MIN, startingCharges[Ice],       startingCharges[Ice]}},
+        {Clone,     {AbilityDatabase::abilityCooldowns.at(Clone),     INT_MIN, startingCharges[Clone],     startingCharges[Clone]}},
+    };
+
+    this->gameStats->totalCoins = 0;
+}
+
+//should be from db
+void Game::SetAbilityStaticsToDefault()
+{
+    Turret::rapidFirerateMultiplier = 2.0f;
+    Turret::rapidFireDuration = 240;
+
+    TurretLaser::damage = 5.0f;
+    TurretLaser::duration = 100;
+    TurretLaser::color = RED;
+
+    IceSheet::width = 500;
+    IceSheet::height = 300;
+    IceSheet::duration = 240;
+    IceSheet::intensity = 5;
+
+    BombExplosion::damage = 300.0f;
+    BombExplosion::knockbackFrames = 30;
+    BombExplosion::radius = 300.0f;
+    BombExplosion::bulletRadius = 150.0f;
+
+    Sentry::damageMultiplier = 0.5f;
+    Sentry::duration = 500;
+}
+
+void Game::SetGameStatsToDatabaseValues()
+{
+    //merge upgrade states
+    for (const auto& upgradeInfo : UpgradeDatabase::currentUpgradeInfo)
+    {
+        this->gameStats->upgradeStates[upgradeInfo.first] = upgradeInfo.second;
+    }
+
+    std::unordered_map<TurretAbility, short> abilityCharges = AbilityDatabase::GetRoundStartAbilityCharges();
+
+    //merge initial ability states
+    for (const auto& abilityCD : AbilityDatabase::abilityCooldowns)
+    {
+        this->gameStats->initialAbilityValues[abilityCD.first].maxCharges = abilityCharges[abilityCD.first];
+        this->gameStats->initialAbilityValues[abilityCD.first].charges = abilityCharges[abilityCD.first];
+    }
+
+    this->gameStats->totalCoins = UpgradeDatabase::totalCoins;
+    //now all we have to do is to use new upgrade info to set turret capabilities.
+}
+
+void Game::SetTurretsAndAbilitiesToUpgradeValues()
+{
+    //SET EVERYTHING TO DEFAULT AND SIMULATE UPGRADING IT [UPGRADELEVEL] TIMES.
+    Turret* t = new Turret();
+    Sentry* s1 = new Sentry();
+    Sentry* s2 = new Sentry();
+
+    this->SetAbilityStaticsToDefault();
+
+    for (const auto& upgradeState : this->gameStats->upgradeStates)
+    {
+        
+        //loop upgradelevel amount of times to simulate upgrade that many times
+        for (int i = 0; i < upgradeState.second.first; i++)
+        {
+            switch (upgradeState.first)
+            {
+            case TurretBulletU:
+                this->HandleBulletUpgrade(1, t, s1, s2);
+                break;
+
+            case ShockwaveBulletU: //id for shockwave bullet is 2
+                this->HandleBulletUpgrade(2, t, s1, s2);
+                break;
+
+            case FireBulletU://id for shockwave bullet is 3
+                this->HandleBulletUpgrade(3, t, s1, s2);
+                break;
+
+            case SniperBulletU:
+                this->HandleBulletUpgrade(4, t, s1, s2);
+                break;
+
+            case LightningBulletU:
+                this->HandleBulletUpgrade(5, t, s1, s2);
+
+            case BombBulletU:
+                this->HandleBulletUpgrade(6, t, s1, s2);
+                break;
+
+            case RapidfireU:
+                this->HandleAbilityUpgrade(upgradeState.first);
+                break;
+
+            case LaserU:
+                this->HandleAbilityUpgrade(upgradeState.first);
+                break;
+
+            case IceU:
+                this->HandleAbilityUpgrade(upgradeState.first);
+                break;
+
+            case ExplosiveU:
+                this->HandleAbilityUpgrade(upgradeState.first);
+                break;
+
+            case CloneU:
+                this->HandleAbilityUpgrade(upgradeState.first);
+                break;
+
+            default:
+                std::cout << "Upgrade does not exist.";
+                break;
+            }
+        }
+    }
+
+    delete this->turret;
+    delete this->sentry1;
+    delete this->sentry2;
+
+    this->turret = t;
+    this->sentry1 = s1;
+    this->sentry2 = s2;
+}
+
+//helper
+void Game::HandleBulletUpgrade(int bulletID, Turret* t, Sentry* s1, Sentry* s2)
+{
+    if (t->IsBulletUnlocked(bulletID)) t->SetFirerate(bulletID, t->GetFirerate(bulletID) + UpgradeDatabase::bulletFirerateIncreaseAmounts.at(bulletID));
+    else (t->UnlockBullet(bulletID));
+
+    //sentries
+    if (this->sentry1->IsBulletUnlocked(bulletID)) this->sentry1->SetFirerate(bulletID, this->sentry1->GetFirerate(bulletID) + 0.1f);
+    else (this->sentry1->UnlockBullet(bulletID));
+
+    if (this->sentry2->IsBulletUnlocked(bulletID)) this->sentry2->SetFirerate(bulletID, this->sentry2->GetFirerate(bulletID) + 0.1f);
+    else (this->sentry2->UnlockBullet(bulletID));
+}
+
+//use db
+void Game::HandleAbilityUpgrade(Upgrade upgrade)
+{
+    switch (upgrade)
+    {
+    case RapidfireU:
+        Turret::rapidFirerateMultiplier += 0.12f;
+        break;
+
+    case LaserU:
+        if (TurretLaser::duration >= 400)
+        {
+            TurretLaser::duration = 100;
+            TurretLaser::damage += 15.0f;
+            TurretLaser::color = RotateColorChannels(TurretLaser::color);
+        }
+            
+        TurretLaser::duration += 100;
+        break;
+
+    case IceU:
+        IceSheet::width += 20;
+		IceSheet::height += 13;
+		IceSheet::duration += 50;
+		IceSheet::intensity += 20;
+        break;
+
+    case ExplosiveU:
+        BombExplosion::radius += 10.0f;
+		BombExplosion::damage += 170.0f;
+		BombExplosion::knockbackFrames += 3;
+        break;
+
+    case CloneU:
+        Sentry::damageMultiplier += 0.1f;
+		Sentry::duration += 20;
+        break;
+    }
+}
+
 void Game::Initialize()
 {
     InitWindow(screenWidth, screenHeight, "TurretGame window");
@@ -190,48 +401,11 @@ void Game::Initialize()
     this->sentry2 = new Sentry();
     this->sentry2->SetPosition(100, 900);
     this->sentry2->SetTargetMode(0);
-    
-    //temp
-    //this->gameStats->initialAbilityValues =
-    //{
-    //    // type, {cooldown, lastshotframe, maxcharges, charges}
-    //    {Rapidfire, {550, INT_MIN, 1, 1}},
-    //    {Laser, {700, INT_MIN, 0, 0}},
-    //    {Explosive, {800, INT_MIN, 0, 0}},
-    //    {Ice, {750, INT_MIN, 0, 0}},
-    //    {Clone, {1000, INT_MIN, 0, 0}},
-    //};
 
-    //get starting ability charges
-    std::unordered_map<TurretAbility, short> startingCharges = AbilityDatabase::GetRoundStartAbilityCharges();
+    this->SetGameStatsToDefault();
+    this->SetGameStatsToDatabaseValues();
 
-    this->gameStats->initialAbilityValues =
-    {
-        // type,    {               cooldown,                       lastshotframe,     maxcharges,                    charges}
-        {Rapidfire, {AbilityDatabase::abilityCooldowns.at(Rapidfire), INT_MIN, startingCharges[Rapidfire], startingCharges[Rapidfire]}},
-        {Laser,     {AbilityDatabase::abilityCooldowns.at(Laser),     INT_MIN, startingCharges[Laser],     startingCharges[Laser]}},
-        {Explosive, {AbilityDatabase::abilityCooldowns.at(Explosive), INT_MIN, startingCharges[Explosive], startingCharges[Explosive]}},
-        {Ice,       {AbilityDatabase::abilityCooldowns.at(Ice),       INT_MIN, startingCharges[Ice],       startingCharges[Ice]}},
-        {Clone,     {AbilityDatabase::abilityCooldowns.at(Clone),     INT_MIN, startingCharges[Clone],     startingCharges[Clone]}},
-    };
-
-    //upgrade , {level,price,}
-    this->gameStats->upgradeStates =
-    {
-        {TurretBulletU,      UpgradeDatabase::initalUpgradeInfo.at(TurretBulletU)},
-        {ShockwaveBulletU,   UpgradeDatabase::initalUpgradeInfo.at(ShockwaveBulletU)},
-        {FireBulletU,        UpgradeDatabase::initalUpgradeInfo.at(FireBulletU)},
-        {SniperBulletU,      UpgradeDatabase::initalUpgradeInfo.at(SniperBulletU)},
-        {LightningBulletU,   UpgradeDatabase::initalUpgradeInfo.at(LightningBulletU)},
-        {BombBulletU,        UpgradeDatabase::initalUpgradeInfo.at(BombBulletU)},
-        {RapidfireU,         UpgradeDatabase::initalUpgradeInfo.at(RapidfireU)},
-        {LaserU,             UpgradeDatabase::initalUpgradeInfo.at(LaserU)},
-        {IceU,               UpgradeDatabase::initalUpgradeInfo.at(IceU)},
-        {ExplosiveU,         UpgradeDatabase::initalUpgradeInfo.at(ExplosiveU)},
-        {CloneU,             UpgradeDatabase::initalUpgradeInfo.at(CloneU)},
-    };
-
-    this->gameStats->upgradeStates = UpgradeDatabase::initalUpgradeInfo;
+    //this->gameStats->upgradeStates = UpgradeDatabase::initialUpgradeInfo;
 
     this->levelHandler = new LevelHandler(this);
     this->collisionHandler = new CollisionHandler(this);
@@ -250,7 +424,8 @@ void Game::Initialize()
 void Game::StartCurrentLevel()
 {
     this->levelHandler->InitializeCurrentLevel();
-    this->hotbar = new Hotbar(this->levelHandler->currentLevelStats->abilityStates);
+    this->hotbar = new Hotbar();
+    this->SetTurretsAndAbilitiesToUpgradeValues();
     //this->turret = new Turret();
 }
 

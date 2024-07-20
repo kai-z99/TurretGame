@@ -5,7 +5,7 @@
 
 namespace UpgradeDatabase
 {
-    const std::unordered_map<Upgrade, std::pair<int, int>> initalUpgradeInfo =
+    const std::unordered_map<Upgrade, std::pair<int, int>> initialUpgradeInfo =
     {
         { TurretBulletU,        {1, 50  } },
         { ShockwaveBulletU,     {0, 100 } },
@@ -34,6 +34,18 @@ namespace UpgradeDatabase
         { ExplosiveU,           {0, 3100} },
         { CloneU,               {0, 5150} },
     };
+
+    const std::unordered_map<int, float> bulletFirerateIncreaseAmounts =
+    {
+        {1, 0.2f},
+        {2, 0.4f},
+        {3, 0.6f},
+        {4, 0.8f},
+        {5, 1.0f},
+        {6, 1.2f},
+    };
+
+    int totalCoins = 50000;
 }
 
 
@@ -64,5 +76,7 @@ namespace AbilityDatabase
 
         return data;
     }
+
+    
 }
 
