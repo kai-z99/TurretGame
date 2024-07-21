@@ -92,8 +92,9 @@ private:
 	void DrawMousePos(); //debug
 
 	void SetGameStatsToDefault();				  //called on game init
-	void SetGameStatsToDatabaseValues();		  //called at game init and on upgrade (upgrade states) end level (totalCoins) and on level completion (levels complete values)
-	
+	void SetGameStatsToDatabaseValues();		  //called at game init and on upgrade (upgrade states) and on level completion (levels complete values)
+	void SetDatabaseValuesToGameStats();
+
 	void SetTurretsAndAbilitiesToUpgradeValues(); //called on level play
 
 	//helpers for SetTurretsAndAbilitiesToUpgradeValues()

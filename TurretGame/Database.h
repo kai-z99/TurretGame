@@ -27,7 +27,6 @@ namespace UpgradeDatabase
 namespace AbilityDatabase
 {
 	extern const std::unordered_map<TurretAbility, int> ABILITY_COOLDOWNS;
-	std::unordered_map<TurretAbility, short> GetRoundStartAbilityCharges();
 }
 
 
@@ -36,6 +35,8 @@ namespace DBFunctions
 {
 	void LoadDatabaseFromFile(const char* filename);
 	void SaveDatabaseToFile(const char* filename);
+
+	std::unordered_map<TurretAbility, short> GetRoundStartAbilityCharges();
 }
 
 

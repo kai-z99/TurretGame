@@ -497,11 +497,19 @@ void LevelHandler::InitializeCurrentLevel()
     this->cooldownWarningFrames = 0;
     this->chargeWarningFrames = 0;
 
-    //set initial ability charges in this->currentLevelStats
-    for (int i = 0; i <= 5; i++)
+
+    std::unordered_map<TurretAbility, short> startingCharges = DBFunctions::GetRoundStartAbilityCharges();
+
+    //set initial ability chrages and cooldown info in this->currentLevelStats
+    for (int i = 0; i <= 4; i++)
     {
         TurretAbility ability = static_cast<TurretAbility>(i);
-        this->currentLevelStats->abilityStates[ability] = this->game->gameStats->initialAbilityValues[ability];
+
+        this->currentLevelStats->abilityStates[ability].maxCharges = startingCharges[ability];
+        this->currentLevelStats->abilityStates[ability].charges = startingCharges[ability];
+
+        this->currentLevelStats->abilityStates[ability].cooldown = AbilityDatabase::ABILITY_COOLDOWNS.at(ability);
+        this->currentLevelStats->abilityStates[ability].lastUsedFrame = INT_MIN;
     }
 
     //set initial money and health
@@ -518,7 +526,8 @@ void LevelHandler::DeInitializeCurrentLevel()
     this->sentryFrames = 0;
     this->game->inputMode = 0;
 
-    UpgradeDatabase::totalCoins += this->currentLevelStats->coinsCollected;
+    this->game->gameStats->totalCoins += this->currentLevelStats->coinsCollected;
+    this->game->SetDatabaseValuesToGameStats();
 
     this->currentLevelStats->coinsCollected = 0;
     this->currentLevelStats->health = 100;
@@ -526,10 +535,8 @@ void LevelHandler::DeInitializeCurrentLevel()
     this->cooldownWarningFrames = 0;
     this->chargeWarningFrames = 0;
 
-    this->game->SetGameStatsToDatabaseValues();
+    
 
-    //export new db
-    DBFunctions::SaveDatabaseToFile("db.json"); //temp
     
 }
 

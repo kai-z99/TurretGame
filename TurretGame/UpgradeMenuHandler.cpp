@@ -48,22 +48,20 @@ void UpgradeMenuHandler::Update()
 
 		if (u->isClicked && (g->gameStats->totalCoins >= u->GetPrice()))
 		{
-			//update coin amount in db
-			UpgradeDatabase::totalCoins -= u->GetPrice();
 
-			//update level in db
-			UpgradeDatabase::currentUpgradeInfo[u->GetUpgrade()].first += 1;
+			//subtract coins
+			this->game->gameStats->totalCoins -= u->GetPrice();
 
-			//update price in db
-			UpgradeDatabase::currentUpgradeInfo[u->GetUpgrade()].second += (int)(10 + UpgradeDatabase::currentUpgradeInfo[u->GetUpgrade()].second * 0.2);
+			//increase levl
+			this->game->gameStats->upgradeStates[u->GetUpgrade()].first += 1;
+
+			//increase the cost
+			this->game->gameStats->upgradeStates[u->GetUpgrade()].second += (int)(10 + UpgradeDatabase::currentUpgradeInfo[u->GetUpgrade()].second * 0.2);
 
 			//use that new db info to set game stats
-			g->SetGameStatsToDatabaseValues();
+			g->SetDatabaseValuesToGameStats();
 
-			//export new db
-			DBFunctions::SaveDatabaseToFile("db.json"); //temp
-
-			//increase the price of the button
+			//set new price of button
 			g->upgradeButtons[u->GetUpgrade()]->SetPrice(this->game->gameStats->upgradeStates[u->GetUpgrade()].second);
 
 		}

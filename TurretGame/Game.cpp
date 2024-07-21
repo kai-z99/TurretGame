@@ -37,6 +37,9 @@ Game::Game()
 
 Game::~Game()
 {
+    //export new db
+    DBFunctions::SaveDatabaseToFile("db.json"); //temp
+
     //this should be unload level
 	for (Bullet* b : this->bullets)
 	{
@@ -141,17 +144,7 @@ void Game::SetGameStatsToDefault()
     };
 
     //get starting ability charges
-    std::unordered_map<TurretAbility, short> startingCharges = AbilityDatabase::GetRoundStartAbilityCharges();
-
-    this->gameStats->initialAbilityValues =
-    {
-        // type,    {               cooldown,                       lastshotframe,     maxcharges,                    charges}
-        {Rapidfire, {AbilityDatabase::ABILITY_COOLDOWNS.at(Rapidfire), INT_MIN, startingCharges[Rapidfire], startingCharges[Rapidfire]}},
-        {Laser,     {AbilityDatabase::ABILITY_COOLDOWNS.at(Laser),     INT_MIN, startingCharges[Laser],     startingCharges[Laser]}},
-        {Explosive, {AbilityDatabase::ABILITY_COOLDOWNS.at(Explosive), INT_MIN, startingCharges[Explosive], startingCharges[Explosive]}},
-        {Ice,       {AbilityDatabase::ABILITY_COOLDOWNS.at(Ice),       INT_MIN, startingCharges[Ice],       startingCharges[Ice]}},
-        {Clone,     {AbilityDatabase::ABILITY_COOLDOWNS.at(Clone),     INT_MIN, startingCharges[Clone],     startingCharges[Clone]}},
-    };
+    std::unordered_map<TurretAbility, short> startingCharges = DBFunctions::GetRoundStartAbilityCharges();
 
     this->gameStats->totalCoins = 0;
     this->gameStats->initialHealth = UpgradeDatabase::startingHealth;
@@ -189,19 +182,22 @@ void Game::SetGameStatsToDatabaseValues()
         this->gameStats->upgradeStates[upgrade] = info;
     }
 
-    std::unordered_map<TurretAbility, short> abilityCharges = AbilityDatabase::GetRoundStartAbilityCharges();
-
-    //merge db initial ability states to gamestats
-    for (int i = 0; i <= 4; i++)
-    {
-        TurretAbility ability = (TurretAbility)i;
-        this->gameStats->initialAbilityValues[ability].maxCharges = abilityCharges[ability];
-        this->gameStats->initialAbilityValues[ability].charges = abilityCharges[ability];
-
-    }
-
     this->gameStats->totalCoins = UpgradeDatabase::totalCoins;
+    this->gameStats->initialHealth = UpgradeDatabase::startingHealth;
     //now all we have to do is to use new upgrade info to set turret capabilities.
+}
+
+void Game::SetDatabaseValuesToGameStats()
+{
+    for (const auto& [upgrade, info] : this->gameStats->upgradeStates)
+    {
+        auto& [level, price] = info;
+
+        UpgradeDatabase::currentUpgradeInfo[upgrade] = info;
+    }
+    
+    UpgradeDatabase::totalCoins = this->gameStats->totalCoins;
+    UpgradeDatabase::startingHealth = this->gameStats->initialHealth;
 }
 
 void Game::SetTurretsAndAbilitiesToUpgradeValues()
@@ -248,6 +244,7 @@ void Game::SetTurretsAndAbilitiesToUpgradeValues()
 
             case LightningBulletU:
                 this->HandleBulletUpgrade(5, t, s1, s2);
+                break;
 
             case BombBulletU:
                 this->HandleBulletUpgrade(6, t, s1, s2);
@@ -548,6 +545,7 @@ void Game::Update()
 
     case UpgradeMenu:
         this->UpdateUpgradeMenu();
+        break;
 
     case MainMenu:
         this->UpdateMainMenu();

@@ -15,24 +15,27 @@ int main(void)
 // 
 //
 //
-//"Base Tint"
+//
+//
+// particles to shockwave
+// 
+// SetDatabaseValuesToGameStats
+// put db json in appdata
+//
 //
 // 
-//
-// finish db implementation.
-// then games state uses db to update
+// 
 // 
 // defeat enemy sound
 // 
-// database page
+// 
 // 
 //resolve wanings
 // 
-// levels compelte in gamestats. another db item.
-//
+// levels compelte in gamestats. another db item. change color of levelbutton based on completion.
 //
 // 
-//enemies can drop abilities that can be clicked? maybe for later
+// enemies can drop abilities that can be clicked? maybe for later
 //
 //
 //draw different effects when ability is activated

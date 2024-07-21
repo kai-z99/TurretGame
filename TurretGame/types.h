@@ -68,7 +68,6 @@ struct GameStats
 	//UPGRADES
 
 	//abilities
-	std::unordered_map<TurretAbility, AbilityInfo> initialAbilityValues;
 	std::unordered_map<Upgrade, std::pair<int,int>> upgradeStates; // Upgrade , {level,price}
 
 };

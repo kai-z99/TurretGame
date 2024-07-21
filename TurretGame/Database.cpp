@@ -67,22 +67,7 @@ namespace AbilityDatabase
         { Ice,                 750 },
         { Explosive,           800 },
         { Clone,               1000 },
-    };
-
-
-    std::unordered_map<TurretAbility, short> GetRoundStartAbilityCharges()
-    {
-        std::unordered_map<TurretAbility, short> data;
-
-        //if level is 0, no charges. else its 1 + 1 every 4 levels
-        (UpgradeDatabase::currentUpgradeInfo[RapidfireU].first > 0) ? data[Rapidfire] = 1 + UpgradeDatabase::currentUpgradeInfo[RapidfireU].first / 4 : data[Rapidfire] = 0;
-        (UpgradeDatabase::currentUpgradeInfo[LaserU].first > 0)     ? data[Laser] = 1 + UpgradeDatabase::currentUpgradeInfo[LaserU].first / 4         : data[Laser]     = 0;
-        (UpgradeDatabase::currentUpgradeInfo[IceU].first > 0)       ? data[Ice] = 1 + UpgradeDatabase::currentUpgradeInfo[IceU].first / 4             : data[Ice]       = 0;
-        (UpgradeDatabase::currentUpgradeInfo[ExplosiveU].first > 0) ? data[Explosive] = 1 + UpgradeDatabase::currentUpgradeInfo[ExplosiveU].first / 4 : data[Explosive] = 0;
-        (UpgradeDatabase::currentUpgradeInfo[CloneU].first > 0)     ? data[Clone] = 1 + UpgradeDatabase::currentUpgradeInfo[CloneU].first / 4         : data[Clone]     = 0;
-
-        return data;
-    }   
+    }; 
 }
 
 namespace DBFunctions
@@ -90,19 +75,19 @@ namespace DBFunctions
     void LoadDatabaseFromFile(const char* filename)
     {
         std::ifstream file(filename);
+
         if (file.is_open())
         {
             json j;
             file >> j;
             file.close();
 
-
-            //load upgrades info
+            // load currentUpgradeInfo
 
             for (const auto& [upgrade, info] : j["upgrades"].items())
             {
-                Upgrade u = (Upgrade)(std::stoi(upgrade));
-                std::pair<int, int> i = { info[0] , info[1] };
+                Upgrade u = (Upgrade)(std::stoi(upgrade)); //convert from string to integer
+                std::pair<int, int> i = { info[0] , info[1] }; //convert from json array element to int pair
 
                 UpgradeDatabase::currentUpgradeInfo[u] = i;
             }
@@ -134,12 +119,26 @@ namespace DBFunctions
         }
 
         std::ofstream file(filename);
+
         if (file.is_open())
         {
             file << j.dump(4); // Pretty print with 4 spaces
             file.close();
         }
+    }
 
+    std::unordered_map<TurretAbility, short> GetRoundStartAbilityCharges()
+    {
+        std::unordered_map<TurretAbility, short> data;
+
+        //if level is 0, no charges. else its 1 + 1 every 4 levels
+        (UpgradeDatabase::currentUpgradeInfo[RapidfireU].first > 0) ? data[Rapidfire] = 1 + UpgradeDatabase::currentUpgradeInfo[RapidfireU].first / 4 : data[Rapidfire] = 0;
+        (UpgradeDatabase::currentUpgradeInfo[LaserU].first > 0)     ? data[Laser] = 1 + UpgradeDatabase::currentUpgradeInfo[LaserU].first / 4         : data[Laser]     = 0;
+        (UpgradeDatabase::currentUpgradeInfo[IceU].first > 0)       ? data[Ice] = 1 + UpgradeDatabase::currentUpgradeInfo[IceU].first / 4             : data[Ice]       = 0;
+        (UpgradeDatabase::currentUpgradeInfo[ExplosiveU].first > 0) ? data[Explosive] = 1 + UpgradeDatabase::currentUpgradeInfo[ExplosiveU].first / 4 : data[Explosive] = 0;
+        (UpgradeDatabase::currentUpgradeInfo[CloneU].first > 0)     ? data[Clone] = 1 + UpgradeDatabase::currentUpgradeInfo[CloneU].first / 4         : data[Clone]     = 0;
+
+        return data;
     }
 }
 
