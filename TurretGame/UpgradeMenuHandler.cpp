@@ -60,6 +60,9 @@ void UpgradeMenuHandler::Update()
 			//use that new db info to set game stats
 			g->SetGameStatsToDatabaseValues();
 
+			//export new db
+			DBFunctions::SaveDatabaseToFile("db.json"); //temp
+
 			//increase the price of the button
 			g->upgradeButtons[u->GetUpgrade()]->SetPrice(this->game->gameStats->upgradeStates[u->GetUpgrade()].second);
 

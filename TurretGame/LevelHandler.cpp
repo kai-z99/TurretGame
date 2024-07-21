@@ -6,6 +6,7 @@
 #include "types.h"
 #include "constants.h"
 #include "helpers.h"
+#include "Database.h"
 
 #include "Bullet.h"
 #include "Turret.h"
@@ -465,13 +466,13 @@ void LevelHandler::HandleInput()
             if (IsMouseButtonDown(0))
             {
                 //go through each bullet type
-                for (const auto& cooldown : g->turret->GetBulletCooldownMap()) // bulletid : cooldownInfo
+                for (const auto& [id,cooldownInfo] : g->turret->GetBulletCooldownMap()) // bulletid : cooldownInfo
                 {
                     //if that type isnt on cooldown
-                    if (cooldown.second->canShoot)
+                    if (cooldownInfo->canShoot)
                     {
                         //shoot that bullet type once.
-                        g->turret->ShootBullet(g->bullets, cooldown.first);
+                        g->turret->ShootBullet(g->bullets, id);
                     }
                 }
 
@@ -517,13 +518,19 @@ void LevelHandler::DeInitializeCurrentLevel()
     this->sentryFrames = 0;
     this->game->inputMode = 0;
 
-    this->game->gameStats->totalCoins += this->currentLevelStats->coinsCollected;
+    UpgradeDatabase::totalCoins += this->currentLevelStats->coinsCollected;
 
     this->currentLevelStats->coinsCollected = 0;
     this->currentLevelStats->health = 100;
     this->currentLevelFrameCount = 0;
     this->cooldownWarningFrames = 0;
     this->chargeWarningFrames = 0;
+
+    this->game->SetGameStatsToDatabaseValues();
+
+    //export new db
+    DBFunctions::SaveDatabaseToFile("db.json"); //temp
+    
 }
 
 

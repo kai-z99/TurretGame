@@ -19,7 +19,7 @@ int main(void)
 //
 // 
 //
-// finish db implementation. dont worry about progress save just yet. just finish making the game use it like upgrade changes db instead of games state. 
+// finish db implementation.
 // then games state uses db to update
 // 
 // defeat enemy sound

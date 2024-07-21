@@ -23,20 +23,18 @@ LevelSelectHandler::LevelSelectHandler(Game* g)
 	this->worldMarkers[2] = worldBoundaries[1];
 	this->worldMarkers[3] = worldBoundaries[2];
 
-	for (const auto& level : MapPositions::levelPositions)
+	for (const auto& [levelID, pos] : MapPositions::levelPositions)
 	{
-		int levelID = level.first;
-		Vector2 pos = level.second;
 		g->levelButtons.push_back(new LevelButton(pos.x, pos.y, levelID));
 
 		if (levelID == 6 || levelID == 12) g->levelButtons[levelID - 1]->isBoss = true;
 	}
 
-	for (const auto& decoration : MapPositions::decorationPositions)
+	for (const auto& [id,positions] : MapPositions::decorationPositions)
 	{
-		for (const Vector2& pos : decoration.second)
+		for (const Vector2& pos : positions)
 		{
-			this->game->decorations.push_back(new Decoration(decoration.first, (int)pos.x, (int)pos.y));
+			this->game->decorations.push_back(new Decoration(id, (int)pos.x, (int)pos.y));
 		}
 	}
 
@@ -203,9 +201,9 @@ void LevelSelectHandler::StoreInitialPositions()
 		this->initialDecorationPositions[d] = d->GetPosition();
 	}
 
-	for (auto& x : this->worldMarkers)
+	for (auto& [world,posX] : this->worldMarkers)
 	{
-		this->initialMarkerPositions[x.first] = x.second;
+		this->initialMarkerPositions[world] = posX;
 	}
 
 }
@@ -224,8 +222,8 @@ void LevelSelectHandler::UpdatePositionsWithDelta()
 		d->SetPosition((int)this->initialDecorationPositions[d].x - deltaMouseX, (int)this->initialDecorationPositions[d].y - deltaMouseY);
 	}
 
-	for (auto& x : this->worldMarkers)
+	for (auto& [world,posX] : this->worldMarkers)
 	{
-		x.second = this->initialMarkerPositions[x.first] - deltaMouseX;
+		posX = this->initialMarkerPositions[world] - deltaMouseX;
 	}
 }

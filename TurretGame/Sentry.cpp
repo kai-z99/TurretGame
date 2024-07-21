@@ -78,13 +78,13 @@ void Sentry::Update(unsigned int frame, int mouseX, int mouseY, std::vector<Enem
 		this->angle = 0.0f;
 	}	
 
-	for (const auto& cooldown : this->GetBulletCooldownMap()) // bulletid : cooldownInfo
+	for (const auto& [bulletID,cooldownInfo] : this->GetBulletCooldownMap()) // bulletid : cooldownInfo
 	{
 		//if that type isnt on cooldown
-		if (cooldown.second->canShoot)
+		if (cooldownInfo->canShoot)
 		{
 			//shoot that bullet type once.
-			this->ShootBullet(bullets, cooldown.first);
+			this->ShootBullet(bullets, bulletID);
 		}
 	}
 }

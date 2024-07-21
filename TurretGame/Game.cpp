@@ -127,17 +127,17 @@ void Game::SetGameStatsToDefault()
     this->gameStats->upgradeStates =
     {
         //should change to currentUpgradeInfo? no?
-        {TurretBulletU,      UpgradeDatabase::initialUpgradeInfo.at(TurretBulletU)},
-        {ShockwaveBulletU,   UpgradeDatabase::initialUpgradeInfo.at(ShockwaveBulletU)},
-        {FireBulletU,        UpgradeDatabase::initialUpgradeInfo.at(FireBulletU)},
-        {SniperBulletU,      UpgradeDatabase::initialUpgradeInfo.at(SniperBulletU)},
-        {LightningBulletU,   UpgradeDatabase::initialUpgradeInfo.at(LightningBulletU)},
-        {BombBulletU,        UpgradeDatabase::initialUpgradeInfo.at(BombBulletU)},
-        {RapidfireU,         UpgradeDatabase::initialUpgradeInfo.at(RapidfireU)},
-        {LaserU,             UpgradeDatabase::initialUpgradeInfo.at(LaserU)},
-        {IceU,               UpgradeDatabase::initialUpgradeInfo.at(IceU)},
-        {ExplosiveU,         UpgradeDatabase::initialUpgradeInfo.at(ExplosiveU)},
-        {CloneU,             UpgradeDatabase::initialUpgradeInfo.at(CloneU)},
+        {TurretBulletU,      UpgradeDatabase::INITIAL_UPGRADE_INFO.at(TurretBulletU)},
+        {ShockwaveBulletU,   UpgradeDatabase::INITIAL_UPGRADE_INFO.at(ShockwaveBulletU)},
+        {FireBulletU,        UpgradeDatabase::INITIAL_UPGRADE_INFO.at(FireBulletU)},
+        {SniperBulletU,      UpgradeDatabase::INITIAL_UPGRADE_INFO.at(SniperBulletU)},
+        {LightningBulletU,   UpgradeDatabase::INITIAL_UPGRADE_INFO.at(LightningBulletU)},
+        {BombBulletU,        UpgradeDatabase::INITIAL_UPGRADE_INFO.at(BombBulletU)},
+        {RapidfireU,         UpgradeDatabase::INITIAL_UPGRADE_INFO.at(RapidfireU)},
+        {LaserU,             UpgradeDatabase::INITIAL_UPGRADE_INFO.at(LaserU)},
+        {IceU,               UpgradeDatabase::INITIAL_UPGRADE_INFO.at(IceU)},
+        {ExplosiveU,         UpgradeDatabase::INITIAL_UPGRADE_INFO.at(ExplosiveU)},
+        {CloneU,             UpgradeDatabase::INITIAL_UPGRADE_INFO.at(CloneU)},
     };
 
     //get starting ability charges
@@ -146,14 +146,15 @@ void Game::SetGameStatsToDefault()
     this->gameStats->initialAbilityValues =
     {
         // type,    {               cooldown,                       lastshotframe,     maxcharges,                    charges}
-        {Rapidfire, {AbilityDatabase::abilityCooldowns.at(Rapidfire), INT_MIN, startingCharges[Rapidfire], startingCharges[Rapidfire]}},
-        {Laser,     {AbilityDatabase::abilityCooldowns.at(Laser),     INT_MIN, startingCharges[Laser],     startingCharges[Laser]}},
-        {Explosive, {AbilityDatabase::abilityCooldowns.at(Explosive), INT_MIN, startingCharges[Explosive], startingCharges[Explosive]}},
-        {Ice,       {AbilityDatabase::abilityCooldowns.at(Ice),       INT_MIN, startingCharges[Ice],       startingCharges[Ice]}},
-        {Clone,     {AbilityDatabase::abilityCooldowns.at(Clone),     INT_MIN, startingCharges[Clone],     startingCharges[Clone]}},
+        {Rapidfire, {AbilityDatabase::ABILITY_COOLDOWNS.at(Rapidfire), INT_MIN, startingCharges[Rapidfire], startingCharges[Rapidfire]}},
+        {Laser,     {AbilityDatabase::ABILITY_COOLDOWNS.at(Laser),     INT_MIN, startingCharges[Laser],     startingCharges[Laser]}},
+        {Explosive, {AbilityDatabase::ABILITY_COOLDOWNS.at(Explosive), INT_MIN, startingCharges[Explosive], startingCharges[Explosive]}},
+        {Ice,       {AbilityDatabase::ABILITY_COOLDOWNS.at(Ice),       INT_MIN, startingCharges[Ice],       startingCharges[Ice]}},
+        {Clone,     {AbilityDatabase::ABILITY_COOLDOWNS.at(Clone),     INT_MIN, startingCharges[Clone],     startingCharges[Clone]}},
     };
 
     this->gameStats->totalCoins = 0;
+    this->gameStats->initialHealth = UpgradeDatabase::startingHealth;
 }
 
 //should be from db
@@ -182,19 +183,21 @@ void Game::SetAbilityStaticsToDefault()
 
 void Game::SetGameStatsToDatabaseValues()
 {
-    //merge upgrade states
-    for (const auto& upgradeInfo : UpgradeDatabase::currentUpgradeInfo)
+    //merge db upgrade states to gamestats
+    for (const auto& [upgrade,info] : UpgradeDatabase::currentUpgradeInfo)
     {
-        this->gameStats->upgradeStates[upgradeInfo.first] = upgradeInfo.second;
+        this->gameStats->upgradeStates[upgrade] = info;
     }
 
     std::unordered_map<TurretAbility, short> abilityCharges = AbilityDatabase::GetRoundStartAbilityCharges();
 
-    //merge initial ability states
-    for (const auto& abilityCD : AbilityDatabase::abilityCooldowns)
+    //merge db initial ability states to gamestats
+    for (int i = 0; i <= 4; i++)
     {
-        this->gameStats->initialAbilityValues[abilityCD.first].maxCharges = abilityCharges[abilityCD.first];
-        this->gameStats->initialAbilityValues[abilityCD.first].charges = abilityCharges[abilityCD.first];
+        TurretAbility ability = (TurretAbility)i;
+        this->gameStats->initialAbilityValues[ability].maxCharges = abilityCharges[ability];
+        this->gameStats->initialAbilityValues[ability].charges = abilityCharges[ability];
+
     }
 
     this->gameStats->totalCoins = UpgradeDatabase::totalCoins;
@@ -205,18 +208,27 @@ void Game::SetTurretsAndAbilitiesToUpgradeValues()
 {
     //SET EVERYTHING TO DEFAULT AND SIMULATE UPGRADING IT [UPGRADELEVEL] TIMES.
     Turret* t = new Turret();
+
     Sentry* s1 = new Sentry();
+    s1->SetPosition(100, 300);
+    s1->SetTargetMode(1);
+
     Sentry* s2 = new Sentry();
+    s2->SetPosition(100, 900);
+    s2->SetTargetMode(0);
+    
 
     this->SetAbilityStaticsToDefault();
 
-    for (const auto& upgradeState : this->gameStats->upgradeStates)
+    for (const auto& [upgrade, info] : this->gameStats->upgradeStates)
     {
-        
+        int level = info.first;
+        int price = info.second;
+
         //loop upgradelevel amount of times to simulate upgrade that many times
-        for (int i = 0; i < upgradeState.second.first; i++)
+        for (int i = 0; i < level; i++)
         {
-            switch (upgradeState.first)
+            switch (upgrade)
             {
             case TurretBulletU:
                 this->HandleBulletUpgrade(1, t, s1, s2);
@@ -242,23 +254,23 @@ void Game::SetTurretsAndAbilitiesToUpgradeValues()
                 break;
 
             case RapidfireU:
-                this->HandleAbilityUpgrade(upgradeState.first);
+                this->HandleAbilityUpgrade(upgrade);
                 break;
 
             case LaserU:
-                this->HandleAbilityUpgrade(upgradeState.first);
+                this->HandleAbilityUpgrade(upgrade);
                 break;
 
             case IceU:
-                this->HandleAbilityUpgrade(upgradeState.first);
+                this->HandleAbilityUpgrade(upgrade);
                 break;
 
             case ExplosiveU:
-                this->HandleAbilityUpgrade(upgradeState.first);
+                this->HandleAbilityUpgrade(upgrade);
                 break;
 
             case CloneU:
-                this->HandleAbilityUpgrade(upgradeState.first);
+                this->HandleAbilityUpgrade(upgrade);
                 break;
 
             default:
@@ -280,15 +292,15 @@ void Game::SetTurretsAndAbilitiesToUpgradeValues()
 //helper
 void Game::HandleBulletUpgrade(int bulletID, Turret* t, Sentry* s1, Sentry* s2)
 {
-    if (t->IsBulletUnlocked(bulletID)) t->SetFirerate(bulletID, t->GetFirerate(bulletID) + UpgradeDatabase::bulletFirerateIncreaseAmounts.at(bulletID));
+    if (t->IsBulletUnlocked(bulletID)) t->SetFirerate(bulletID, t->GetFirerate(bulletID) + UpgradeDatabase::BULLET_FIRERATE_INCREASE_AMOUNTS.at(bulletID));
     else (t->UnlockBullet(bulletID));
 
     //sentries
-    if (this->sentry1->IsBulletUnlocked(bulletID)) this->sentry1->SetFirerate(bulletID, this->sentry1->GetFirerate(bulletID) + 0.1f);
-    else (this->sentry1->UnlockBullet(bulletID));
+    if (s1->IsBulletUnlocked(bulletID)) this->sentry1->SetFirerate(bulletID, this->sentry1->GetFirerate(bulletID) + 0.3f);
+    else (s1->UnlockBullet(bulletID));
 
-    if (this->sentry2->IsBulletUnlocked(bulletID)) this->sentry2->SetFirerate(bulletID, this->sentry2->GetFirerate(bulletID) + 0.1f);
-    else (this->sentry2->UnlockBullet(bulletID));
+    if (s2->IsBulletUnlocked(bulletID)) this->sentry2->SetFirerate(bulletID, this->sentry2->GetFirerate(bulletID) + 0.3f);
+    else (s2->UnlockBullet(bulletID));
 }
 
 //use db
@@ -340,7 +352,7 @@ void Game::Initialize()
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
     LoadAllSounds();
-
+    
     this->frameCount = 0;
     this->mousePos = { 0,0 };
 
@@ -403,6 +415,7 @@ void Game::Initialize()
     this->sentry2->SetTargetMode(0);
 
     this->SetGameStatsToDefault();
+    DBFunctions::LoadDatabaseFromFile("db.json");
     this->SetGameStatsToDatabaseValues();
 
     //this->gameStats->upgradeStates = UpgradeDatabase::initialUpgradeInfo;

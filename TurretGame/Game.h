@@ -24,6 +24,8 @@ class TextButton;
 class LevelButton;
 class UpgradeButton;
 
+
+
 class Game
 {
 public:
@@ -90,15 +92,14 @@ private:
 	void DrawMousePos(); //debug
 
 	void SetGameStatsToDefault();				  //called on game init
-	void SetGameStatsToDatabaseValues();		  //called at game init and on upgrade (upgrade states) and on level completion (levels complete values)
+	void SetGameStatsToDatabaseValues();		  //called at game init and on upgrade (upgrade states) end level (totalCoins) and on level completion (levels complete values)
+	
 	void SetTurretsAndAbilitiesToUpgradeValues(); //called on level play
 
 	//helpers for SetTurretsAndAbilitiesToUpgradeValues()
 	void HandleBulletUpgrade(int bulletID, Turret* t, Sentry* s1, Sentry* s2);
 	void SetAbilityStaticsToDefault();
 	void HandleAbilityUpgrade(Upgrade upgrade);
-
-	
 
 
 	Turret* turret;

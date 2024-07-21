@@ -30,15 +30,15 @@ LevelSpawner::LevelSpawner(LevelHandler* levelHandler)
 void LevelSpawner::HandleCurrentLevelSpawning()
 {
 	//for every enemy id
-	for (const auto& pair : this->spawnMap)
+	for (const auto& [enemyID,framesToSpawn] : this->spawnMap)
 	{
 		//for each frame they should spawn
-		for (const int& frame : pair.second)
+		for (const int& frame : framesToSpawn)
 		{
 			//if thats the current frame
 			if (levelHandler->currentLevelFrameCount == frame)
 			{
-				this->SpawnEnemyByID(pair.first);
+				this->SpawnEnemyByID(enemyID);
 			}
 		}
 	}
@@ -256,9 +256,9 @@ bool LevelSpawner::IsFinishedSpawning()
 	int lastFrame = 0;
 
 	//find the frame of the last enemy spawned in this level
-	for (const auto& pair : this->spawnMap)
+	for (const auto& [enemyID,framesToSpawn] : this->spawnMap)
 	{
-		lastFrame = std::max((int)pair.second.back(), lastFrame);
+		lastFrame = std::max((int)framesToSpawn.back(), lastFrame);
 	}
 
 	return this->levelHandler->currentLevelFrameCount > lastFrame;
@@ -269,9 +269,9 @@ int LevelSpawner::GetCurrentLevelLength()
 	int lastFrame = 0;
 
 	//find the frame of the last enemy spawned in this level
-	for (const auto& pair : this->spawnMap)
+	for (const auto& [enemyID, framesToSpawn] : this->spawnMap)
 	{
-		lastFrame = std::max((int)pair.second.back(), lastFrame);
+		lastFrame = std::max((int)framesToSpawn.back(), lastFrame);
 	}
 
 	return lastFrame;

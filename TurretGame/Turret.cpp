@@ -103,12 +103,8 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
     //update bullet cooldowns
 
     //go through each bullet type
-    for (auto& pair : this->bulletCooldownMap)
+    for (auto& [bulletID,cooldownInfo] : this->bulletCooldownMap)
     {
-        //for clarity
-        int id = pair.first;
-        BulletCooldownInfo*& cooldownInfo = pair.second;
-
         //if the bullet isnt unlocked, it cannot shoot no matter what.
         if (!cooldownInfo->unlocked)
         {
@@ -128,7 +124,7 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
         int baseCooldownFrames;
 
         // basecooldown of how long each bullet has between shots. firther modified by individual bullet firerate and turretfirerate.
-        switch (id)
+        switch (bulletID)
         {
         //TurretBullet
         case 1:
@@ -162,9 +158,9 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
         }
 
         //set bullet to canShoot if the time is right.
-        if (frame - cooldownInfo->lastShotFrame > (baseCooldownFrames / this->bulletCooldownMap[id]->firerate) / this->currentFirerate)
+        if (frame - cooldownInfo->lastShotFrame > (baseCooldownFrames / this->bulletCooldownMap[bulletID]->firerate) / this->currentFirerate)
         {
-            pair.second->canShoot = true;
+            cooldownInfo->canShoot = true;
         }  
     }
 

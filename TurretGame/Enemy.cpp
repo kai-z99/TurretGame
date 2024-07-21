@@ -28,17 +28,17 @@ void Enemy::Draw() //draws hitbox
 void Enemy::Update(unsigned int frame)
 {
 	//for eevery status effect
-	for (auto& effect : this->statusEffects)
+	for (auto& [effect,frames] : this->statusEffects)
 	{
 		//if it active
-		if (effect.second > 0)
+		if (frames > 0)
 		{
-			switch (effect.first)
+			switch (effect)
 			{
 			case Burning:
 				//-10 hp 2 times per second
 				if (frame % 30 == 0) this->health -= 10.0f;
-				effect.second -= 1;
+				frames -= 1;
 				break;
 
 			case Chilled:
@@ -46,8 +46,8 @@ void Enemy::Update(unsigned int frame)
 				this->movementChilled = true;
 				if (!this->resistChill) this->tint = BLUE; //tint blue 
 
-				effect.second -= 1;
-				if (effect.second <= 0)
+				frames -= 1;
+				if (frames <= 0)
 				{
 					this->movementChilled = false;
 					if (!this->resistChill) this->tint = WHITE;
