@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <unordered_map>
 #include "types.h"
+#include <string>
 
 class Turret;
 class Sentry;
@@ -139,6 +140,7 @@ private:
 	
 	int inputMode; //0: standard, 1: bomb, 2 : ice
 	Vector2 mousePos;
-	
+
+	std::string userAppDataPath;
 
 };

@@ -1,5 +1,6 @@
 #include "Database.h"
 
+#include <iostream>
 
 //UPGRADES
 
@@ -97,6 +98,13 @@ namespace DBFunctions
 
             // Load startingHealth
             UpgradeDatabase::startingHealth = j["hp"];
+
+            std::cout << "Data found. Database loaded.\n";
+        }
+
+        else
+        {
+            std::cout << "Cannot find data. NO database to load.\n";
         }
 
 
@@ -124,6 +132,13 @@ namespace DBFunctions
         {
             file << j.dump(4); // Pretty print with 4 spaces
             file.close();
+
+            std::cout << "Data saved.\n";
+        }
+
+        else
+        {
+            std::cout << "Could not open data file. Data not saved.\n";
         }
     }
 

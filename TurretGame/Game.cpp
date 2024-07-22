@@ -5,6 +5,7 @@
 #include "types.h"
 #include "helpers.h"
 #include "Database.h"
+#include "windowsFunctions.h"
 
 #include "LevelHandler.h"
 #include "CollisionHandler.h"
@@ -38,7 +39,7 @@ Game::Game()
 Game::~Game()
 {
     //export new db
-    DBFunctions::SaveDatabaseToFile("db.json"); //temp
+    DBFunctions::SaveDatabaseToFile(this->userAppDataPath.c_str()); //temp
 
     //this should be unload level
 	for (Bullet* b : this->bullets)
@@ -349,6 +350,8 @@ void Game::Initialize()
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
     LoadAllSounds();
+
+    this->userAppDataPath = WindowsFunctions::GetAppDataPath() + "/TurretGame/TurretGameData.json";
     
     this->frameCount = 0;
     this->mousePos = { 0,0 };
@@ -412,7 +415,7 @@ void Game::Initialize()
     this->sentry2->SetTargetMode(0);
 
     this->SetGameStatsToDefault();
-    DBFunctions::LoadDatabaseFromFile("db.json");
+    DBFunctions::LoadDatabaseFromFile(this->userAppDataPath.c_str());
     this->SetGameStatsToDatabaseValues();
 
     //this->gameStats->upgradeStates = UpgradeDatabase::initialUpgradeInfo;
