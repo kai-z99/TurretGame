@@ -142,7 +142,7 @@ void LevelHandler::Update(unsigned int frame)
             // if enemy died, add coin amount. and display coin effect
             if (e->GetHealth() <= 0)
             {
-                this->currentLevelStats->coinsCollected += e->GetCoinDropAmount();
+                g->gameStats->totalCoins += e->GetCoinDropAmount();
                 g->effectManager->DisplayCoinSplash(e->GetPosition(), e->GetCoinDropAmount());
                 e->isActive = false;
           
@@ -329,7 +329,7 @@ void LevelHandler::Draw()
 
 
     //draw hotbar
-    g->hotbar->Draw(*this->currentLevelStats, this->currentLevelFrameCount, this->levelSpawner->GetCurrentLevelLength());
+    g->hotbar->Draw(*this->currentLevelStats, *this->game->gameStats, this->currentLevelFrameCount, this->levelSpawner->GetCurrentLevelLength());
 
 
     //draw warnings
@@ -512,8 +512,7 @@ void LevelHandler::InitializeCurrentLevel()
         this->currentLevelStats->abilityStates[ability].lastUsedFrame = INT_MIN;
     }
 
-    //set initial money and health
-    this->currentLevelStats->coinsCollected = 0;
+    //set initial heath
     this->currentLevelStats->health = this->game->gameStats->initialHealth;
 }
 
@@ -526,11 +525,9 @@ void LevelHandler::DeInitializeCurrentLevel()
     this->sentryFrames = 0;
     this->game->inputMode = 0;
 
-    this->game->gameStats->totalCoins += this->currentLevelStats->coinsCollected;
     this->game->SetDatabaseValuesToGameStats();
 
-    this->currentLevelStats->coinsCollected = 0;
-    this->currentLevelStats->health = 100;
+    this->currentLevelStats->health = this->game->gameStats->initialHealth;
     this->currentLevelFrameCount = 0;
     this->cooldownWarningFrames = 0;
     this->chargeWarningFrames = 0;

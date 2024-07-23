@@ -2,6 +2,7 @@
 #include <string>
 #include "constants.h"
 #include "AbilityButton.h"
+#include "types.h"
 
 #include "raymath.h"
 
@@ -18,7 +19,7 @@ Hotbar::Hotbar()
 	}
 }
 
-void Hotbar::Draw(CurrentLevelStats& currentLevelStats, unsigned int currentLevelFrame, int currentLevelLength)
+void Hotbar::Draw(CurrentLevelStats& currentLevelStats, GameStats& gamestats, unsigned int currentLevelFrame, int currentLevelLength)
 {
 	//draw the background
 	DrawRectangle(0, 0, screenWidth, menuBoundaryY, GRAY);
@@ -34,7 +35,7 @@ void Hotbar::Draw(CurrentLevelStats& currentLevelStats, unsigned int currentLeve
 	DrawTextEx(GetFontDefault(), text.c_str(), { xPos ,yPos }, fontsize, spacing, RED);
 
 	//draw coins (same fontsize and spacing as health)
-	text = "Coins: " + std::to_string(currentLevelStats.coinsCollected) + " C";
+	text = "Coins: " + std::to_string(gamestats.totalCoins) + " C";
 	textDimensions = MeasureTextEx(GetFontDefault(), text.c_str(), fontsize, 5);
 	xPos = ((float)deathBoundaryX / 2) - (textDimensions.x / 2);
 	yPos = (2*(float)menuBoundaryY / 3) - (textDimensions.y / 2);

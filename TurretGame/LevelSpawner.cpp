@@ -303,7 +303,7 @@ void LevelSpawner::SpawnEnemyByID(int id)
 
 	case 5:
 		b = new BatEnemy();
-		b->SetAmplitude(GetRandomFloat(1, 10));
+		b->SetAmplitude(GetRandomFloat(1, 5));
 		if (GetRandomValue(1, 2) == 1) b->upStart = true;
 		e = b;
 		break;
@@ -372,46 +372,47 @@ void LevelSpawner::SetSpawnMap(int level)
 	switch (level)
 	{
 	case 1:
-		this->spawnMap[1] = { 100,200,300,400,500 }; //temp
-		this->spawnMap[6] = { 1,200,300,400,500 }; //temp
+		this->spawnMap[1] = { 60,    240, 241,    500, 501,     800, 801, 850,    1100,1101,1102,    1400,1401 }; 
+		this->spawnMap[2] = {																						1750 };
 		break;
 
 	case 2:
-		this->spawnMap[2] = { 50,100,422 };
+		this->spawnMap[1] = { 60,           400,			700,701,                1500,								2800};
+		this->spawnMap[2] = { 60,  300,301,     600,601,            1000,1001,      1500,								2800};
+		this->spawnMap[3] = {																		2200,				2800};
 		break;
 
 	case 3:
-		for (int i = 0; i < 8000; i+= 1)
+		for (int i = 60; i < 1500; i += 200)
 		{
 			this->spawnMap[5].push_back(i);
 		}
 
-		for (int i = 0; i < 8000; i += 1)
+		for (int i = 2500; i <= 2504; i++)
 		{
-			this->spawnMap[4].push_back(i);
+			this->spawnMap[5].push_back(i);
 		}
 
-		for (int i = 0; i < 8000; i += 1)
-		{
-			this->spawnMap[3].push_back(i);
-		}
+		
 
-		for (int i = 0; i < 8000; i += 1)
-		{
-			this->spawnMap[2].push_back(i);
-		}
-
+		this->spawnMap[1] = { 60, 61, 62,  400,401,402,403,    800,801,802,			1500,1501};
+		this->spawnMap[2] = {												1000,					2000,				2500,2502,2503};
+		this->spawnMap[3] = {												1000,1001,              2000,2001,2003 };
+		
 		break;
 
 	case 4:
-		this->spawnMap[3] = { 300,600 };
-		this->spawnMap[4] = { 200,500,550 };
+		this->spawnMap[1] = { 200,500,700,900,1100,1300,1500,1700,1800,2000,																					2800,2801};
+		this->spawnMap[4] = { 60,         300,           600,601,        1001,1002,1003,         1800,1800,			2300,2301,2302,2303,2304,2305,2306,          2800,2801,2802,2803};
+		this->spawnMap[3] = { 600,601,										1001,1002,				 1800,														2801,2802,2803,2804	};
+
+
 		break;
 		
 	case 5:
-		this->spawnMap[1] = { 50,150,400 };
-		this->spawnMap[4] = { 100,200 };
-		this->spawnMap[3] = { 0, 10, 333 };
+		this->spawnMap[6] = { 60, 300,300,300,   750,750,750,      1200,1200,1200,1200,            2000,2000,2000,2000,2000,           2600,2600,2600,2600,2600 };
+		this->spawnMap[1] = { 60, 300, 1200, 2000, 2600 };
+		this->spawnMap[5] = { 1500,1520,1540,1560 };
 		break;
 
 	case 6:

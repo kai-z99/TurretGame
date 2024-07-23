@@ -14,9 +14,9 @@ SlimeEnemy::SlimeEnemy(bool small)
 	{
 		this->splitted = false;
 		this->damage = 10;
-		this->maxHealth = 350.0f;
+		this->maxHealth = 450.0f;
 		this->health = this->maxHealth;
-		this->coinDropAmount = 50;
+		this->coinDropAmount = GetRandomValue(100,120);
 
 		this->knockbackMultiplier = 0.5f;
 
@@ -33,7 +33,7 @@ SlimeEnemy::SlimeEnemy(bool small)
 		this->damage = 3;
 		this->maxHealth = 80.0f;
 		this->health = this->maxHealth;
-		this->coinDropAmount = 14;
+		this->coinDropAmount = GetRandomValue(40,60);
 
 		this->knockbackMultiplier = 1.3f;
 

@@ -51,7 +51,7 @@ namespace UpgradeDatabase
         { CloneU,               {0, 5150} },
     };
 
-    int totalCoins = 50000;
+    int totalCoins = 0;
     int startingHealth = 30;
     //----------------------------------------------------------------------------
 }

@@ -5,10 +5,10 @@
 KoopaEnemy::KoopaEnemy()
 {
 	this->id = 2;
-	this->damage = 3;
-	this->maxHealth = 400.0f;
+	this->damage = 8;
+	this->maxHealth = 250.0f;
 	this->health = this->maxHealth;
-	this->coinDropAmount = GetRandomValue(12,18);
+	this->coinDropAmount = GetRandomValue(40,50);
 
 	this->knockbackMultiplier = 0.5f;
 	this->baseVelocity = { -1.5,0.0f };

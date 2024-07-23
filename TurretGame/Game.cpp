@@ -144,11 +144,8 @@ void Game::SetGameStatsToDefault()
         {CloneU,             UpgradeDatabase::INITIAL_UPGRADE_INFO.at(CloneU)},
     };
 
-    //get starting ability charges
-    std::unordered_map<TurretAbility, short> startingCharges = DBFunctions::GetRoundStartAbilityCharges();
-
-    this->gameStats->totalCoins = 0;
-    this->gameStats->initialHealth = UpgradeDatabase::startingHealth;
+    this->gameStats->totalCoins = UpgradeDatabase::INITIAL_COINS;
+    this->gameStats->initialHealth = UpgradeDatabase::INITIAL_STARTING_HEALTH;
 }
 
 //should be from db
@@ -346,7 +343,7 @@ void Game::Initialize()
     InitWindow(screenWidth, screenHeight, "TurretGame window");
     SetTargetFPS(60);  
     //ToggleFullscreen();
-    //ToggleBorderlessWindowed();
+    ToggleBorderlessWindowed();
     HideCursor();
     LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
     LoadAllSounds();
@@ -398,10 +395,6 @@ void Game::Initialize()
 
     //------------------------------------------------
 
-
-    this->gameStats->totalCoins = 50000;
-    this->gameStats->initialHealth = 30;
-
     this->currentLevel = 1;
 
     this->inputMode = false;
@@ -415,8 +408,9 @@ void Game::Initialize()
     this->sentry2->SetTargetMode(0);
 
     this->SetGameStatsToDefault();
-    DBFunctions::LoadDatabaseFromFile(this->userAppDataPath.c_str());
+   // DBFunctions::LoadDatabaseFromFile(this->userAppDataPath.c_str());
     this->SetGameStatsToDatabaseValues();
+    //this->gameStats->totalCoins = 10000; //temo
 
     //this->gameStats->upgradeStates = UpgradeDatabase::initialUpgradeInfo;
 

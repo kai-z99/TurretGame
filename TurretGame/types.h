@@ -75,6 +75,5 @@ struct GameStats
 struct CurrentLevelStats
 {
 	int health;
-	int coinsCollected;
 	std::unordered_map<TurretAbility, AbilityInfo> abilityStates; //ability : (currentcharges : maxcharges)
 };

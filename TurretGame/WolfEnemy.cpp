@@ -6,9 +6,9 @@ WolfEnemy::WolfEnemy()
 {
 	this->id = 4;
 	this->damage = 8;
-	this->maxHealth = 350.0f;
+	this->maxHealth = 225.0f;
 	this->health = this->maxHealth;
-	this->coinDropAmount = GetRandomValue(30, 51);
+	this->coinDropAmount = GetRandomValue(100, 120);
 
 	this->knockbackMultiplier = 1.0f;
 	this->baseVelocity = { -1.5,0.0f };

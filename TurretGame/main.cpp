@@ -14,9 +14,12 @@ int main(void)
 // Refrain from front-end detailing until engine is finished.
 // 
 //
+// change exit to back
+// 
+// win screen and music
 //
-//
-//
+//shop button on death screen
+// 
 // particles to shockwave
 // 
 // SetDatabaseValuesToGameStats

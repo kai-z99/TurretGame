@@ -8,7 +8,7 @@ RedKoopaEnemy::RedKoopaEnemy()
 	this->damage = 6;
 	this->maxHealth = 500.0f;
 	this->health = this->maxHealth;
-	this->coinDropAmount = GetRandomValue(20,30);
+	this->coinDropAmount = GetRandomValue(50,55);
 
 	this->knockbackMultiplier = 0.0f;
 	this->baseVelocity = { -1.2f,0.0f }; //walking speed

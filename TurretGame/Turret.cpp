@@ -133,23 +133,23 @@ void Turret::Update(unsigned int frame, int mouseX, int mouseY)
 
         //shockwave bullet
         case 2:
-            baseCooldownFrames = 150;
+            baseCooldownFrames = 100;
             break;
 
         case 3:
-            baseCooldownFrames = 180;
+            baseCooldownFrames = 120;
             break;
 
         case 4:
-            baseCooldownFrames = 190;
+            baseCooldownFrames = 120;
             break;
 
         case 5:
-            baseCooldownFrames = 210;
+            baseCooldownFrames = 140;
             break;
 
         case 6:
-            baseCooldownFrames = 240;
+            baseCooldownFrames = 160;
             break;
 
         default:

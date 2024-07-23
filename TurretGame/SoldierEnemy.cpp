@@ -5,14 +5,14 @@
 SoldierEnemy::SoldierEnemy()
 {
 	this->id = 1;
-	this->damage = 1;
+	this->damage = 5;
 	this->maxHealth = 100.0f;
 	this->health = this->maxHealth;
-	this->coinDropAmount = 10;
+	this->coinDropAmount = 30;
 
 	this->knockbackMultiplier = 1.0f;
 
-	this->baseVelocity = { -4,0 };
+	this->baseVelocity = { -3.0f,0.0f };
 	this->currentVelocity = this->baseVelocity;
 
 	this->hitbox = { this->position.x - (50 / 2), this->position.y - (100 / 2), 50, 100}; //50 and100 are the hitbox dimensions... minus half for centering purpose
@@ -44,8 +44,11 @@ void SoldierEnemy::Update(unsigned int frame)
 void SoldierEnemy::Draw()
 {
 	//DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
+	this->DrawShadow(0,0,1.0f);
 	this->textureLoop->Draw();
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
+
+
 
 	//Enemy::Draw(); // draw hitbox
 }
