@@ -80,6 +80,7 @@ void SlimeEnemy::Update(unsigned int frame)
 void SlimeEnemy::Draw()
 {
 	//DrawTexturePro(*this->texture, this->textureSourceRec, this->textureDestRec, this->textureOriginPoint, 0, WHITE);
+	(this->small) ? this->DrawShadow(0, 0, 0.6f) : this->DrawShadow(0,0,1.0f);
 	this->textureLoop->Draw();
 	if (this->health < this->maxHealth) this->DrawHealthbar(50, 1.0f);
 

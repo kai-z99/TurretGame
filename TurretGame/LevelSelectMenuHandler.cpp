@@ -25,9 +25,12 @@ LevelSelectHandler::LevelSelectHandler(Game* g)
 
 	for (const auto& [levelID, pos] : MapPositions::levelPositions)
 	{
-		g->levelButtons.push_back(new LevelButton(pos.x, pos.y, levelID));
+		g->levelButtons.push_back(new LevelButton((int)pos.x, (int)pos.y, levelID, false));
 
 		if (levelID == 6 || levelID == 12) g->levelButtons[levelID - 1]->isBoss = true;
+
+		//if the level is compelte, set it to compelte
+		if (g->gameStats->levelCompletions[levelID] == true) g->levelButtons[levelID - 1]->isComplete = true;
 	}
 
 	for (const auto& [id,positions] : MapPositions::decorationPositions)
@@ -59,6 +62,7 @@ void LevelSelectHandler::Update(unsigned int frame)
 	}
 
 	g->shopButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
+	g->shopButton->SetPosition(10,(menuBoundaryY / 2) - (130 / 2));
 	g->quitButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
 
 
@@ -85,6 +89,32 @@ void LevelSelectHandler::Update(unsigned int frame)
 		this->backgroundColor = RAYWHITE;
 		break;
 	}
+
+	//set states of level buttons
+	for (const auto& [level, complete] : g->gameStats->levelCompletions)
+	{
+		LevelButton* button = g->levelButtons[level - 1];
+
+		//if the level is compelte, set button to compelte
+		if (complete)
+		{
+			button->isComplete = true;
+
+			//completed level always availble to play
+			button->isAvailible = true;
+		}
+
+		//if the level is not complete, set button to incomplete.
+		else
+		{
+			button->isComplete = false;
+
+			// if the previous level is compelte, set the level to availible.
+			if (level == 1 || g->gameStats->levelCompletions[level - 1] == true) button->isAvailible = true;
+		}
+	}
+
+
 
 }
 
@@ -136,15 +166,23 @@ void LevelSelectHandler::HandleInput()
 		deltaMouseX = initialMouseX - (int)g->mousePos.x;
 		//deltaMouseY = initialMouseY - (int)g->mousePos.y; only change x
 
-		if (deltaMouseX > 0)
+		if (deltaMouseX > 0) //m left
 		{
-			this->UpdatePositionsWithDelta();
+			if (g->levelButtons[11]->GetPosition().x > screenWidth - 200) // okay to move
+			{
+				this->UpdatePositionsWithDelta();
+			}
+
+			else
+			{
+				this->StoreInitialPositions();
+			}
 		}
 
 		else if (deltaMouseX < 0) // mouse right
 		{
 
-			if (g->levelButtons[0]->GetPosition().x <= 200) //left is ok right is disabled
+			if (g->levelButtons[0]->GetPosition().x <= 200) //left is ok right is disabled. okay to move.
 			{
 				this->UpdatePositionsWithDelta();
 			}
@@ -172,7 +210,7 @@ void LevelSelectHandler::HandleInput()
 
 	for (LevelButton* b : g->levelButtons)
 	{
-		if (b->isClicked)
+		if (b->isClicked && b->isAvailible)
 		{
 			g->currentLevel = b->GetLevel();
 			g->gameState = InLevel;

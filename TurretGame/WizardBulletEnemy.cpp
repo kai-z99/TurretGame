@@ -9,7 +9,7 @@ WizardBulletEnemy::WizardBulletEnemy()
 {
 	this->id = 12;
 	this->damage = 10;
-	this->maxHealth = 170.0f;
+	this->maxHealth = 410.0f;
 	this->health = this->maxHealth;
 	this->coinDropAmount = GetRandomValue(1, 2);
 

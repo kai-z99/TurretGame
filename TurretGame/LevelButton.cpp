@@ -1,21 +1,38 @@
 #include "LevelButton.h"
 #include <string>
 
-LevelButton::LevelButton(int posX, int posY, int level)
+LevelButton::LevelButton(int posX, int posY, int level, bool complete)
 {
 	this->position = { (float)posX, (float)posY };
 	this->radius = 30.0f;
 	this->level = level;
+	this->isComplete = complete;
 }
 
 void LevelButton::Draw()
 {
 	Color col;
 
-	if (this->isHovering) col = BLUE;
-	else col = RED;
+	if (this->isHovering)
+	{
+		if (this->isComplete) col = DARKBLUE;
+		else
+		{
+			if (this->isAvailible) col = ORANGE;
+			else col = DARKGRAY;
+		}
+	}
+		
+	else
 
-	//DrawCircleV(this->position, this->radius, col);
+	{
+		if (this->isComplete) col = BLUE;
+		else
+		{
+			if (this->isAvailible)col = RED;
+			else col = DARKGRAY;
+		}
+	}
 
 	DrawEllipse((int)this->position.x, (int)this->position.y, this->radius + 10.0f, this->radius, BLACK);
 	DrawEllipse((int)this->position.x, (int)this->position.y, this->radius + 3.0f , this->radius - 7.0f, col);

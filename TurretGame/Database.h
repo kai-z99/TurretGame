@@ -29,6 +29,13 @@ namespace AbilityDatabase
 	extern const std::unordered_map<TurretAbility, int> ABILITY_COOLDOWNS;
 }
 
+//LEVELS
+namespace LevelDatabase
+{
+	extern const std::unordered_map<int, bool> INITIAL_LEVEL_COMPLETION_INFO;
+	extern std::unordered_map<int, bool> levelCompletionInfo;
+}
+
 
 
 namespace DBFunctions

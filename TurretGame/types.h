@@ -65,7 +65,8 @@ struct GameStats
 {
 	int totalCoins;
 	int initialHealth;
-	//UPGRADES
+	//levels
+	std::unordered_map<int, bool> levelCompletions;
 
 	//abilities
 	std::unordered_map<Upgrade, std::pair<int,int>> upgradeStates; // Upgrade , {level,price}

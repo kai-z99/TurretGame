@@ -12,7 +12,7 @@ public:
 	bool isClicked = false;
 	bool isHeld = false; 
 
-	void SetPosition(int posX, int posY);
+	virtual void SetPosition(int posX, int posY);
 	Vector2 GetPosition() const;
 protected:
 	virtual bool MouseCollide(int mouseX, int mouseY) = 0;

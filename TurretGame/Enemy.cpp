@@ -106,7 +106,7 @@ void Enemy::DrawBossHealthbar(const char* title, Color barColor, Color textColor
 
 void Enemy::DrawShadow(int yOffset, int xOffset, float scale)
 {
-	DrawEllipse((int)this->position.x + xOffset, (int)this->position.y + (this->textureLoop->GetDestDimensions().y / 2) + yOffset, 49 * scale, 21 * scale, {0,0,0,100});
+	DrawEllipse((int)this->position.x + xOffset, (int)this->position.y + (int)(this->textureLoop->GetDestDimensions().y / 2) + yOffset, 49 * scale, 21 * scale, {0,0,0,100});
 }
 
 void Enemy::ApplyKnockback(Bullet* b)

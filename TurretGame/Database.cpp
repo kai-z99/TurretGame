@@ -71,6 +71,42 @@ namespace AbilityDatabase
     }; 
 }
 
+namespace LevelDatabase
+{
+    const std::unordered_map<int, bool> INITIAL_LEVEL_COMPLETION_INFO =
+    {
+        {1,false},
+        {2,false},
+        {3,false},
+        {4,false},
+        {5,false},
+        {6,false},
+        {7,false},
+        {8,false},
+        {9,false},
+        {10,false},
+        {11,false},
+        {12,false},
+    };
+
+    std::unordered_map<int, bool> levelCompletionInfo = 
+    {
+        {1,false},
+        {2,false},
+        {3,false},
+        {4,false},
+        {5,false},
+        {6,false},
+        {7,false},
+        {8,false},
+        {9,false},
+        {10,false},
+        {11,false},
+        {12,false},
+    };
+}
+
+
 namespace DBFunctions
 {
     void LoadDatabaseFromFile(const char* filename)
@@ -91,6 +127,15 @@ namespace DBFunctions
                 std::pair<int, int> i = { info[0] , info[1] }; //convert from json array element to int pair
 
                 UpgradeDatabase::currentUpgradeInfo[u] = i;
+            }
+
+            // load level completion info
+
+            for (const auto& [level, isComplete] : j["levels"].items())
+            {
+                int l = std::stoi(level); //convert from string to integer
+
+                LevelDatabase::levelCompletionInfo[l] = isComplete;
             }
 
             // Load totalCoins
@@ -117,6 +162,7 @@ namespace DBFunctions
             {"coins",UpgradeDatabase::totalCoins},
             {"hp", UpgradeDatabase::startingHealth},
             {"upgrades", json::object()},
+            {"levels", json::object()},
 
         };
 
@@ -124,6 +170,11 @@ namespace DBFunctions
         {
             auto& [level, price] = info;
             j["upgrades"][std::to_string(upgrade)] = { level,price }; // pair converted to json array.
+        }
+
+        for (const auto& [level, isComplete] : LevelDatabase::levelCompletionInfo)
+        {
+            j["levels"][std::to_string(level)] = isComplete;
         }
 
         std::ofstream file(filename);

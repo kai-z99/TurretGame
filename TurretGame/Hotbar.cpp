@@ -28,7 +28,7 @@ void Hotbar::Draw(CurrentLevelStats& currentLevelStats, GameStats& gamestats, un
 	std::string text = "HP: " + std::to_string(currentLevelStats.health);
 	float fontsize = 36.0f;
 	float spacing = 4.0f;
-	Vector2 textDimensions = MeasureTextEx(GetFontDefault(), text.c_str(), fontsize, 5);
+	Vector2 textDimensions = MeasureTextEx(GetFontDefault(), text.c_str(), fontsize, spacing);
 	float xPos = ((float)deathBoundaryX / 2) - (textDimensions.x / 2);
 	float yPos = ((float)menuBoundaryY / 3) - (textDimensions.y / 2);
 
@@ -36,7 +36,9 @@ void Hotbar::Draw(CurrentLevelStats& currentLevelStats, GameStats& gamestats, un
 
 	//draw coins (same fontsize and spacing as health)
 	text = "Coins: " + std::to_string(gamestats.totalCoins) + " C";
-	textDimensions = MeasureTextEx(GetFontDefault(), text.c_str(), fontsize, 5);
+	fontsize = 30.0f;
+
+	textDimensions = MeasureTextEx(GetFontDefault(), text.c_str(), fontsize, spacing);
 	xPos = ((float)deathBoundaryX / 2) - (textDimensions.x / 2);
 	yPos = (2*(float)menuBoundaryY / 3) - (textDimensions.y / 2);
 
@@ -131,7 +133,7 @@ void Hotbar::DrawLevelProgressBar(unsigned int frame, int levelLength)
 	int barWidth = 500;
 	int barHeight = 50;
 
-	float w = barWidth;
+	float w = (float)barWidth;
 	int h = barHeight;
 	int posX = 1150;
 	int posY = (menuBoundaryY / 2) - (h / 2);
@@ -147,13 +149,13 @@ void Hotbar::DrawLevelProgressBar(unsigned int frame, int levelLength)
 	if (levelLength > 1)
 	{
 		//black outline
-		DrawRectangle(posX - 5, posY - 5, w + 10, h + 10, BLACK);
+		DrawRectangle(posX - 5, posY - 5, (int)w + 10, h + 10, BLACK);
 
 		//main bar-------------------------------------
 		DrawRectangle(posX, posY, (int)w, h, RED);
 
 		w = (float)barWidth * ((float)frame / (float)levelLength);
-		if (w > barWidth) w = barWidth;
+		if (w > barWidth) w = (float)barWidth;
 		h = barHeight;
 		posX = 1150;
 		posY = (menuBoundaryY / 2) - (h / 2);
@@ -166,7 +168,7 @@ void Hotbar::DrawLevelProgressBar(unsigned int frame, int levelLength)
 	else
 	{
 		//black outline
-		DrawRectangle(posX - 5, posY - 5, w + 10, h + 10, BLACK);
+		DrawRectangle(posX - 5, posY - 5, (int)w + 10, h + 10, BLACK);
 		//main bar
 		//---------------------------------------------
 		DrawRectangle(posX, posY, (int)w, h, BLUE);
@@ -175,7 +177,7 @@ void Hotbar::DrawLevelProgressBar(unsigned int frame, int levelLength)
 		int textWidth = MeasureText(text, 40);
 
 		//boss text
-		DrawText(text, 1150 + (w / 2) - (textWidth / 2.0f), (menuBoundaryY / 2) - (h / 2) + 10, 40, BLACK);
+		DrawText(text, 1150 + (int)(w / 2) - (int)(textWidth / 2.0f), (menuBoundaryY / 2) - (h / 2) + 10, 40, BLACK);
 		//---------------------------------------------
 
 	}

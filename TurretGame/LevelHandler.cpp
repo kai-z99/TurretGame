@@ -174,6 +174,8 @@ void LevelHandler::Update(unsigned int frame)
     {
         //handle try again button
         g->tryAgainButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
+        g->shopButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
+        g->shopButton->SetPosition(screenWidth / 2 - (230 / 2) + 210, (screenHeight / 2) - (150 / 2) + 210);
     }
     
     //check win/loss
@@ -353,6 +355,10 @@ void LevelHandler::Draw()
 
     if (this->currentLevelComplete)
     {
+        const char* text = "LEVEL COMPLETE! AMAZING!";
+        int width = MeasureText(text, 50);
+        DrawText(text, (screenWidth / 2) - (width / 2), 500, 50, GREEN);
+
         this->game->returnButton->Draw();
         this->cooldownWarningFrames = 0;
         this->chargeWarningFrames = 0;
@@ -363,9 +369,11 @@ void LevelHandler::Draw()
     {
         const char* text = "YOU DIED :(";
         int width = MeasureText(text, 50);
-
         DrawText(text, (screenWidth / 2) - (width / 2), 500, 50, RED);
-        this->game->tryAgainButton->Draw();
+
+        g->tryAgainButton->Draw();
+        g->shopButton->Draw();
+
         this->cooldownWarningFrames = 0;
         this->chargeWarningFrames = 0;
         this->game->inputMode = 0;
@@ -415,6 +423,16 @@ void LevelHandler::HandleInput()
             g->gameState = LevelSelectMenu;
             g->soundHandler->HandleGoToLevelSelect();
         }
+
+        else if (g->shopButton->isClicked)
+        {
+            this->currentLevelLose = false;
+            g->shopButton->isClicked = false; //since it doesnt update when its not active
+
+            g->ExitCurrentLevel();
+            g->gameState = UpgradeMenu;
+            g->soundHandler->HandleGoToLevelSelect();
+        }
         
     }
 
@@ -422,6 +440,9 @@ void LevelHandler::HandleInput()
     {
         if (g->returnButton->isClicked || g->quitButton->isClicked)
         {
+            g->gameStats->levelCompletions[g->currentLevel] = true;
+            g->SetDatabaseValuesToGameStats();
+
             this->currentLevelComplete = false;
             g->returnButton->isClicked = false;
             g->quitButton->isClicked = false;

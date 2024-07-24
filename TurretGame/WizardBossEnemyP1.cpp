@@ -12,7 +12,7 @@ WizardBossEnemyP1::WizardBossEnemyP1()
 {
 	this->id = 11;
 	this->damage = 100;
-	this->maxHealth = 20000.0f; //15000
+	this->maxHealth = 50000.0f; //15000
 	this->health = this->maxHealth;
 	this->coinDropAmount = GetRandomValue(2502, 2550);
 
@@ -379,7 +379,7 @@ void WizardBossEnemyP1::Draw()
 	else
 	{
 		this->p2Texture->Draw();
-		this->DrawBossHealthbar("SPECTRIX, THE DUNE FLAME", BLUE, DARKPURPLE);
+		this->DrawBossHealthbar("THE DUNE FLAME", BLUE, DARKPURPLE);
 	}
 		
 

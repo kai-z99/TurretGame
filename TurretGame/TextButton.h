@@ -11,6 +11,8 @@ public:
 	virtual void Draw() override;
 	virtual void Update(int mouseX, int mouseY) override;
 
+	virtual void SetPosition(int posX, int posY) override;
+
 private:
 	virtual bool MouseCollide(int mouseX, int mouseY) override;
 	const char* text;

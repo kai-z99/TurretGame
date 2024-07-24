@@ -144,6 +144,24 @@ void Game::SetGameStatsToDefault()
         {CloneU,             UpgradeDatabase::INITIAL_UPGRADE_INFO.at(CloneU)},
     };
 
+    this->gameStats->levelCompletions =
+    {
+        {1, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(1)},
+        {2, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(2)},
+        {3, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(3)},
+        {4, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(4)},
+        {5, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(5)},
+        {6, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(6)},
+        {7, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(7)},
+        {8, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(8)},
+        {9, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(9)},
+        {10, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(10)},
+        {11, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(11)},
+        {12, LevelDatabase::INITIAL_LEVEL_COMPLETION_INFO.at(12)}
+    };
+
+
+
     this->gameStats->totalCoins = UpgradeDatabase::INITIAL_COINS;
     this->gameStats->initialHealth = UpgradeDatabase::INITIAL_STARTING_HEALTH;
 }
@@ -180,6 +198,12 @@ void Game::SetGameStatsToDatabaseValues()
         this->gameStats->upgradeStates[upgrade] = info;
     }
 
+    for (const auto& [level, isComplete] : LevelDatabase::levelCompletionInfo)
+    {
+        this->gameStats->levelCompletions[level] = isComplete;
+    }
+
+
     this->gameStats->totalCoins = UpgradeDatabase::totalCoins;
     this->gameStats->initialHealth = UpgradeDatabase::startingHealth;
     //now all we have to do is to use new upgrade info to set turret capabilities.
@@ -193,7 +217,13 @@ void Game::SetDatabaseValuesToGameStats()
 
         UpgradeDatabase::currentUpgradeInfo[upgrade] = info;
     }
-    
+
+    for (const auto& [level, isComplete] : this->gameStats->levelCompletions)
+    {
+        LevelDatabase::levelCompletionInfo[level] = isComplete;
+    }
+
+
     UpgradeDatabase::totalCoins = this->gameStats->totalCoins;
     UpgradeDatabase::startingHealth = this->gameStats->initialHealth;
 }
@@ -345,7 +375,7 @@ void Game::Initialize()
     //ToggleFullscreen();
     ToggleBorderlessWindowed();
     HideCursor();
-    LoadAllTextures(); // ONLY WORKS AFTER INITIWINDOW
+    LoadAllTextures(); // ONLY WORKS AFTER INITWINDOW
     LoadAllSounds();
 
     this->userAppDataPath = WindowsFunctions::GetAppDataPath() + "/TurretGame/TurretGameData.json";
@@ -363,12 +393,14 @@ void Game::Initialize()
 
     //BUTTONS------------------------------------------
 
-    int width = 500;
-    int height = 200;
-    int posX = (screenWidth / 2) - (width / 2);
+    int width = 375;
+    int height = 150;
+    int posX = (screenWidth / 2) - (width / 2) - 140;
     int posY = (screenHeight / 2) - (height / 2) + 200;
 
     this->tryAgainButton = new TextButton(posX, posY, width, height, "TRY AGAIN");
+
+    posX = (screenWidth / 2) - (width / 2);
     this->returnButton = new TextButton(posX, posY, width, height, "RETURN TO MENU");
 
     width = 130;
@@ -376,7 +408,7 @@ void Game::Initialize()
     posX = screenWidth - width - 10;
     posY = (menuBoundaryY / 2) - (height / 2);
 
-    this->quitButton = new TextButton(posX, posY, width, height, "QUIT");
+    this->quitButton = new TextButton(posX, posY, width, height, "BACK");
 
     width = 230;
     height = 130;
@@ -408,9 +440,8 @@ void Game::Initialize()
     this->sentry2->SetTargetMode(0);
 
     this->SetGameStatsToDefault();
-   // DBFunctions::LoadDatabaseFromFile(this->userAppDataPath.c_str());
+    DBFunctions::LoadDatabaseFromFile(this->userAppDataPath.c_str());
     this->SetGameStatsToDatabaseValues();
-    //this->gameStats->totalCoins = 10000; //temo
 
     //this->gameStats->upgradeStates = UpgradeDatabase::initialUpgradeInfo;
 

@@ -12,7 +12,7 @@ BlackSoldierEnemy::BlackSoldierEnemy()
 	this->coinDropAmount = GetRandomValue(320, 380);
 
 	this->knockbackMultiplier = 0.2f;
-	this->baseVelocity = { -1.2,0.0f };
+	this->baseVelocity = { -1.2f,0.0f };
 	this->currentVelocity = this->baseVelocity;
 	this->hitbox = { this->position.x - (100 / 2), this->position.y - (200 / 2), 100, 200 }; //50 and 100 are the hitbox dimensions... minus half for centering purpose
 	this->textureLoop = new TextureLoop(&textures[46], 4, 4.0f, this->position);

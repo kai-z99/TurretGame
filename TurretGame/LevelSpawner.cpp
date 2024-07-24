@@ -94,7 +94,7 @@ void LevelSpawner::HandleSpecialSpawning()
 			if (boss->GetPhase() == 2 && boss->fireWithBullet)
 			{
 				WizardFireEnemy* w = new WizardFireEnemy();
-				w->SetPosition(GetRandomValue(deathBoundaryX + 80, screenWidth - 380), screenHeight + 100);
+				w->SetPosition(GetRandomFloat(deathBoundaryX + 80, screenWidth - 380), screenHeight + 100);
 				this->levelHandler->enemiesRef->push_back(w);
 			}
 			
@@ -195,7 +195,7 @@ void LevelSpawner::SpawnWizardBurst(WizardBossEnemyP1* host)
 	//front up
 	WizardBulletEnemy* e2 = new WizardBulletEnemy();
 	e2->SetPosition(bossPos.x - 200.0f * cosf(PI / 4.0f), bossPos.y + 200.0f * sinf(PI / 4.0f));
-	e2->SetBaseVelocity(-3.0 * cosf(PI / 4.0f), 3.0f * sinf(PI / 4.0f));
+	e2->SetBaseVelocity(-3.0f * cosf(PI / 4.0f), 3.0f * sinf(PI / 4.0f));
 
 	//most up
 	WizardBulletEnemy* e3 = new WizardBulletEnemy();
@@ -205,7 +205,7 @@ void LevelSpawner::SpawnWizardBurst(WizardBossEnemyP1* host)
 	//front down
 	WizardBulletEnemy* e4 = new WizardBulletEnemy();
 	e4->SetPosition(bossPos.x - 200.0f * cosf(PI / 4.0f), bossPos.y - 200.0f * sinf(PI / 4.0f));
-	e4->SetBaseVelocity(-3.0 * cosf(PI / 4.0f), -3.0f * sinf(PI / 4.0f));
+	e4->SetBaseVelocity(-3.0f * cosf(PI / 4.0f), -3.0f * sinf(PI / 4.0f));
 
 	//most down
 	WizardBulletEnemy* e5 = new WizardBulletEnemy();
@@ -421,17 +421,114 @@ void LevelSpawner::SetSpawnMap(int level)
 		break;
 
 	case 7:
-		this->spawnMap[9] = { 1,102,153,664 };
-
-		this->spawnMap[3] = { 501,602,703,804,905,906 };
+		this->spawnMap[9] = { 60,       500,500,500,				1000,1000,1000,              1500,1500,          2000,2000,2000,         2500,2500,2500,        3000, 3000, 3000, 3000 };
+		this->spawnMap[3] = {			500,						1000,																	2500,2500,2500};
+		this->spawnMap[4] = {																	1500,1500,1500, };
+		this->spawnMap[2] = { 1000,																					2000,2000,2000,2000, };
 		break;
 
 	case 8:
 
-		this->spawnMap[4] = { 2000,2101,2202,2300,  };
-		this->spawnMap[9] = { 500, 1000,1001,1002, 2300,2301, 2700 };
-		this->spawnMap[10] = { 1, 600, 1500, 1501 , 3000};
+		this->spawnMap[4] = {				500,											2000,2101,2202,2300,				};
+		this->spawnMap[9] = {				500,		1000,1001,1002,		1500, 1500,								3000		};
+		this->spawnMap[10] = { 60,			500,		1000,				1500, 1500 ,							3000, 3000	};
+		this->spawnMap[6] = {							1000,1000,1000,     1500,1500,1500,    2000,2000,2000};
 		break;
+
+	case 9:
+		for (int i = 60; i <= 3000; i += 60)
+		{
+			this->spawnMap[1].push_back(i);
+		}
+
+		for (int i = 60; i <= 3000; i += 50)
+		{
+			this->spawnMap[5].push_back(i);
+		}
+
+
+
+		for (int j = 0; j <= 3000; j += 500)
+		{
+			for (int i = 0; i < 5 + (j / 500) * 2; i += 1)
+			{
+				this->spawnMap[3].push_back(j);
+			}
+		}
+		break;
+
+	case 10:
+
+		this->spawnMap[10] = { 60,60,60,60,       500,500,500,500,          1000,1000,1000,1000,   1500,1500,1500,1500,   2000,2000,2000,2000,  2500,2500,2500,2500,   3000,3000,3000,3000,3000 };
+		this->spawnMap[2] = {                300,300,              700,700,700,					1200,1200,1200,1200,1700,1700,1700,1700,1700,  2200,2200,2200,2200,2200,2200,     2700,2700,2700,2700,2700,2700,2700,2700};
+
+
+		break;
+	case 11:
+		for (int i = 0; i <= 500; i += 20)
+		{
+			this->spawnMap[1].push_back(i);
+		}
+
+		for (int i = 500; i <= 1000; i += 20)
+		{
+			this->spawnMap[2].push_back(i);
+		}
+
+		for (int i = 1000; i <= 1500; i += 10)
+		{
+			this->spawnMap[5].push_back(i);
+		}
+
+		for (int i = 1500; i <= 2000; i += 20)
+		{
+			this->spawnMap[3].push_back(i);
+		}
+
+		for (int i = 2000; i <= 2500; i += 20)
+		{
+			this->spawnMap[4].push_back(i);
+		}
+
+		for (int i = 2500; i <= 3000; i += 35)
+		{
+			this->spawnMap[6].push_back(i);
+		}
+
+		for (int i = 3000; i <= 3500; i += 50)
+		{
+			this->spawnMap[9].push_back(i);
+		}
+
+		for (int i = 3500; i <= 4000; i += 60)
+		{
+			this->spawnMap[10].push_back(i);
+		}
+
+		for (int j = 1; j <= 10; j++)
+		{
+			if (j != 7 && j != 8)
+			{
+				for (int i = 0; i <= 5; i++)
+				{
+					this->spawnMap[j].push_back(4500);
+				}
+			}
+		}
+
+		
+
+
+
+
+
+
+
+
+
+		break;
+
+
 
 	case 12:
 		this->spawnMap[11] = { 1 };

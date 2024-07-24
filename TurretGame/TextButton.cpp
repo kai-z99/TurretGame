@@ -25,7 +25,7 @@ void TextButton::Draw()
 	//
 
 	DrawRectangleRec(this->rec, BLACK);
-	DrawRectangle(this->rec.x + 15.0f, this->rec.y + 15.0f, this->rec.width - 30.0f, this->rec.height - 30.0f, col);
+	DrawRectangle((int)this->rec.x + 15, (int)this->rec.y + 15, (int)this->rec.width - 30, (int)this->rec.height - 30, col);
 
 	int x = (int)this->position.x + (int)(this->rec.width / 2) - (MeasureText(this->text, 35) / 2);
 	int y = (int)this->position.y + (int)(this->rec.height / 2) - 11;
@@ -35,6 +35,13 @@ void TextButton::Draw()
 void TextButton::Update(int mouseX, int mouseY)
 {
 	Button::Update(mouseX, mouseY);
+}
+
+void TextButton::SetPosition(int posX, int posY)
+{
+	Button::SetPosition(posX, posY);
+	this->rec.x = this->position.x;
+	this->rec.y = this->position.y;
 }
 
 bool TextButton::MouseCollide(int mouseX, int mouseY)

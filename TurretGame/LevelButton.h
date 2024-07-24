@@ -5,7 +5,7 @@
 class LevelButton : public Button
 {
 public:
-	LevelButton(int posX, int posY, int level);
+	LevelButton(int posX, int posY, int level, bool complete);
 
 	virtual void Draw() override;
 	virtual void Update(int mouseX, int mouseY) override;
@@ -13,6 +13,8 @@ public:
 	int GetLevel() const;
 
 	bool isBoss = false;
+	bool isComplete;
+	bool isAvailible = false;
 
 private:
 	virtual bool MouseCollide(int mouseX, int mouseY);

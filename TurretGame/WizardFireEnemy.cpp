@@ -11,7 +11,7 @@ WizardFireEnemy::WizardFireEnemy()
 {
 	this->id = 13;
 	this->damage = 20;
-	this->maxHealth = 433.3f;
+	this->maxHealth = 1033.3f;
 	this->health = this->maxHealth;
 	this->coinDropAmount = GetRandomValue(1, 2);
 
@@ -44,7 +44,7 @@ void WizardFireEnemy::Update(unsigned int frame)
 		//stop floating up when reach stop point
 		if (this->position.y < stopPointY && this->currentVelocity.y != 0.0f)
 		{
-			this->currentVelocity.y = this->currentVelocity.y * 0.95;
+			this->currentVelocity.y = this->currentVelocity.y * 0.95f;
 			float acceleration = 0.01f;
 			this->currentVelocity.y += acceleration;
 

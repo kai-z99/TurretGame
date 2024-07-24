@@ -13,7 +13,7 @@ public:
 	unsigned int GetLocalFramecount() const;
 
 private:
-	float stopPointY;
+	int stopPointY;
 	bool hoverMode;
 
 	unsigned int localFramecount;

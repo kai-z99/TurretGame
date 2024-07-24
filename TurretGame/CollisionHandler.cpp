@@ -86,7 +86,7 @@ void CollisionHandler::HandleBulletToEnemy(Bullet* b, Enemy* e)
 
 	//bomb bullet
 	case 6:
-		this->game->areaEffects.push_back(new BombExplosion(b->GetPosition().x, b->GetPosition().y, true));
+		this->game->areaEffects.push_back(new BombExplosion((int)b->GetPosition().x, (int)b->GetPosition().y, true));
 		break;
 
 	default:
