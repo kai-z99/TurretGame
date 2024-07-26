@@ -12,6 +12,7 @@ public:
 	virtual void Update(int mouseX, int mouseY) override;
 
 	virtual void SetPosition(int posX, int posY) override;
+	void SetText(const char* text);
 
 private:
 	virtual bool MouseCollide(int mouseX, int mouseY) override;

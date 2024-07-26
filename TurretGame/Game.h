@@ -49,6 +49,7 @@ private:
 	void Initialize();
 
 	GameState gameState;
+	bool shouldClose;
 	unsigned int frameCount;
 
 	//----------------------------------------
@@ -138,6 +139,8 @@ private:
 	const int enemyLimit = 800;
 	const int AOELimit = 800;
 	
+
+
 	int inputMode; //0: standard, 1: bomb, 2 : ice
 	Vector2 mousePos;
 

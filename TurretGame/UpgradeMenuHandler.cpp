@@ -73,10 +73,13 @@ void UpgradeMenuHandler::Update()
 void UpgradeMenuHandler::Draw()
 {
 	Game* g = this->game;
-	DrawText("Upgrade!", screenWidth / 2 - 100, 100, 50, BLACK);
+	std::string text = "Upgrade!";
+	int width = MeasureText(text.c_str(), 50);
+	DrawText("Upgrade!", screenWidth / 2 - (width / 2), 100, 50, BLACK);
 
-	std::string text = std::to_string(g->gameStats->totalCoins) + " C";
-	DrawText(text.c_str(), 10, 10, 30, BLACK);
+	text = std::to_string(g->gameStats->totalCoins) + " C";
+	width = MeasureText(text.c_str(), 40);
+	DrawText(text.c_str(), screenWidth / 2 - (width / 2), 200, 40, BLACK);
 
 	for (UpgradeButton* u : g->upgradeButtons)
 	{
@@ -102,12 +105,6 @@ void UpgradeMenuHandler::HandleInput()
 	{
 		this->game->gameState = LevelSelectMenu;
 		//this->game->quitButton->isClicked = false;
-
-
-
-
-
-
 	}
 }
 

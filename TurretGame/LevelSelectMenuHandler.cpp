@@ -63,6 +63,8 @@ void LevelSelectHandler::Update(unsigned int frame)
 
 	g->shopButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
 	g->shopButton->SetPosition(10,(menuBoundaryY / 2) - (130 / 2));
+
+	g->quitButton->SetText("BACK");
 	g->quitButton->Update((int)g->mousePos.x, (int)g->mousePos.y);
 
 

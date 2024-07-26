@@ -84,7 +84,7 @@ Game::~Game()
 
 void Game::Run()
 {
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && !this->shouldClose)
     {
         this->HandleInput();
         this->Update();
@@ -375,8 +375,10 @@ void Game::Initialize()
     //ToggleFullscreen();
     ToggleBorderlessWindowed();
     HideCursor();
+    SetExitKey(0);
     LoadAllTextures(); // ONLY WORKS AFTER INITWINDOW
     LoadAllSounds();
+    this->shouldClose = false;
 
     this->userAppDataPath = WindowsFunctions::GetAppDataPath() + "/TurretGame/TurretGameData.json";
     
@@ -509,7 +511,7 @@ void Game::Draw()
 
     //make this a function
     //draw mouse
-    if (!this->inputMode) DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5.0f, GREEN);
+    if (!this->inputMode) DrawCircle((int)this->mousePos.x, (int)this->mousePos.y, 5.0f, BLUE);
 
     //draw mouse in place mode
     else
@@ -519,7 +521,7 @@ void Game::Draw()
         DrawLineEx({ this->mousePos.x + 30, this->mousePos.y - 30 }, { this->mousePos.x - 30, this->mousePos.y + 30 }, 1.0f, RED);
     }
 
-    this->DrawMousePos();
+    //this->DrawMousePos();
 
     //DrawFPS(0, 0);
 

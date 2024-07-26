@@ -44,6 +44,11 @@ void TextButton::SetPosition(int posX, int posY)
 	this->rec.y = this->position.y;
 }
 
+void TextButton::SetText(const char* text)
+{
+	this->text = text;
+}
+
 bool TextButton::MouseCollide(int mouseX, int mouseY)
 {
 	return CheckCollisionPointRec({ (float)mouseX, (float)mouseY }, this->rec);

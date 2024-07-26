@@ -8,7 +8,6 @@ int main(void)
     game.Run();
 
     return 0;
-
 }
 
 // 
@@ -29,11 +28,11 @@ int main(void)
 // 
 // 
 // 
-// defeat enemy sound
 // 
 // 
 // 
-// resolve wanings
+// 
+// 
 // 
 // 
 //
